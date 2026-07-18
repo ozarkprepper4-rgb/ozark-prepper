@@ -1,167 +1,595 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ozark Prepper - Self-Reliance & Tactical Homesteading</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Inter:wght@300;400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap');
+        
         .serif-title {
             font-family: 'Cinzel', serif;
         }
         .sans-body {
             font-family: 'Inter', sans-serif;
         }
+        .mono-text {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        /* Tactical grid lines overlay background */
+        .tactical-grid {
+            background-size: 40px 40px;
+            background-image: linear-gradient(to right, rgba(16, 185, 129, 0.03) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(16, 185, 129, 0.03) 1px, transparent 1px);
+        }
+        
+        /* 3D Book perspective transformations */
+        .perspective-1000 {
+            perspective: 1200px;
+        }
+        .book-container {
+            transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+        .book-container:hover {
+            transform: rotateY(-18deg) rotateX(10deg) scale(1.05);
+        }
+        
+        .book-spine {
+            background: linear-gradient(90deg, #022c22 0%, #064e3b 40%, #022c22 100%);
+            transform: rotateY(-90deg) translateZ(12px);
+            width: 24px;
+        }
+        
+        /* Dynamic radar sweeping animation */
+        @keyframes sweep {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .radar-sweep {
+            animation: sweep 8s linear infinite;
+            transform-origin: center;
+        }
+        
+        /* CRT scanlines effect */
+        .crt-overlay {
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+            background-size: 100% 4px;
+        }
+        
+        /* Marquee ticker animation */
+        @keyframes ticker {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-50%, 0, 0); }
+        }
+        .ticker-wrap {
+            animation: ticker 35s linear infinite;
+        }
+        
+        /* Glowing badges */
+        .glow-emerald {
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
+        }
+        .glow-amber {
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.3);
+        }
     </style>
 </head>
-<body class="bg-stone-900 text-stone-100 sans-body min-h-screen">
+<body class="bg-[#0c0a09] text-stone-100 sans-body min-h-screen selection:bg-emerald-600 selection:text-white tactical-grid overflow-x-hidden">
 
-    <!-- Hero Header -->
-    <header class="border-b border-stone-800 bg-stone-950 py-12 px-6 text-center">
-        <h1 class="serif-title text-4xl md:text-6xl text-emerald-500 tracking-wide mb-3 font-extrabold">OZARK PREPPER</h1>
-        <p class="text-stone-400 max-w-xl mx-auto text-sm md:text-base uppercase tracking-widest font-semibold">Practical Self-Reliance • Survival Field Manuals • Off-Grid Solar</p>
+    <!-- Top Survival Metrics Ticker -->
+    <div class="bg-black/90 border-b border-emerald-900/40 text-[10px] md:text-xs text-emerald-500 font-bold tracking-widest uppercase py-2 select-none overflow-hidden relative z-50 crt-overlay">
+        <div class="flex whitespace-nowrap ticker-wrap">
+            <span class="px-8 flex items-center"><span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse mr-2"></span> SYSTEM: ONLINE</span>
+            <span class="px-8 flex items-center"><span class="h-2 w-2 rounded-full bg-red-500 animate-ping mr-2"></span> GRID CAPACITY: DEFICIT (72%)</span>
+            <span class="px-8 flex items-center"><span class="h-2 w-2 rounded-full bg-amber-500 mr-2 animate-pulse"></span> WATER SECURITY: STANDBY</span>
+            <span class="px-8 flex items-center"><span class="h-2 w-2 rounded-full bg-emerald-500 mr-2 animate-pulse"></span> OFF-GRID SOLAR INTEGRATION: COMPATIBLE</span>
+            <span class="px-8 flex items-center"><span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse mr-2"></span> SYSTEM: ONLINE</span>
+            <span class="px-8 flex items-center"><span class="h-2 w-2 rounded-full bg-red-500 animate-ping mr-2"></span> GRID CAPACITY: DEFICIT (72%)</span>
+            <span class="px-8 flex items-center"><span class="h-2 w-2 rounded-full bg-amber-500 mr-2 animate-pulse"></span> WATER SECURITY: STANDBY</span>
+            <span class="px-8 flex items-center"><span class="h-2 w-2 rounded-full bg-emerald-500 mr-2 animate-pulse"></span> OFF-GRID SOLAR INTEGRATION: COMPATIBLE</span>
+        </div>
+    </div>
+
+    <!-- Immersive Interactive Header -->
+    <header class="relative border-b border-stone-800 bg-stone-950/90 backdrop-blur-md py-16 px-6 text-center overflow-hidden">
+        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(6,78,59,0.15),transparent_60%)]"></div>
+        <div class="relative z-10 max-w-4xl mx-auto space-y-4">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-emerald-500/30 bg-emerald-950/40 text-xs text-emerald-400 uppercase tracking-widest font-semibold mb-2">
+                <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-ping"></span> 2026 EDITION FIELD WORK
+            </div>
+            <h1 class="serif-title text-5xl md:text-7xl text-emerald-500 tracking-wider font-extrabold select-none filter drop-shadow-[0_4px_12px_rgba(16,185,129,0.2)]">
+                OZARK PREPPER
+            </h1>
+            <p class="text-stone-300 max-w-2xl mx-auto text-sm md:text-lg uppercase tracking-[0.25em] font-medium leading-relaxed">
+                Practical Survival Field Manuals <span class="text-emerald-500">•</span> Off-Grid Engineering
+            </p>
+            <p class="text-stone-500 text-xs md:text-sm max-w-lg mx-auto font-normal leading-relaxed italic">
+                "No complicated theories. Just battle-tested, zero-budget, off-grid blue-prints compiled directly from the rugged Ozarks wilderness."
+            </p>
+        </div>
     </header>
 
-    <!-- Main Content Grid -->
-    <main class="max-w-6xl mx-auto px-6 py-12 space-y-16">
+    <!-- Main Content Container -->
+    <main class="max-w-6xl mx-auto px-6 py-16 space-y-24">
 
-        <!-- Newsletter Sign-up / Lead Magnet -->
-        <section class="bg-stone-950 border border-stone-800 p-8 rounded-lg text-center max-w-3xl mx-auto space-y-4">
-            <h2 class="serif-title text-2xl text-stone-200">JOIN THE WEEKLY PREP</h2>
-            <p class="text-stone-400 text-sm max-w-lg mx-auto">Get exclusive, zero-budget survival strategies, emergency water filter hacks, and solar backup wiring plans delivered straight to your inbox.</p>
-            <form action="https://formspree.io/f/{your_id}" method="POST" class="flex flex-col sm:flex-row gap-2 max-w-md mx-auto pt-2">
-                <input type="email" name="email" placeholder="Enter your email address" required 
-                    class="bg-stone-900 border border-stone-700 rounded px-4 py-2 text-stone-200 flex-grow focus:outline-none focus:ring-1 focus:ring-emerald-500 text-sm">
-                <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-6 py-2 rounded text-sm tracking-wider uppercase transition">Subscribe</button>
-            </form>
+        <!-- OVERKILL SECTION 1: Tactical Interactive Radar Dashboard & Video Preview -->
+        <section class="grid lg:grid-cols-12 gap-10 items-center bg-stone-950/80 border border-stone-800 p-8 rounded-2xl relative overflow-hidden backdrop-blur-md">
+            <div class="absolute top-0 right-0 h-40 w-40 bg-emerald-500/5 rounded-full blur-3xl"></div>
+            
+            <div class="lg:col-span-6 space-y-6">
+                <div class="inline-flex items-center gap-1.5 text-xs text-emerald-400 uppercase tracking-widest font-semibold">
+                    <span class="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span> SYSTEM MONITORED AREA
+                </div>
+                <h2 class="serif-title text-3xl md:text-4xl text-stone-100 font-extrabold leading-tight">
+                    Ozark Tactical <br class="hidden md:inline" />
+                    <span class="text-emerald-500">Survival Radar Dashboard</span>
+                </h2>
+                <p class="text-stone-400 text-sm leading-relaxed">
+                    Watch the system dynamics live. Our training video loops provide clear visual overviews on emergency infrastructure, off-grid water engineering, and remote battery bank assembly.
+                </p>
+                <div class="grid grid-cols-2 gap-4 pt-2 text-xs font-semibold uppercase tracking-wider text-stone-300">
+                    <div class="flex items-center gap-2">
+                        <span class="text-emerald-500">⚡</span> 18,000W Hybrid Output
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-emerald-500">💧</span> 5-Gallon Active Flow
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-emerald-500">🌲</span> Off-Grid Proven
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-emerald-500">🛠</span> Real-Time Schematics
+                    </div>
+                </div>
+            </div>
+
+            <!-- Overkill Visual: Interactive Radar Simulator with Video Play Overlay -->
+            <div class="lg:col-span-6">
+                <div class="relative aspect-video w-full rounded-xl border border-emerald-500/20 bg-stone-950 overflow-hidden group shadow-lg shadow-emerald-950/10 hover:border-emerald-500/40 transition duration-500 crt-overlay">
+                    
+                    <!-- Radar Screen Background Grid -->
+                    <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,#052e16,transparent)] opacity-40"></div>
+                    <div class="absolute inset-0 bg-stone-950/80 tactical-grid"></div>
+                    
+                    <!-- SVG Interactive Radar -->
+                    <svg class="absolute inset-0 w-full h-full p-4 opacity-40 group-hover:opacity-65 transition-opacity duration-500" viewBox="0 0 200 100">
+                        <!-- Radar Circles -->
+                        <circle cx="100" cy="50" r="45" fill="none" stroke="#10b981" stroke-width="0.5" stroke-dasharray="2 3" />
+                        <circle cx="100" cy="50" r="30" fill="none" stroke="#10b981" stroke-width="0.5" />
+                        <circle cx="100" cy="50" r="15" fill="none" stroke="#10b981" stroke-width="0.5" stroke-dasharray="1 1" />
+                        <!-- Crosshairs -->
+                        <line x1="100" y1="5" x2="100" y2="95" stroke="#10b981" stroke-width="0.3" />
+                        <line x1="10" y1="50" x2="190" y2="50" stroke="#10b981" stroke-width="0.3" />
+                        <!-- Sweeping radar hand -->
+                        <g class="radar-sweep">
+                            <line x1="100" y1="50" x2="100" y2="5" stroke="#10b981" stroke-width="1.5" stroke-linecap="round" class="filter drop-shadow-[0_0_8px_#10b981]" />
+                            <polygon points="100,50 100,5 125,12 110,35" fill="url(#radarGradient)" opacity="0.3" />
+                        </g>
+                        <!-- Blinking target dots -->
+                        <circle cx="130" cy="30" r="2.5" fill="#10b981" class="animate-ping" />
+                        <circle cx="130" cy="30" r="1.5" fill="#34d399" />
+                        
+                        <circle cx="70" cy="65" r="2" fill="#ef4444" class="animate-ping" style="animation-duration: 2s;" />
+                        <circle cx="70" cy="65" r="1" fill="#f87171" />
+                        
+                        <!-- Definitions -->
+                        <defs>
+                            <radialGradient id="radarGradient" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" stop-color="#10b981" />
+                                <stop offset="100%" stop-color="transparent" />
+                            </radialGradient>
+                        </defs>
+                    </svg>
+                    
+                    <!-- Mock Live Video Interface -->
+                    <div class="absolute top-3 left-3 flex gap-2">
+                        <span class="bg-red-600 text-stone-100 text-[9px] px-2 py-0.5 rounded font-extrabold tracking-widest uppercase animate-pulse">REC</span>
+                        <span class="bg-stone-900/90 border border-stone-800 text-[8px] text-emerald-400 px-2 py-0.5 rounded font-mono">CAM_04 (WILDERNESS_VALLEY)</span>
+                    </div>
+                    <div class="absolute bottom-3 right-3 font-mono text-[9px] text-emerald-400 bg-stone-900/90 border border-stone-800 px-2 py-1 rounded">
+                        COORD: 36.6341° N, 93.3006° W
+                    </div>
+                    
+                    <!-- Pulsing Play Button Overlay -->
+                    <div class="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/50 transition-colors duration-500 cursor-pointer">
+                        <button class="bg-emerald-600 hover:bg-emerald-500 hover:scale-110 text-white w-16 h-16 rounded-full flex items-center justify-center shadow-lg transition duration-300 glow-emerald transform-gpu">
+                            <svg class="w-6 h-6 fill-current text-white translate-x-0.5" viewBox="0 0 24 24">
+                                <path d="M8 5v14l11-7z" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
         </section>
 
-        <!-- Digital Store / Field Manuals -->
-        <section class="space-y-8">
-            <div class="text-center">
-                <h2 class="serif-title text-3xl text-emerald-400 font-bold">DIGITAL FIELD MANUALS</h2>
-                <div class="h-1 w-20 bg-emerald-500 mx-auto mt-2"></div>
-                <p class="text-stone-400 text-sm mt-3">Rugged, detailed, zero-jargon manuals packed with step-by-step schematics.</p>
+
+        <!-- DIGITAL FIELD MANUALS SECTION: Dynamic 3D Book Covers & Premium Layouts -->
+        <section class="space-y-12">
+            <div class="text-center space-y-3">
+                <div class="inline-flex items-center gap-1 border border-amber-500/30 bg-amber-950/20 px-3 py-1 rounded-full text-[10px] text-amber-500 font-bold uppercase tracking-wider">
+                    ★ ELITE FIELD GUIDES ★
+                </div>
+                <h2 class="serif-title text-4xl text-stone-100 font-black">DIGITAL MANUAL PORTAL</h2>
+                <div class="h-1 w-24 bg-emerald-500 mx-auto rounded"></div>
+                <p class="text-stone-400 text-sm max-w-xl mx-auto leading-relaxed">
+                    Instantly downloadable PDF + EPUB bundles optimized for offline tablets, phones, and paper printing.
+                </p>
             </div>
 
             <div class="grid md:grid-cols-3 gap-8">
+                
                 <!-- Product 1: Water Filter -->
-                <div class="bg-stone-950 border border-stone-800 rounded-lg p-6 flex flex-col justify-between space-y-6">
-                    <div>
-                        <div class="bg-stone-900 py-6 text-center border-b border-stone-800 rounded-t mb-4">
-                            <span class="serif-title text-sm tracking-widest uppercase text-stone-400">Field Manual 01</span>
-                            <h3 class="serif-title text-xl text-stone-200 font-bold mt-2">DIY 5-GALLON WATER FILTER</h3>
+                <div class="bg-[#12100e] border border-stone-800/80 rounded-2xl p-6 flex flex-col justify-between space-y-8 hover:border-emerald-800/40 transition-all duration-300 shadow-md">
+                    <div class="space-y-6">
+                        <!-- Overkill 3D Book Cover Simulator -->
+                        <div class="perspective-1000 flex justify-center py-6">
+                            <div class="book-container relative w-40 h-56 shadow-2xl shadow-stone-950 rounded-r-md cursor-pointer flex transform-gpu">
+                                <!-- Main Front Cover -->
+                                <div class="absolute inset-0 bg-gradient-to-br from-emerald-950 via-[#0a3622] to-stone-950 border border-emerald-800/30 rounded-r-md p-4 flex flex-col justify-between overflow-hidden select-none">
+                                    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(16,185,129,0.1),transparent)]"></div>
+                                    <div class="border border-emerald-600/20 h-full w-full rounded flex flex-col justify-between p-2">
+                                        <div class="text-center">
+                                            <span class="serif-title text-[7px] tracking-widest text-emerald-400 uppercase font-bold block">TACTICAL BLUEPRINTS</span>
+                                            <div class="h-[1px] w-6 bg-emerald-500/40 mx-auto mt-1 mb-2"></div>
+                                            <h3 class="serif-title text-xs md:text-sm text-stone-100 tracking-wide font-black leading-tight uppercase">
+                                                DIY 5-GALLON<br/>WATER FILTER
+                                            </h3>
+                                        </div>
+                                        <!-- Minimal Vector Design -->
+                                        <div class="my-2 flex justify-center opacity-30">
+                                            <svg class="w-10 h-10 text-emerald-400 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="1">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v18M3 12h18M12 3a9 9 0 019 9v9a2 2 0 01-2 2H5a2 2 0 01-2-2v-9a9 9 0 019-9z" />
+                                            </svg>
+                                        </div>
+                                        <div class="text-center space-y-1">
+                                            <span class="text-[6px] tracking-wider text-emerald-500/80 font-mono block uppercase">VOLUME 01</span>
+                                            <span class="text-[6px] text-stone-500 font-bold block uppercase">BY WILCOX LABS</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Spine Element -->
+                                <div class="book-spine absolute top-0 bottom-0 left-0 rounded-l-sm z-10 origin-left"></div>
+                            </div>
                         </div>
-                        <ul class="text-stone-400 text-xs space-y-2 pt-2">
-                            <li class="flex items-start"><span class="text-emerald-500 mr-2">✔</span> Multi-stage bio-sand system blueprints</li>
-                            <li class="flex items-start"><span class="text-emerald-500 mr-2">✔</span> High-efficiency activated charcoal recipe</li>
-                            <li class="flex items-start"><span class="text-emerald-500 mr-2">✔</span> Silt/debris separation pre-filters</li>
-                        </ul>
+
+                        <div class="space-y-3">
+                            <span class="mono-text text-[10px] uppercase font-bold text-emerald-500 tracking-widest block">FIELD MANUAL 01</span>
+                            <h4 class="serif-title text-xl text-stone-100 font-bold tracking-wide">DIY 5-Gallon Water Filter</h4>
+                            <p class="text-stone-400 text-xs leading-relaxed">
+                                Avoid waterborne pathogons in survival scenarios. Master the science of high-flow emergency gravity filtration.
+                            </p>
+                            <ul class="text-stone-300 text-xs space-y-2 pt-2 border-t border-stone-900">
+                                <li class="flex items-start gap-2"><span class="text-emerald-500">✔</span> Multi-stage bio-sand system blueprints</li>
+                                <li class="flex items-start gap-2"><span class="text-emerald-500">✔</span> Premium activated charcoal recipe</li>
+                                <li class="flex items-start gap-2"><span class="text-emerald-500">✔</span> Debris & heavy-metal pre-filtration</li>
+                            </ul>
+                        </div>
                     </div>
-                    <div>
-                        <div class="text-2xl font-bold text-emerald-400 text-center mb-4">$4.99</div>
-                        <a href="https://buy.stripe.com/5kQ4gzbohgtnahX0YFeUU00" target="_blank" class="block w-full text-center bg-emerald-600 hover:bg-emerald-700 text-stone-100 font-semibold py-2 rounded text-xs uppercase tracking-wider transition">Buy PDF + EPUB</a>
+                    
+                    <div class="pt-4 border-t border-stone-900 space-y-3">
+                        <div class="text-center">
+                            <span class="text-stone-500 text-[10px] line-through block font-bold uppercase tracking-wider">$19.99 ORIGINAL PRICE</span>
+                            <div class="text-3xl font-extrabold text-emerald-400 mt-1">$4.99 <span class="text-stone-500 text-xs font-semibold uppercase">PDF + EPUB</span></div>
+                        </div>
+                        <a href="https://buy.stripe.com/5kQ4gzbohgtnahX0YFeUU00" target="_blank" class="block w-full text-center bg-emerald-600 hover:bg-emerald-700 hover:scale-[1.02] text-stone-100 font-bold py-3 rounded-lg text-xs uppercase tracking-widest transition-all duration-300 shadow-md glow-emerald">
+                            BUY MANUAL
+                        </a>
                     </div>
                 </div>
 
                 <!-- Product 2: Egg Preservation -->
-                <div class="bg-stone-950 border border-stone-800 rounded-lg p-6 flex flex-col justify-between space-y-6">
-                    <div>
-                        <div class="bg-stone-900 py-6 text-center border-b border-stone-800 rounded-t mb-4">
-                            <span class="serif-title text-sm tracking-widest uppercase text-stone-400">Field Manual 02</span>
-                            <h3 class="serif-title text-xl text-stone-200 font-bold mt-2">EGG PRESERVATION SECRETS</h3>
+                <div class="bg-[#12100e] border border-stone-800/80 rounded-2xl p-6 flex flex-col justify-between space-y-8 hover:border-emerald-800/40 transition-all duration-300 shadow-md">
+                    <div class="space-y-6">
+                        <!-- Overkill 3D Book Cover Simulator -->
+                        <div class="perspective-1000 flex justify-center py-6">
+                            <div class="book-container relative w-40 h-56 shadow-2xl shadow-stone-950 rounded-r-md cursor-pointer flex transform-gpu">
+                                <!-- Main Front Cover -->
+                                <div class="absolute inset-0 bg-gradient-to-br from-[#451a03] via-[#78350f] to-stone-950 border border-amber-900/30 rounded-r-md p-4 flex flex-col justify-between overflow-hidden select-none">
+                                    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(245,158,11,0.1),transparent)]"></div>
+                                    <div class="border border-amber-600/20 h-full w-full rounded flex flex-col justify-between p-2">
+                                        <div class="text-center">
+                                            <span class="serif-title text-[7px] tracking-widest text-amber-400 uppercase font-bold block">TACTICAL BLUEPRINTS</span>
+                                            <div class="h-[1px] w-6 bg-amber-500/40 mx-auto mt-1 mb-2"></div>
+                                            <h3 class="serif-title text-xs md:text-sm text-stone-100 tracking-wide font-black leading-tight uppercase">
+                                                EGG PRESERVATION<br/>SECRETS
+                                            </h3>
+                                        </div>
+                                        <!-- Minimal Vector Design -->
+                                        <div class="my-2 flex justify-center opacity-30">
+                                            <svg class="w-10 h-10 text-amber-400 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="1">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9 9 0 100-18 9 9 0 000 18zM12 9v4m0 4h.01" />
+                                            </svg>
+                                        </div>
+                                        <div class="text-center space-y-1">
+                                            <span class="text-[6px] tracking-wider text-amber-500/80 font-mono block uppercase">VOLUME 02</span>
+                                            <span class="text-[6px] text-stone-500 font-bold block uppercase">BY WILCOX LABS</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Spine Element -->
+                                <div class="book-spine absolute top-0 bottom-0 left-0 rounded-l-sm z-10 origin-left" style="background: linear-gradient(90deg, #451a03 0%, #78350f 40%, #451a03 100%);"></div>
+                            </div>
                         </div>
-                        <ul class="text-stone-400 text-xs space-y-2 pt-2">
-                            <li class="flex items-start"><span class="text-emerald-500 mr-2">✔</span> Water glassing (sodium silicate) method</li>
-                            <li class="flex items-start"><span class="text-emerald-500 mr-2">✔</span> 12-month shelf-life verification guidelines</li>
-                            <li class="flex items-start"><span class="text-emerald-500 mr-2">✔</span> Testing methods for egg freshness</li>
-                        </ul>
+
+                        <div class="space-y-3">
+                            <span class="mono-text text-[10px] uppercase font-bold text-amber-500 tracking-widest block">FIELD MANUAL 02</span>
+                            <h4 class="serif-title text-xl text-stone-100 font-bold tracking-wide">Egg Preservation Secrets</h4>
+                            <p class="text-stone-400 text-xs leading-relaxed">
+                                Store fresh eggs without refrigeration for over 12 months using high-integrity local homesteading secrets.
+                            </p>
+                            <ul class="text-stone-300 text-xs space-y-2 pt-2 border-t border-stone-900">
+                                <li class="flex items-start gap-2"><span class="text-amber-500">★</span> Sodium Silicate water glassing method</li>
+                                <li class="flex items-start gap-2"><span class="text-amber-500">★</span> Freshness testing & verification tables</li>
+                                <li class="flex items-start gap-2"><span class="text-amber-500">★</span> Shell integrity & structural preservation</li>
+                            </ul>
+                        </div>
                     </div>
-                    <div>
-                        <div class="text-2xl font-bold text-emerald-400 text-center mb-4">$4.99</div>
-                        <a href="https://buy.stripe.com/28E28reAt2Cxcq59vbeUU01" target="_blank" class="block w-full text-center bg-emerald-600 hover:bg-emerald-700 text-stone-100 font-semibold py-2 rounded text-xs uppercase tracking-wider transition">Buy PDF + EPUB</a>
+                    
+                    <div class="pt-4 border-t border-stone-900 space-y-3">
+                        <div class="text-center">
+                            <span class="text-stone-500 text-[10px] line-through block font-bold uppercase tracking-wider">$19.99 ORIGINAL PRICE</span>
+                            <div class="text-3xl font-extrabold text-amber-500 mt-1">$4.99 <span class="text-stone-500 text-xs font-semibold uppercase">PDF + EPUB</span></div>
+                        </div>
+                        <a href="https://buy.stripe.com/28E28reAt2Cxcq59vbeUU01" target="_blank" class="block w-full text-center bg-amber-600 hover:bg-amber-700 hover:scale-[1.02] text-stone-100 font-bold py-3 rounded-lg text-xs uppercase tracking-widest transition-all duration-300 shadow-md glow-amber">
+                            BUY MANUAL
+                        </a>
                     </div>
                 </div>
 
-                <!-- Product 3: Bundle -->
-                <div class="bg-stone-950 border-2 border-emerald-500 rounded-lg p-6 flex flex-col justify-between space-y-6 relative">
-                    <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-emerald-500 text-stone-950 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">BEST VALUE</div>
-                    <div>
-                        <div class="bg-stone-900 py-6 text-center border-b border-stone-800 rounded-t mb-4">
-                            <span class="serif-title text-sm tracking-widest uppercase text-emerald-400">THE ULTIMATE BUNDLE</span>
-                            <h3 class="serif-title text-xl text-stone-200 font-bold mt-2">PREPPER'S STARTER PACK</h3>
+                <!-- Product 3: Ultimate Bundle Pack (Overkill Accent Highlight) -->
+                <div class="bg-[#0b1511] border-2 border-emerald-500 rounded-2xl p-6 flex flex-col justify-between space-y-8 relative hover:border-emerald-400 transition-all duration-300 shadow-xl shadow-emerald-950/20">
+                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-emerald-600 to-amber-500 text-stone-950 px-4 py-1.5 rounded-full text-[9px] font-extrabold uppercase tracking-widest glow-emerald z-20">
+                        🔥 BEST VALUE PACK 🔥
+                    </div>
+                    <div class="space-y-6">
+                        <!-- Overkill 3D Book Cover Simulator (Double Stacked Effect) -->
+                        <div class="perspective-1000 flex justify-center py-6 relative">
+                            <!-- Background Book Shadow -->
+                            <div class="absolute w-36 h-52 bg-gradient-to-br from-amber-950 via-[#78350f] to-stone-950 opacity-40 rounded-r-md border border-amber-900/10 origin-bottom-right rotate-y-12 translate-x-3 -translate-y-2 select-none pointer-events-none"></div>
+                            <!-- Main Forefront Book -->
+                            <div class="book-container relative w-40 h-56 shadow-2xl shadow-emerald-950/40 rounded-r-md cursor-pointer flex transform-gpu">
+                                <!-- Main Front Cover -->
+                                <div class="absolute inset-0 bg-gradient-to-br from-stone-900 via-stone-950 to-emerald-950 border border-emerald-500/50 rounded-r-md p-4 flex flex-col justify-between overflow-hidden select-none">
+                                    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(16,185,129,0.25),transparent)]"></div>
+                                    <div class="border-2 border-double border-emerald-500/40 h-full w-full rounded flex flex-col justify-between p-2">
+                                        <div class="text-center">
+                                            <span class="serif-title text-[7px] tracking-widest text-emerald-400 uppercase font-extrabold block">THE COMPLETE INTEL</span>
+                                            <div class="h-[1.5px] w-8 bg-gradient-to-r from-amber-500 to-emerald-500 mx-auto mt-1 mb-2"></div>
+                                            <h3 class="serif-title text-sm text-stone-100 tracking-wide font-black leading-tight uppercase filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">
+                                                OZARK PREPPER<br/><span class="text-emerald-400">STARTER BUNDLE</span>
+                                            </h3>
+                                        </div>
+                                        <!-- Minimal Vector Design -->
+                                        <div class="my-1 flex justify-center opacity-60">
+                                            <svg class="w-10 h-10 text-emerald-400 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                                            </svg>
+                                        </div>
+                                        <div class="text-center space-y-1">
+                                            <span class="text-[6px] tracking-wider text-amber-400 font-mono font-black block uppercase">VOLUMES 01 & 02</span>
+                                            <span class="text-[6px] text-stone-400 font-bold block uppercase">NEIL WILCOX EXCLUSIVE</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Spine Element -->
+                                <div class="book-spine absolute top-0 bottom-0 left-0 rounded-l-sm z-10 origin-left" style="background: linear-gradient(90deg, #111827 0%, #1f2937 40%, #111827 100%);"></div>
+                            </div>
                         </div>
-                        <ul class="text-stone-400 text-xs space-y-2 pt-2">
-                            <li class="flex items-start"><span class="text-emerald-500 mr-2">✔</span> DIY 5-Gallon Water Filter Manual</li>
-                            <li class="flex items-start"><span class="text-emerald-500 mr-2">✔</span> Egg Preservation Secrets Manual</li>
-                            <li class="flex items-start"><span class="text-emerald-500 mr-2">✔</span> Includes bonus high-res printable wiring diagrams</li>
-                        </ul>
+
+                        <div class="space-y-3">
+                            <span class="mono-text text-[10px] uppercase font-bold text-emerald-400 tracking-widest block">STARTER BUNDLE PACKAGE</span>
+                            <h4 class="serif-title text-xl text-stone-100 font-bold tracking-wide">The Ultimate Starter Pack</h4>
+                            <p class="text-stone-300 text-xs leading-relaxed font-semibold">
+                                Get both comprehensive, highly illustrated off-grid manuals instantly at a massive 60% discount.
+                            </p>
+                            <ul class="text-stone-300 text-xs space-y-2 pt-2 border-t border-emerald-950">
+                                <li class="flex items-start gap-2"><span class="text-emerald-400">✔</span> Complete DIY 5-Gallon Water Filter Manual</li>
+                                <li class="flex items-start gap-2"><span class="text-emerald-400">✔</span> Complete Egg Preservation Secrets Manual</li>
+                                <li class="flex items-start gap-2"><span class="text-emerald-400">✔</span> Included printable technical wiring diagrams</li>
+                            </ul>
+                        </div>
                     </div>
-                    <div>
-                        <div class="text-2xl font-bold text-emerald-400 text-center mb-4">$7.99</div>
-                        <a href="https://buy.stripe.com/3cIeVd2RLfpj3TzdLreUU02" target="_blank" class="block w-full text-center bg-emerald-500 hover:bg-emerald-600 text-stone-950 font-extrabold py-2 rounded text-xs uppercase tracking-wider transition">Get The Bundle</a>
+                    
+                    <div class="pt-4 border-t border-emerald-950 space-y-3">
+                        <div class="text-center">
+                            <span class="text-stone-500 text-[10px] line-through block font-bold uppercase tracking-wider">$39.98 ORIGINAL VALUE</span>
+                            <div class="text-3xl font-black text-emerald-400 mt-1">$7.99 <span class="text-stone-500 text-xs font-semibold uppercase">COMBINED BUNDLE</span></div>
+                        </div>
+                        <a href="https://buy.stripe.com/3cIeVd2RLfpj3TzdLreUU02" target="_blank" class="block w-full text-center bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 hover:scale-[1.03] text-stone-950 font-black py-4 rounded-lg text-xs uppercase tracking-widest transition-all duration-300 shadow-lg glow-emerald">
+                            DOWNLOAD BUNDLE
+                        </a>
                     </div>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- SIGNATURE SOLAR PARTNERSHIP: Blueprints, Spec Cards & Vector Art -->
+        <section class="space-y-12">
+            <div class="text-center space-y-3">
+                <div class="inline-flex items-center gap-1.5 border border-emerald-500/30 bg-emerald-950/20 px-3 py-1 rounded-full text-[10px] text-emerald-400 font-bold uppercase tracking-widest">
+                    ★ AUTHORIZED AFFILIATE CHANNEL ★
+                </div>
+                <h2 class="serif-title text-4xl text-stone-100 font-black">OFF-GRID POWER INTEL</h2>
+                <div class="h-1 w-24 bg-emerald-500 mx-auto rounded"></div>
+                <p class="text-stone-400 text-sm max-w-xl mx-auto leading-relaxed">
+                    We partner with Signature Solar to deliver reliable backup power hardware for emergency situations.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                
+                <!-- Solar Item 1: Inverter -->
+                <div class="bg-stone-950 border border-stone-800 rounded-xl p-6 flex flex-col justify-between space-y-6 hover:border-emerald-500/20 transition-all duration-300 shadow-md">
+                    <div class="space-y-4">
+                        <div class="border-b border-stone-850 pb-3 flex justify-between items-start">
+                            <h4 class="serif-title text-stone-200 text-md font-bold leading-tight">EG4 18kPV Hybrid Inverter</h4>
+                            <span class="mono-text text-[9px] text-emerald-500 font-bold bg-emerald-950/50 border border-emerald-900/30 px-1.5 py-0.5 rounded">INVERTER</span>
+                        </div>
+                        <!-- Technical Spec Table Blueprint style -->
+                        <div class="mono-text text-[10px] text-stone-400 space-y-1.5 bg-[#0e0c0b] border border-stone-900 rounded p-3 leading-relaxed">
+                            <div class="flex justify-between"><span class="text-stone-500">SURGE:</span> <span class="text-stone-200 font-bold">18,000 W</span></div>
+                            <div class="flex justify-between"><span class="text-stone-500">GRID-TIE:</span> <span class="text-stone-200 font-bold">YES / OPTIONAL</span></div>
+                            <div class="flex justify-between"><span class="text-stone-500">TRANSFER:</span> <span class="text-stone-200 font-bold">0 MS (ONLINE)</span></div>
+                        </div>
+                        <p class="text-stone-400 text-xs leading-relaxed">
+                            The gold standard for residential backup battery loops. Massive power peak rating.
+                        </p>
+                    </div>
+                    <a href="https://signaturesolar.com/eg4-18kpv-all-in-one-hybrid-inverter/?ref=placeholder_ozark_prepper" target="_blank" class="text-center w-full block border border-stone-800 hover:border-emerald-500/50 hover:bg-emerald-950/20 text-stone-300 hover:text-emerald-400 py-2.5 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all duration-300">
+                        VIEW HARDWARE
+                    </a>
+                </div>
+
+                <!-- Solar Item 2: Battery -->
+                <div class="bg-stone-950 border border-stone-800 rounded-xl p-6 flex flex-col justify-between space-y-6 hover:border-emerald-500/20 transition-all duration-300 shadow-md">
+                    <div class="space-y-4">
+                        <div class="border-b border-stone-850 pb-3 flex justify-between items-start">
+                            <h4 class="serif-title text-stone-200 text-md font-bold leading-tight">EG4 LifePower4 Battery</h4>
+                            <span class="mono-text text-[9px] text-emerald-500 font-bold bg-emerald-950/50 border border-emerald-900/30 px-1.5 py-0.5 rounded">STORAGE</span>
+                        </div>
+                        <!-- Technical Spec Table Blueprint style -->
+                        <div class="mono-text text-[10px] text-stone-400 space-y-1.5 bg-[#0e0c0b] border border-stone-900 rounded p-3 leading-relaxed">
+                            <div class="flex justify-between"><span class="text-stone-500">CELLS:</span> <span class="text-stone-200 font-bold">LiFePO4 (LFP)</span></div>
+                            <div class="flex justify-between"><span class="text-stone-500">CAPACITY:</span> <span class="text-stone-200 font-bold">48V 100AH (5.12kWh)</span></div>
+                            <div class="flex justify-between"><span class="text-stone-500">SCALABLE:</span> <span class="text-stone-200 font-bold">UP TO 16 MODULES</span></div>
+                        </div>
+                        <p class="text-stone-400 text-xs leading-relaxed">
+                            Premium lithium chemistry modules with built-in high-performance BMS boards.
+                        </p>
+                    </div>
+                    <a href="https://signaturesolar.com/eg4-lifepower4-lithium-battery-48v-100ah/?ref=placeholder_ozark_prepper" target="_blank" class="text-center w-full block border border-stone-800 hover:border-emerald-500/50 hover:bg-emerald-950/20 text-stone-300 hover:text-emerald-400 py-2.5 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all duration-300">
+                        VIEW HARDWARE
+                    </a>
+                </div>
+
+                <!-- Solar Item 3: Complete Kit -->
+                <div class="bg-stone-950 border border-stone-800 rounded-xl p-6 flex flex-col justify-between space-y-6 hover:border-emerald-500/20 transition-all duration-300 shadow-md">
+                    <div class="space-y-4">
+                        <div class="border-b border-stone-850 pb-3 flex justify-between items-start">
+                            <h4 class="serif-title text-stone-200 text-md font-bold leading-tight">Complete Off-Grid Kit</h4>
+                            <span class="mono-text text-[9px] text-emerald-500 font-bold bg-emerald-950/50 border border-emerald-900/30 px-1.5 py-0.5 rounded">SYSTEMS</span>
+                        </div>
+                        <!-- Technical Spec Table Blueprint style -->
+                        <div class="mono-text text-[10px] text-stone-400 space-y-1.5 bg-[#0e0c0b] border border-stone-900 rounded p-3 leading-relaxed">
+                            <div class="flex justify-between"><span class="text-stone-500">OUTPUT:</span> <span class="text-stone-200 font-bold">6,000 W CONTINUOUS</span></div>
+                            <div class="flex justify-between"><span class="text-stone-500">PANELS:</span> <span class="text-stone-200 font-bold">MONOCRYSTALLINE</span></div>
+                            <div class="flex justify-between"><span class="text-stone-500">WIRING:</span> <span class="text-stone-200 font-bold">INCLUDED COMPLETE</span></div>
+                        </div>
+                        <p class="text-stone-400 text-xs leading-relaxed">
+                            Everything needed for true homestead deployment: panels, brackets, inverters, and fuses.
+                        </p>
+                    </div>
+                    <a href="https://signaturesolar.com/complete-off-grid-solar-kits/?ref=placeholder_ozark_prepper" target="_blank" class="text-center w-full block border border-stone-800 hover:border-emerald-500/50 hover:bg-emerald-950/20 text-stone-300 hover:text-emerald-400 py-2.5 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all duration-300">
+                        VIEW HARDWARE
+                    </a>
+                </div>
+
+                <!-- Solar Item 4: Portable Panel -->
+                <div class="bg-stone-950 border border-stone-800 rounded-xl p-6 flex flex-col justify-between space-y-6 hover:border-emerald-500/20 transition-all duration-300 shadow-md">
+                    <div class="space-y-4">
+                        <div class="border-b border-stone-850 pb-3 flex justify-between items-start">
+                            <h4 class="serif-title text-stone-200 text-md font-bold leading-tight">200W Folding Solar Panel</h4>
+                            <span class="mono-text text-[9px] text-emerald-500 font-bold bg-emerald-950/50 border border-emerald-900/30 px-1.5 py-0.5 rounded">PORTABLE</span>
+                        </div>
+                        <!-- Technical Spec Table Blueprint style -->
+                        <div class="mono-text text-[10px] text-stone-400 space-y-1.5 bg-[#0e0c0b] border border-stone-900 rounded p-3 leading-relaxed">
+                            <div class="flex justify-between"><span class="text-stone-500">CELL TYPE:</span> <span class="text-stone-200 font-bold">HIGH-EFF MONO</span></div>
+                            <div class="flex justify-between"><span class="text-stone-500">INTERFACE:</span> <span class="text-stone-200 font-bold">MC4 CONNECTOR</span></div>
+                            <div class="flex justify-between"><span class="text-stone-500">WEIGHT:</span> <span class="text-stone-200 font-bold">14.3 LBS</span></div>
+                        </div>
+                        <p class="text-stone-400 text-xs leading-relaxed">
+                            Perfect for mobile applications, emergency bug-out setups, or rapid deploy communication.
+                        </p>
+                    </div>
+                    <a href="https://signaturesolar.com/portable-folding-solar-panels/?ref=placeholder_ozark_prepper" target="_blank" class="text-center w-full block border border-stone-800 hover:border-emerald-500/50 hover:bg-emerald-950/20 text-stone-300 hover:text-emerald-400 py-2.5 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all duration-300">
+                        VIEW HARDWARE
+                    </a>
                 </div>
             </div>
         </section>
 
-        <!-- Signature Solar Affiliate Recommendations -->
-        <section class="space-y-8">
+
+        <!-- INTERACTIVE TECHNICAL FAQ SECTION -->
+        <section class="max-w-4xl mx-auto space-y-8">
             <div class="text-center">
-                <h2 class="serif-title text-3xl text-emerald-400 font-bold">OFF-GRID SOLAR POWER RECOMMENDATIONS</h2>
-                <div class="h-1 w-20 bg-emerald-500 mx-auto mt-2"></div>
-                <p class="text-stone-400 text-sm mt-3">We partner with Signature Solar to deliver reliable backup power hardware for emergency situations.</p>
+                <h2 class="serif-title text-3xl text-stone-100 font-black">TACTICAL INTEL FAQ</h2>
+                <div class="h-1 w-16 bg-emerald-500 mx-auto mt-2 rounded"></div>
             </div>
 
-            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Solar Item 1: Inverter -->
-                <div class="bg-stone-950 border border-stone-800 rounded p-5 flex flex-col justify-between space-y-4">
-                    <div>
-                        <h4 class="serif-title text-stone-200 text-base font-bold">EG4 18kPV Hybrid Inverter</h4>
-                        <p class="text-stone-400 text-[11px] mt-2 leading-relaxed">The ultimate 18,000W surge split-phase off-grid smart inverter.</p>
+            <div class="space-y-4">
+                <!-- Accordion 1 -->
+                <details class="group bg-stone-950 border border-stone-850 rounded-lg overflow-hidden [&_summary::-webkit-details-marker]:hidden">
+                    <summary class="flex justify-between items-center p-5 cursor-pointer text-stone-200 hover:text-emerald-400 transition">
+                        <span class="font-bold text-sm uppercase tracking-wider">Are these digital downloads instant?</span>
+                        <span class="text-emerald-500 transition duration-300 group-open:rotate-45 font-bold">＋</span>
+                    </summary>
+                    <div class="p-5 border-t border-stone-900 bg-stone-950/60 text-stone-400 text-xs leading-relaxed">
+                        Yes, immediately after payment, Stripe's secure verification automated server delivers high-resolution, uncompressed PDF and EPUB links directly to your email, optimized for tablet, smartphone, or physical printing.
                     </div>
-                    <a href="https://signaturesolar.com/eg4-18kpv-all-in-one-hybrid-inverter/?ref=placeholder_ozark_prepper" target="_blank" class="text-center border border-stone-700 hover:border-emerald-500 text-stone-300 hover:text-emerald-400 py-2 rounded text-[11px] uppercase tracking-wider transition">View Product</a>
-                </div>
+                </details>
 
-                <!-- Solar Item 2: Battery -->
-                <div class="bg-stone-950 border border-stone-800 rounded p-5 flex flex-col justify-between space-y-4">
-                    <div>
-                        <h4 class="serif-title text-stone-200 text-base font-bold">EG4 LifePower4 Battery</h4>
-                        <p class="text-stone-400 text-[11px] mt-2 leading-relaxed">48V 100AH LiFePO4 cabinet module. Massive life cycle count.</p>
+                <!-- Accordion 2 -->
+                <details class="group bg-stone-950 border border-stone-850 rounded-lg overflow-hidden [&_summary::-webkit-details-marker]:hidden">
+                    <summary class="flex justify-between items-center p-5 cursor-pointer text-stone-200 hover:text-emerald-400 transition">
+                        <span class="font-bold text-sm uppercase tracking-wider">Do these blueprints require complex machining?</span>
+                        <span class="text-emerald-500 transition duration-300 group-open:rotate-45 font-bold">＋</span>
+                    </summary>
+                    <div class="p-5 border-t border-stone-900 bg-stone-950/60 text-stone-400 text-xs leading-relaxed">
+                        Absolutely not. These are low-budget, DIY plans requiring standard off-the-shelf items from local hardware shops. If you can use a basic handsaw, sand, and drill, you can build these fully active survival setups.
                     </div>
-                    <a href="https://signaturesolar.com/eg4-lifepower4-lithium-battery-48v-100ah/?ref=placeholder_ozark_prepper" target="_blank" class="text-center border border-stone-700 hover:border-emerald-500 text-stone-300 hover:text-emerald-400 py-2 rounded text-[11px] uppercase tracking-wider transition">View Product</a>
-                </div>
+                </details>
 
-                <!-- Solar Item 3: Complete Kit -->
-                <div class="bg-stone-950 border border-stone-800 rounded p-5 flex flex-col justify-between space-y-4">
-                    <div>
-                        <h4 class="serif-title text-stone-200 text-base font-bold">Complete Off-Grid 6kW Kit</h4>
-                        <p class="text-stone-400 text-[11px] mt-2 leading-relaxed">Everything needed: inverters, batteries, solar panels, and wiring.</p>
+                <!-- Accordion 3 -->
+                <details class="group bg-stone-950 border border-stone-850 rounded-lg overflow-hidden [&_summary::-webkit-details-marker]:hidden">
+                    <summary class="flex justify-between items-center p-5 cursor-pointer text-stone-200 hover:text-emerald-400 transition">
+                        <span class="font-bold text-sm uppercase tracking-wider">How secure is the transaction processing?</span>
+                        <span class="text-emerald-500 transition duration-300 group-open:rotate-45 font-bold">＋</span>
+                    </summary>
+                    <div class="p-5 border-t border-stone-900 bg-stone-950/60 text-stone-400 text-xs leading-relaxed">
+                        All payments are processed natively through Stripe's banking-grade, fully PCI-compliant SSL secure platform. We do not store or see your credit details locally.
                     </div>
-                    <a href="https://signaturesolar.com/complete-off-grid-solar-kits/?ref=placeholder_ozark_prepper" target="_blank" class="text-center border border-stone-700 hover:border-emerald-500 text-stone-300 hover:text-emerald-400 py-2 rounded text-[11px] uppercase tracking-wider transition">View Product</a>
-                </div>
+                </details>
+            </div>
+        </section>
 
-                <!-- Solar Item 4: Portable Panel -->
-                <div class="bg-stone-950 border border-stone-800 rounded p-5 flex flex-col justify-between space-y-4">
-                    <div>
-                        <h4 class="serif-title text-stone-200 text-base font-bold">200W Portable Solar Panel</h4>
-                        <p class="text-stone-400 text-[11px] mt-2 leading-relaxed">Highly portable monocrystalline folding panels for emergency tactical use.</p>
-                    </div>
-                    <a href="https://signaturesolar.com/portable-folding-solar-panels/?ref=placeholder_ozark_prepper" target="_blank" class="text-center border border-stone-700 hover:border-emerald-500 text-stone-300 hover:text-emerald-400 py-2 rounded text-[11px] uppercase tracking-wider transition">View Product</a>
-                </div>
+
+        <!-- HIGHLY DESIGNED NEWSLETTER MODULE -->
+        <section class="bg-gradient-to-br from-stone-950 via-[#0a1a12] to-stone-950 border-2 border-emerald-900/30 p-8 md:p-12 rounded-2xl text-center max-w-3xl mx-auto space-y-6 relative overflow-hidden backdrop-blur-md">
+            <div class="absolute inset-0 bg-stone-950/20 crt-overlay"></div>
+            <div class="relative z-10 space-y-4">
+                <span class="mono-text text-[10px] font-black text-emerald-400 tracking-widest block">EMERGENCY COMMUNICATOR</span>
+                <h2 class="serif-title text-3xl text-stone-200 font-extrabold tracking-wide">JOIN THE WILDERNESS RADAR</h2>
+                <p class="text-stone-400 text-xs max-w-lg mx-auto leading-relaxed">
+                    Subscribe to receive immediate, zero-budget survival manuals, off-grid updates, and premium Signature Solar discount codes as they drop.
+                </p>
+                <form action="https://formspree.io/f/{your_id}" method="POST" class="flex flex-col sm:flex-row gap-2 max-w-md mx-auto pt-4 relative z-20">
+                    <input type="email" name="email" placeholder="Enter security email address" required 
+                        class="bg-black/80 border border-stone-800 rounded-lg px-4 py-3 text-stone-200 flex-grow focus:outline-none focus:ring-2 focus:ring-emerald-500/50 text-xs font-semibold uppercase tracking-wider">
+                    <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 hover:scale-[1.02] text-white font-extrabold px-6 py-3 rounded-lg text-xs tracking-widest uppercase transition-all duration-300 shadow-md glow-emerald">
+                        SUBSCRIBE WIRE
+                    </button>
+                </form>
             </div>
         </section>
 
     </main>
 
-    <!-- Footer -->
-    <footer class="border-t border-stone-800 bg-stone-950 py-12 text-center text-xs text-stone-500 space-y-3">
-        <p>© Ozark Prepper. All rights reserved. Self-reliance begins at home.</p>
-        <div class="flex justify-center space-x-4">
-            <a href="#" class="hover:text-emerald-400">Privacy Policy</a>
-            <span class="text-stone-700">|</span>
-            <a href="#" class="hover:text-emerald-400">Terms of Use</a>
+    <!-- Footer with custom styling -->
+    <footer class="border-t border-stone-850 bg-stone-950 py-16 text-center text-[10px] text-stone-500 space-y-4 relative overflow-hidden">
+        <div class="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-emerald-900 via-amber-800 to-emerald-900 animate-pulse"></div>
+        <div class="relative z-10 max-w-4xl mx-auto px-6 space-y-4">
+            <p class="serif-title text-stone-400 font-bold tracking-widest text-sm uppercase">OZARK PREPPER FIELD STATIONS</p>
+            <p class="text-stone-500">© 2026 Wilcox Labs. All rights reserved. Self-reliance is not optional. It is destiny.</p>
+            <div class="flex justify-center space-x-6">
+                <a href="#" class="hover:text-emerald-400 tracking-widest uppercase transition">Privacy Regulations</a>
+                <span class="text-stone-850">|</span>
+                <a href="#" class="hover:text-emerald-400 tracking-widest uppercase transition">Tactical License Terms</a>
+            </div>
         </div>
     </footer>
 
