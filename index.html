@@ -440,9 +440,9 @@
                             The gold standard for residential backup battery loops. Massive power peak rating.
                         </p>
                     </div>
-                    <a href="https://signaturesolar.com/eg4-18kpv-all-in-one-hybrid-inverter/?ref=placeholder_ozark_prepper" target="_blank" class="text-center w-full block border border-stone-800 hover:border-emerald-500/50 hover:bg-emerald-950/20 text-stone-300 hover:text-emerald-400 py-2.5 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all duration-300">
-                        VIEW HARDWARE
-                    </a>
+                    <button onclick="openHardwareModal('EG4 18kPV Hybrid Inverter')" class="text-center w-full block border border-emerald-500/30 hover:border-emerald-500 bg-emerald-950/20 text-emerald-400 hover:bg-emerald-500 hover:text-stone-950 py-2.5 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all duration-300">
+                        LOCK IN DISCOUNT
+                    </button>
                 </div>
 
                 <!-- Solar Item 2: Battery -->
@@ -462,9 +462,9 @@
                             Premium lithium chemistry modules with built-in high-performance BMS boards.
                         </p>
                     </div>
-                    <a href="https://signaturesolar.com/eg4-lifepower4-lithium-battery-48v-100ah/?ref=placeholder_ozark_prepper" target="_blank" class="text-center w-full block border border-stone-800 hover:border-emerald-500/50 hover:bg-emerald-950/20 text-stone-300 hover:text-emerald-400 py-2.5 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all duration-300">
-                        VIEW HARDWARE
-                    </a>
+                    <button onclick="openHardwareModal('EG4 LifePower4 Lithium Battery')" class="text-center w-full block border border-emerald-500/30 hover:border-emerald-500 bg-emerald-950/20 text-emerald-400 hover:bg-emerald-500 hover:text-stone-950 py-2.5 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all duration-300">
+                        LOCK IN DISCOUNT
+                    </button>
                 </div>
 
                 <!-- Solar Item 3: Complete Kit -->
@@ -484,9 +484,9 @@
                             Everything needed for true homestead deployment: panels, brackets, inverters, and fuses.
                         </p>
                     </div>
-                    <a href="https://signaturesolar.com/complete-off-grid-solar-kits/?ref=placeholder_ozark_prepper" target="_blank" class="text-center w-full block border border-stone-800 hover:border-emerald-500/50 hover:bg-emerald-950/20 text-stone-300 hover:text-emerald-400 py-2.5 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all duration-300">
-                        VIEW HARDWARE
-                    </a>
+                    <button onclick="openHardwareModal('Complete Off-Grid 6kW Solar Kit')" class="text-center w-full block border border-emerald-500/30 hover:border-emerald-500 bg-emerald-950/20 text-emerald-400 hover:bg-emerald-500 hover:text-stone-950 py-2.5 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all duration-300">
+                        LOCK IN DISCOUNT
+                    </button>
                 </div>
 
                 <!-- Solar Item 4: Portable Panel -->
@@ -506,9 +506,9 @@
                             Perfect for mobile applications, emergency bug-out setups, or rapid deploy communication.
                         </p>
                     </div>
-                    <a href="https://signaturesolar.com/portable-folding-solar-panels/?ref=placeholder_ozark_prepper" target="_blank" class="text-center w-full block border border-stone-800 hover:border-emerald-500/50 hover:bg-emerald-950/20 text-stone-300 hover:text-emerald-400 py-2.5 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all duration-300">
-                        VIEW HARDWARE
-                    </a>
+                    <button onclick="openHardwareModal('EG4 200W Folding Solar Panel')" class="text-center w-full block border border-emerald-500/30 hover:border-emerald-500 bg-emerald-950/20 text-emerald-400 hover:bg-emerald-500 hover:text-stone-950 py-2.5 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all duration-300">
+                        LOCK IN DISCOUNT
+                    </button>
                 </div>
             </div>
         </section>
@@ -563,7 +563,7 @@
             <div class="absolute inset-0 bg-stone-950/20 crt-overlay"></div>
             <div class="relative z-10 space-y-4">
                 <span class="mono-text text-[10px] font-black text-emerald-400 tracking-widest block">EMERGENCY COMMUNICATOR</span>
-                <h2 class="serif-title text-3xl text-stone-200 font-extrabold tracking-wide">JOIN THE WILDERNESS RADAR</h2>
+                <h2 class="serif-title text-3xl text-stone-200 font-extrabold tracking-wide animate-pulse">JOIN THE WILDERNESS RADAR</h2>
                 <p class="text-stone-400 text-xs max-w-lg mx-auto leading-relaxed">
                     Subscribe to receive immediate, zero-budget survival manuals, off-grid updates, and premium Signature Solar discount codes as they drop.
                 </p>
@@ -579,6 +579,40 @@
 
     </main>
 
+    <!-- TACTICAL HARDWARE DISCOUNT LEAD CAPTURE MODAL -->
+    <div id="hardwareModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md hidden transition-all duration-300">
+        <div class="bg-[#0e0c0b] border-2 border-emerald-500/60 p-6 md:p-8 rounded-2xl max-w-md w-full relative space-y-5 shadow-2xl shadow-emerald-950/20 crt-overlay">
+            
+            <button onclick="closeHardwareModal()" class="absolute top-4 right-4 text-stone-500 hover:text-emerald-400 font-bold transition text-lg">&times;</button>
+            
+            <div class="space-y-2 text-center">
+                <span class="mono-text text-[9px] font-black text-emerald-400 tracking-widest block uppercase">COMMUNITY GEAR NEGOTIATOR</span>
+                <h3 id="modalTitle" class="serif-title text-xl md:text-2xl text-stone-100 font-black tracking-wide">LOCK IN DISCOUNTS</h3>
+                <div class="h-[1px] w-12 bg-emerald-500 mx-auto mt-1"></div>
+            </div>
+
+            <p class="text-stone-400 text-xs text-center leading-relaxed">
+                We are currently establishing our partner channel and wholesale bulk discounts for the <span id="modalProductName" class="text-emerald-400 font-bold">selected hardware</span>.
+            </p>
+            <p class="text-stone-300 text-xs text-center font-semibold leading-relaxed">
+                Join the hardware alert list below to secure your discount codes, inventory updates, and buying priority as soon as our official portal activation clears.
+            </p>
+
+            <form action="https://formspree.io/f/{your_id}" method="POST" class="space-y-3 pt-2">
+                <input type="hidden" id="modalProductInput" name="requested_product" value="">
+                <input type="email" name="email" placeholder="Enter secure contact email" required 
+                    class="w-full bg-black border border-stone-800 rounded-lg px-4 py-3 text-stone-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 text-xs font-semibold uppercase tracking-wider text-center">
+                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-stone-950 font-black py-3 rounded-lg text-xs uppercase tracking-widest transition duration-300 shadow-md glow-emerald">
+                    SECURE MY DISCOUNT
+                </button>
+            </form>
+            
+            <p class="text-[9px] text-stone-600 text-center font-semibold uppercase tracking-wide">
+                🔐 PRIVACY COMPLIANT • ZERO SPAM • DIRECT INTEL
+            </p>
+        </div>
+    </div>
+
     <!-- Footer with custom styling -->
     <footer class="border-t border-stone-850 bg-stone-950 py-16 text-center text-[10px] text-stone-500 space-y-4 relative overflow-hidden">
         <div class="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-emerald-900 via-amber-800 to-emerald-900 animate-pulse"></div>
@@ -592,6 +626,31 @@
             </div>
         </div>
     </footer>
+
+    <!-- Interactive JS Routines -->
+    <script>
+        const modal = document.getElementById('hardwareModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalProductName = document.getElementById('modalProductName');
+        const modalProductInput = document.getElementById('modalProductInput');
+
+        function openHardwareModal(productName) {
+            modalProductName.innerText = productName;
+            modalProductInput.value = productName;
+            modal.classList.remove('hidden');
+        }
+
+        function closeHardwareModal() {
+            modal.classList.add('hidden');
+        }
+
+        // Close on background click
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeHardwareModal();
+            }
+        });
+    </script>
 
 </body>
 </html>
