@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ozark Prepper - Self-Reliance & Tactical Homesteading</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Inter:wght@300;400;600;700&display=swap');
+        .serif-title {
+            font-family: 'Cinzel', serif;
+        }
+        .sans-body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-stone-900 text-stone-100 sans-body min-h-screen">
+
+    <!-- Hero Header -->
+    <header class="border-b border-stone-800 bg-stone-950 py-12 px-6 text-center">
+        <h1 class="serif-title text-4xl md:text-6xl text-emerald-500 tracking-wide mb-3 font-extrabold">OZARK PREPPER</h1>
+        <p class="text-stone-400 max-w-xl mx-auto text-sm md:text-base uppercase tracking-widest font-semibold">Practical Self-Reliance • Survival Field Manuals • Off-Grid Solar</p>
+    </header>
+
+    <!-- Main Content Grid -->
+    <main class="max-w-6xl mx-auto px-6 py-12 space-y-16">
+
+        <!-- Newsletter Sign-up / Lead Magnet -->
+        <section class="bg-stone-950 border border-stone-800 p-8 rounded-lg text-center max-w-3xl mx-auto space-y-4">
+            <h2 class="serif-title text-2xl text-stone-200">JOIN THE WEEKLY PREP</h2>
+            <p class="text-stone-400 text-sm max-w-lg mx-auto">Get exclusive, zero-budget survival strategies, emergency water filter hacks, and solar backup wiring plans delivered straight to your inbox.</p>
+            <form action="https://formspree.io/f/{your_id}" method="POST" class="flex flex-col sm:flex-row gap-2 max-w-md mx-auto pt-2">
+                <input type="email" name="email" placeholder="Enter your email address" required 
+                    class="bg-stone-900 border border-stone-700 rounded px-4 py-2 text-stone-200 flex-grow focus:outline-none focus:ring-1 focus:ring-emerald-500 text-sm">
+                <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-6 py-2 rounded text-sm tracking-wider uppercase transition">Subscribe</button>
+            </form>
+        </section>
+
+        <!-- Digital Store / Field Manuals -->
+        <section class="space-y-8">
+            <div class="text-center">
+                <h2 class="serif-title text-3xl text-emerald-400 font-bold">DIGITAL FIELD MANUALS</h2>
+                <div class="h-1 w-20 bg-emerald-500 mx-auto mt-2"></div>
+                <p class="text-stone-400 text-sm mt-3">Rugged, detailed, zero-jargon manuals packed with step-by-step schematics.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Product 1: Water Filter -->
+                <div class="bg-stone-950 border border-stone-800 rounded-lg p-6 flex flex-col justify-between space-y-6">
+                    <div>
+                        <div class="bg-stone-900 py-6 text-center border-b border-stone-800 rounded-t mb-4">
+                            <span class="serif-title text-sm tracking-widest uppercase text-stone-400">Field Manual 01</span>
+                            <h3 class="serif-title text-xl text-stone-200 font-bold mt-2">DIY 5-GALLON WATER FILTER</h3>
+                        </div>
+                        <ul class="text-stone-400 text-xs space-y-2 pt-2">
+                            <li class="flex items-start"><span class="text-emerald-500 mr-2">✔</span> Multi-stage bio-sand system blueprints</li>
+                            <li class="flex items-start"><span class="text-emerald-500 mr-2">✔</span> High-efficiency activated charcoal recipe</li>
+                            <li class="flex items-start"><span class="text-emerald-500 mr-2">✔</span> Silt/debris separation pre-filters</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-bold text-emerald-400 text-center mb-4">$4.99</div>
+                        <a href="https://buy.stripe.com/test_5kQ4gzbohgtnahX0YFeUU00" target="_blank" class="block w-full text-center bg-emerald-600 hover:bg-emerald-700 text-stone-100 font-semibold py-2 rounded text-xs uppercase tracking-wider transition">Buy PDF + EPUB</a>
+                    </div>
+                </div>
+
+                <!-- Product 2: Egg Preservation -->
+                <div class="bg-stone-950 border border-stone-800 rounded-lg p-6 flex flex-col justify-between space-y-6">
+                    <div>
+                        <div class="bg-stone-900 py-6 text-center border-b border-stone-800 rounded-t mb-4">
+                            <span class="serif-title text-sm tracking-widest uppercase text-stone-400">Field Manual 02</span>
+                            <h3 class="serif-title text-xl text-stone-200 font-bold mt-2">EGG PRESERVATION SECRETS</h3>
+                        </div>
+                        <ul class="text-stone-400 text-xs space-y-2 pt-2">
+                            <li class="flex items-start"><span class="text-emerald-500 mr-2">✔</span> Water glassing (sodium silicate) method</li>
+                            <li class="flex items-start"><span class="text-emerald-500 mr-2">✔</span> 12-month shelf-life verification guidelines</li>
+                            <li class="flex items-start"><span class="text-emerald-500 mr-2">✔</span> Testing methods for egg freshness</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-bold text-emerald-400 text-center mb-4">$4.99</div>
+                        <a href="https://buy.stripe.com/test_28E28reAt2Cxcq59vbeUU01" target="_blank" class="block w-full text-center bg-emerald-600 hover:bg-emerald-700 text-stone-100 font-semibold py-2 rounded text-xs uppercase tracking-wider transition">Buy PDF + EPUB</a>
+                    </div>
+                </div>
+
+                <!-- Product 3: Bundle -->
+                <div class="bg-stone-950 border-2 border-emerald-500 rounded-lg p-6 flex flex-col justify-between space-y-6 relative">
+                    <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-emerald-500 text-stone-950 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">BEST VALUE</div>
+                    <div>
+                        <div class="bg-stone-900 py-6 text-center border-b border-stone-800 rounded-t mb-4">
+                            <span class="serif-title text-sm tracking-widest uppercase text-emerald-400">THE ULTIMATE BUNDLE</span>
+                            <h3 class="serif-title text-xl text-stone-200 font-bold mt-2">PREPPER'S STARTER PACK</h3>
+                        </div>
+                        <ul class="text-stone-400 text-xs space-y-2 pt-2">
+                            <li class="flex items-start"><span class="text-emerald-500 mr-2">✔</span> DIY 5-Gallon Water Filter Manual</li>
+                            <li class="flex items-start"><span class="text-emerald-500 mr-2">✔</span> Egg Preservation Secrets Manual</li>
+                            <li class="flex items-start"><span class="text-emerald-500 mr-2">✔</span> Includes bonus high-res printable wiring diagrams</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-bold text-emerald-400 text-center mb-4">$7.99</div>
+                        <a href="https://buy.stripe.com/test_3cIeVd2RLfpj3TzdLreUU02" target="_blank" class="block w-full text-center bg-emerald-500 hover:bg-emerald-600 text-stone-950 font-extrabold py-2 rounded text-xs uppercase tracking-wider transition">Get The Bundle</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Signature Solar Affiliate Recommendations -->
+        <section class="space-y-8">
+            <div class="text-center">
+                <h2 class="serif-title text-3xl text-emerald-400 font-bold">OFF-GRID SOLAR POWER RECOMMENDATIONS</h2>
+                <div class="h-1 w-20 bg-emerald-500 mx-auto mt-2"></div>
+                <p class="text-stone-400 text-sm mt-3">We partner with Signature Solar to deliver reliable backup power hardware for emergency situations.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Solar Item 1: Inverter -->
+                <div class="bg-stone-950 border border-stone-800 rounded p-5 flex flex-col justify-between space-y-4">
+                    <div>
+                        <h4 class="serif-title text-stone-200 text-base font-bold">EG4 18kPV Hybrid Inverter</h4>
+                        <p class="text-stone-400 text-[11px] mt-2 leading-relaxed">The ultimate 18,000W surge split-phase off-grid smart inverter.</p>
+                    </div>
+                    <a href="https://signaturesolar.com/eg4-18kpv-all-in-one-hybrid-inverter/?ref=placeholder_ozark_prepper" target="_blank" class="text-center border border-stone-700 hover:border-emerald-500 text-stone-300 hover:text-emerald-400 py-2 rounded text-[11px] uppercase tracking-wider transition">View Product</a>
+                </div>
+
+                <!-- Solar Item 2: Battery -->
+                <div class="bg-stone-950 border border-stone-800 rounded p-5 flex flex-col justify-between space-y-4">
+                    <div>
+                        <h4 class="serif-title text-stone-200 text-base font-bold">EG4 LifePower4 Battery</h4>
+                        <p class="text-stone-400 text-[11px] mt-2 leading-relaxed">48V 100AH LiFePO4 cabinet module. Massive life cycle count.</p>
+                    </div>
+                    <a href="https://signaturesolar.com/eg4-lifepower4-lithium-battery-48v-100ah/?ref=placeholder_ozark_prepper" target="_blank" class="text-center border border-stone-700 hover:border-emerald-500 text-stone-300 hover:text-emerald-400 py-2 rounded text-[11px] uppercase tracking-wider transition">View Product</a>
+                </div>
+
+                <!-- Solar Item 3: Complete Kit -->
+                <div class="bg-stone-950 border border-stone-800 rounded p-5 flex flex-col justify-between space-y-4">
+                    <div>
+                        <h4 class="serif-title text-stone-200 text-base font-bold">Complete Off-Grid 6kW Kit</h4>
+                        <p class="text-stone-400 text-[11px] mt-2 leading-relaxed">Everything needed: inverters, batteries, solar panels, and wiring.</p>
+                    </div>
+                    <a href="https://signaturesolar.com/complete-off-grid-solar-kits/?ref=placeholder_ozark_prepper" target="_blank" class="text-center border border-stone-700 hover:border-emerald-500 text-stone-300 hover:text-emerald-400 py-2 rounded text-[11px] uppercase tracking-wider transition">View Product</a>
+                </div>
+
+                <!-- Solar Item 4: Portable Panel -->
+                <div class="bg-stone-950 border border-stone-800 rounded p-5 flex flex-col justify-between space-y-4">
+                    <div>
+                        <h4 class="serif-title text-stone-200 text-base font-bold">200W Portable Solar Panel</h4>
+                        <p class="text-stone-400 text-[11px] mt-2 leading-relaxed">Highly portable monocrystalline folding panels for emergency tactical use.</p>
+                    </div>
+                    <a href="https://signaturesolar.com/portable-folding-solar-panels/?ref=placeholder_ozark_prepper" target="_blank" class="text-center border border-stone-700 hover:border-emerald-500 text-stone-300 hover:text-emerald-400 py-2 rounded text-[11px] uppercase tracking-wider transition">View Product</a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-stone-800 bg-stone-950 py-12 text-center text-xs text-stone-500 space-y-3">
+        <p>© Ozark Prepper. All rights reserved. Self-reliance begins at home.</p>
+        <div class="flex justify-center space-x-4">
+            <a href="#" class="hover:text-emerald-400">Privacy Policy</a>
+            <span class="text-stone-700">|</span>
+            <a href="#" class="hover:text-emerald-400">Terms of Use</a>
+        </div>
+    </footer>
+
+</body>
+</html>
