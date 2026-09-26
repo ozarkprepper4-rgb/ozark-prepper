@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Haven OS - Destiny Control Center</title>
+    <style>
+        body { background: #0f172a; color: #f8fafc; font-family: monospace; padding: 20px; margin: 0; }
+        h1 { color: #38bdf8; }
+        .box { background: #1e293b; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #334155; }
+        button { background: #0284c7; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        button:hover { background: #0ea5e9; }
+    </style>
+</head>
+<body>
+    <h1>Haven OS - Destiny Control Center</h1>
+    <div class="box">
+        <h3>System Status: Online (24/7 Autonomous Loops Active)</h3>
+        <p>Iris Interface Agent & Destiny Core Intelligence operating normally.</p>
+    </div>
+    <div class="box">
+        <h3>Destiny Voice Output Test</h3>
+        <p>Click the button below to test speech synthesis:</p>
+        <button onclick="speakDestiny()">Test Voice</button>
+    </div>
+    <script>
+        function speakDestiny() {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance("Hello, I am Destiny. All systems are online and running autonomously.");
+                utterance.rate = 1.0;
+                utterance.pitch = 1.0;
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert('Speech synthesis not supported in this browser environment.');
+            }
+        }
+    </script>
+</body>
+</html>
