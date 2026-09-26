@@ -62287,3 +62287,11 @@ I need to run `mint: find /home/destiny/Obsidian -type d -name "agents" -exec ls
 ## Universal Visibility & Interface Priority
 - **Full Transparency:** Every action, agent task, revenue stream, and system process must be paired with a clear, real-time visual interface. 
 - **User Experience:** Interfaces must be instantly understandable at a glance, showing active status, glowing node paths, and live updates without requiring technical reading or manual checking.
+
+## Self inventory 2026-09-26 09:04
+- agents: /home/destiny/Obsidian/Victoria.md, /home/destiny/Obsidian/Ozark Apothecary/Clara.md, /home/destiny/Obsidian/NW Investments/Denise.md, /home/destiny/Obsidian/Destiny/Provident.md, /home/destiny/Obsidian/Destiny/Sentinel.md, /home/destiny/Obsidian/Destiny/Sustenance.md, /home/destiny/Obsidian/Destiny/Victoria.md, /home/destiny/Obsidian/Destiny/Bridget.md, /home/destiny/Obsidian/Destiny/Chloe.md, /home/destiny/Obsidian/Destiny/Comms.md, /home/destiny/Obsidian/Destiny/Audrey.md
+- ebooks: ebook_the_simplest_backup_solar_setup_for_beginners.md, ebook_starting_preps_on_a_tight_budget.md, ebook_how_to_preserve_eggs_for_a_year_without_refrigeration.md, ebook_the_arkansas_woodsmans_field_manual.md, ebook_diy_5-gallon_water_filter.md
+- landings: landing_diy_5-gallon_water_filter.html, landing_the_simplest_backup_solar_setup_for_beginners.html, landing_how_to_preserve_eggs_for_a_year_without_refrigeration.html, landing_starting_preps_on_a_tight_budget.html
+
+## Desktop Shortcut Directive
+- **Instant Access:** Destiny's UI and infrastructure agents must automatically create and place a desktop shortcut for the live dashboard directly on the user's desktop screen as soon as it is rendered.
