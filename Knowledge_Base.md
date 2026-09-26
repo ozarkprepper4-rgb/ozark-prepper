@@ -62295,3 +62295,221 @@ I need to run `mint: find /home/destiny/Obsidian -type d -name "agents" -exec ls
 
 ## Desktop Shortcut Directive
 - **Instant Access:** Destiny's UI and infrastructure agents must automatically create and place a desktop shortcut for the live dashboard directly on the user's desktop screen as soon as it is rendered.
+
+## Self inventory 2026-09-26 09:06
+- agents: /home/destiny/Obsidian/Victoria.md, /home/destiny/Obsidian/Ozark Apothecary/Clara.md, /home/destiny/Obsidian/NW Investments/Denise.md, /home/destiny/Obsidian/Destiny/Provident.md, /home/destiny/Obsidian/Destiny/Sentinel.md, /home/destiny/Obsidian/Destiny/Sustenance.md, /home/destiny/Obsidian/Destiny/Victoria.md, /home/destiny/Obsidian/Destiny/Bridget.md, /home/destiny/Obsidian/Destiny/Chloe.md, /home/destiny/Obsidian/Destiny/Comms.md, /home/destiny/Obsidian/Destiny/Audrey.md
+- ebooks: ebook_the_simplest_backup_solar_setup_for_beginners.md, ebook_starting_preps_on_a_tight_budget.md, ebook_how_to_preserve_eggs_for_a_year_without_refrigeration.md, ebook_the_arkansas_woodsmans_field_manual.md, ebook_diy_5-gallon_water_filter.md
+- landings: landing_diy_5-gallon_water_filter.html, landing_the_simplest_backup_solar_setup_for_beginners.html, landing_how_to_preserve_eggs_for_a_year_without_refrigeration.html, landing_starting_preps_on_a_tight_budget.html
+
+## Self inventory 2026-09-26 09:08
+- agents: /home/destiny/Obsidian/Victoria.md, /home/destiny/Obsidian/Ozark Apothecary/Clara.md, /home/destiny/Obsidian/NW Investments/Denise.md, /home/destiny/Obsidian/Destiny/Provident.md, /home/destiny/Obsidian/Destiny/Sentinel.md, /home/destiny/Obsidian/Destiny/Sustenance.md, /home/destiny/Obsidian/Destiny/Victoria.md, /home/destiny/Obsidian/Destiny/Bridget.md, /home/destiny/Obsidian/Destiny/Chloe.md, /home/destiny/Obsidian/Destiny/Comms.md, /home/destiny/Obsidian/Destiny/Audrey.md
+- ebooks: ebook_the_simplest_backup_solar_setup_for_beginners.md, ebook_starting_preps_on_a_tight_budget.md, ebook_how_to_preserve_eggs_for_a_year_without_refrigeration.md, ebook_the_arkansas_woodsmans_field_manual.md, ebook_diy_5-gallon_water_filter.md
+- landings: landing_diy_5-gallon_water_filter.html, landing_the_simplest_backup_solar_setup_for_beginners.html, landing_how_to_preserve_eggs_for_a_year_without_refrigeration.html, landing_starting_preps_on_a_tight_budget.html
+
+## Self inventory 2026-09-26 09:10
+- agents: /home/destiny/Obsidian/Victoria.md, /home/destiny/Obsidian/Ozark Apothecary/Clara.md, /home/destiny/Obsidian/NW Investments/Denise.md, /home/destiny/Obsidian/Destiny/Provident.md, /home/destiny/Obsidian/Destiny/Sentinel.md, /home/destiny/Obsidian/Destiny/Sustenance.md, /home/destiny/Obsidian/Destiny/Victoria.md, /home/destiny/Obsidian/Destiny/Bridget.md, /home/destiny/Obsidian/Destiny/Chloe.md, /home/destiny/Obsidian/Destiny/Comms.md, /home/destiny/Obsidian/Destiny/Audrey.md
+- ebooks: ebook_the_simplest_backup_solar_setup_for_beginners.md, ebook_starting_preps_on_a_tight_budget.md, ebook_how_to_preserve_eggs_for_a_year_without_refrigeration.md, ebook_the_arkansas_woodsmans_field_manual.md, ebook_diy_5-gallon_water_filter.md
+- landings: landing_diy_5-gallon_water_filter.html, landing_the_simplest_backup_solar_setup_for_beginners.html, landing_how_to_preserve_eggs_for_a_year_without_refrigeration.html, landing_starting_preps_on_a_tight_budget.html
+
+## Self inventory 2026-09-26 09:12
+- agents: /home/destiny/Obsidian/Victoria.md, /home/destiny/Obsidian/Ozark Apothecary/Clara.md, /home/destiny/Obsidian/NW Investments/Denise.md, /home/destiny/Obsidian/Destiny/Provident.md, /home/destiny/Obsidian/Destiny/Sentinel.md, /home/destiny/Obsidian/Destiny/Sustenance.md, /home/destiny/Obsidian/Destiny/Victoria.md, /home/destiny/Obsidian/Destiny/Bridget.md, /home/destiny/Obsidian/Destiny/Chloe.md, /home/destiny/Obsidian/Destiny/Comms.md, /home/destiny/Obsidian/Destiny/Audrey.md
+- ebooks: ebook_the_simplest_backup_solar_setup_for_beginners.md, ebook_starting_preps_on_a_tight_budget.md, ebook_how_to_preserve_eggs_for_a_year_without_refrigeration.md, ebook_the_arkansas_woodsmans_field_manual.md, ebook_diy_5-gallon_water_filter.md
+- landings: landing_diy_5-gallon_water_filter.html, landing_the_simplest_backup_solar_setup_for_beginners.html, landing_how_to_preserve_eggs_for_a_year_without_refrigeration.html, landing_starting_preps_on_a_tight_budget.html
+
+## Self inventory 2026-09-26 09:14
+- agents: /home/destiny/Obsidian/Victoria.md, /home/destiny/Obsidian/Ozark Apothecary/Clara.md, /home/destiny/Obsidian/NW Investments/Denise.md, /home/destiny/Obsidian/Destiny/Provident.md, /home/destiny/Obsidian/Destiny/Sentinel.md, /home/destiny/Obsidian/Destiny/Sustenance.md, /home/destiny/Obsidian/Destiny/Victoria.md, /home/destiny/Obsidian/Destiny/Bridget.md, /home/destiny/Obsidian/Destiny/Chloe.md, /home/destiny/Obsidian/Destiny/Comms.md, /home/destiny/Obsidian/Destiny/Audrey.md
+- ebooks: ebook_the_simplest_backup_solar_setup_for_beginners.md, ebook_starting_preps_on_a_tight_budget.md, ebook_how_to_preserve_eggs_for_a_year_without_refrigeration.md, ebook_the_arkansas_woodsmans_field_manual.md, ebook_diy_5-gallon_water_filter.md
+- landings: landing_diy_5-gallon_water_filter.html, landing_the_simplest_backup_solar_setup_for_beginners.html, landing_how_to_preserve_eggs_for_a_year_without_refrigeration.html, landing_starting_preps_on_a_tight_budget.html
+
+## Self inventory 2026-09-26 09:15
+- agents: /home/destiny/Obsidian/Victoria.md, /home/destiny/Obsidian/Ozark Apothecary/Clara.md, /home/destiny/Obsidian/NW Investments/Denise.md, /home/destiny/Obsidian/Destiny/Provident.md, /home/destiny/Obsidian/Destiny/Sentinel.md, /home/destiny/Obsidian/Destiny/Sustenance.md, /home/destiny/Obsidian/Destiny/Victoria.md, /home/destiny/Obsidian/Destiny/Bridget.md, /home/destiny/Obsidian/Destiny/Chloe.md, /home/destiny/Obsidian/Destiny/Comms.md, /home/destiny/Obsidian/Destiny/Audrey.md
+- ebooks: ebook_the_simplest_backup_solar_setup_for_beginners.md, ebook_starting_preps_on_a_tight_budget.md, ebook_how_to_preserve_eggs_for_a_year_without_refrigeration.md, ebook_the_arkansas_woodsmans_field_manual.md, ebook_diy_5-gallon_water_filter.md
+- landings: landing_diy_5-gallon_water_filter.html, landing_the_simplest_backup_solar_setup_for_beginners.html, landing_how_to_preserve_eggs_for_a_year_without_refrigeration.html, landing_starting_preps_on_a_tight_budget.html
+
+## Self inventory 2026-09-26 09:16
+- agents: /home/destiny/Obsidian/Victoria.md, /home/destiny/Obsidian/Ozark Apothecary/Clara.md, /home/destiny/Obsidian/NW Investments/Denise.md, /home/destiny/Obsidian/Destiny/Provident.md, /home/destiny/Obsidian/Destiny/Sentinel.md, /home/destiny/Obsidian/Destiny/Sustenance.md, /home/destiny/Obsidian/Destiny/Victoria.md, /home/destiny/Obsidian/Destiny/Bridget.md, /home/destiny/Obsidian/Destiny/Chloe.md, /home/destiny/Obsidian/Destiny/Comms.md, /home/destiny/Obsidian/Destiny/Audrey.md
+- ebooks: ebook_the_simplest_backup_solar_setup_for_beginners.md, ebook_starting_preps_on_a_tight_budget.md, ebook_how_to_preserve_eggs_for_a_year_without_refrigeration.md, ebook_the_arkansas_woodsmans_field_manual.md, ebook_diy_5-gallon_water_filter.md
+- landings: landing_diy_5-gallon_water_filter.html, landing_the_simplest_backup_solar_setup_for_beginners.html, landing_how_to_preserve_eggs_for_a_year_without_refrigeration.html, landing_starting_preps_on_a_tight_budget.html
+
+## Self inventory 2026-09-26 09:18
+- agents: /home/destiny/Obsidian/Victoria.md, /home/destiny/Obsidian/Ozark Apothecary/Clara.md, /home/destiny/Obsidian/NW Investments/Denise.md, /home/destiny/Obsidian/Destiny/Provident.md, /home/destiny/Obsidian/Destiny/Sentinel.md, /home/destiny/Obsidian/Destiny/Sustenance.md, /home/destiny/Obsidian/Destiny/Victoria.md, /home/destiny/Obsidian/Destiny/Bridget.md, /home/destiny/Obsidian/Destiny/Chloe.md, /home/destiny/Obsidian/Destiny/Comms.md, /home/destiny/Obsidian/Destiny/Audrey.md
+- ebooks: ebook_the_simplest_backup_solar_setup_for_beginners.md, ebook_starting_preps_on_a_tight_budget.md, ebook_how_to_preserve_eggs_for_a_year_without_refrigeration.md, ebook_the_arkansas_woodsmans_field_manual.md, ebook_diy_5-gallon_water_filter.md
+- landings: landing_diy_5-gallon_water_filter.html, landing_the_simplest_backup_solar_setup_for_beginners.html, landing_how_to_preserve_eggs_for_a_year_without_refrigeration.html, landing_starting_preps_on_a_tight_budget.html
+
+## Self inventory 2026-09-26 09:20
+- agents: /home/destiny/Obsidian/Victoria.md, /home/destiny/Obsidian/Ozark Apothecary/Clara.md, /home/destiny/Obsidian/NW Investments/Denise.md, /home/destiny/Obsidian/Destiny/Provident.md, /home/destiny/Obsidian/Destiny/Sentinel.md, /home/destiny/Obsidian/Destiny/Sustenance.md, /home/destiny/Obsidian/Destiny/Victoria.md, /home/destiny/Obsidian/Destiny/Bridget.md, /home/destiny/Obsidian/Destiny/Chloe.md, /home/destiny/Obsidian/Destiny/Comms.md, /home/destiny/Obsidian/Destiny/Audrey.md
+- ebooks: ebook_the_simplest_backup_solar_setup_for_beginners.md, ebook_starting_preps_on_a_tight_budget.md, ebook_how_to_preserve_eggs_for_a_year_without_refrigeration.md, ebook_the_arkansas_woodsmans_field_manual.md, ebook_diy_5-gallon_water_filter.md
+- landings: landing_diy_5-gallon_water_filter.html, landing_the_simplest_backup_solar_setup_for_beginners.html, landing_how_to_preserve_eggs_for_a_year_without_refrigeration.html, landing_starting_preps_on_a_tight_budget.html
+
+## Self inventory 2026-09-26 09:22
+- agents: /home/destiny/Obsidian/Victoria.md, /home/destiny/Obsidian/Ozark Apothecary/Clara.md, /home/destiny/Obsidian/NW Investments/Denise.md, /home/destiny/Obsidian/Destiny/Provident.md, /home/destiny/Obsidian/Destiny/Sentinel.md, /home/destiny/Obsidian/Destiny/Sustenance.md, /home/destiny/Obsidian/Destiny/Victoria.md, /home/destiny/Obsidian/Destiny/Bridget.md, /home/destiny/Obsidian/Destiny/Chloe.md, /home/destiny/Obsidian/Destiny/Comms.md, /home/destiny/Obsidian/Destiny/Audrey.md
+- ebooks: ebook_the_simplest_backup_solar_setup_for_beginners.md, ebook_starting_preps_on_a_tight_budget.md, ebook_how_to_preserve_eggs_for_a_year_without_refrigeration.md, ebook_the_arkansas_woodsmans_field_manual.md, ebook_diy_5-gallon_water_filter.md
+- landings: landing_diy_5-gallon_water_filter.html, landing_the_simplest_backup_solar_setup_for_beginners.html, landing_how_to_preserve_eggs_for_a_year_without_refrigeration.html, landing_starting_preps_on_a_tight_budget.html
+
+## Self inventory 2026-09-26 09:24
+- agents: /home/destiny/Obsidian/Victoria.md, /home/destiny/Obsidian/Ozark Apothecary/Clara.md, /home/destiny/Obsidian/NW Investments/Denise.md, /home/destiny/Obsidian/Destiny/Provident.md, /home/destiny/Obsidian/Destiny/Sentinel.md, /home/destiny/Obsidian/Destiny/Sustenance.md, /home/destiny/Obsidian/Destiny/Victoria.md, /home/destiny/Obsidian/Destiny/Bridget.md, /home/destiny/Obsidian/Destiny/Chloe.md, /home/destiny/Obsidian/Destiny/Comms.md, /home/destiny/Obsidian/Destiny/Audrey.md
+- ebooks: ebook_the_simplest_backup_solar_setup_for_beginners.md, ebook_starting_preps_on_a_tight_budget.md, ebook_how_to_preserve_eggs_for_a_year_without_refrigeration.md, ebook_the_arkansas_woodsmans_field_manual.md, ebook_diy_5-gallon_water_filter.md
+- landings: landing_diy_5-gallon_water_filter.html, landing_the_simplest_backup_solar_setup_for_beginners.html, landing_how_to_preserve_eggs_for_a_year_without_refrigeration.html, landing_starting_preps_on_a_tight_budget.html
+
+## Self inventory 2026-09-26 09:26
+- agents: /home/destiny/Obsidian/Victoria.md, /home/destiny/Obsidian/Ozark Apothecary/Clara.md, /home/destiny/Obsidian/NW Investments/Denise.md, /home/destiny/Obsidian/Destiny/Provident.md, /home/destiny/Obsidian/Destiny/Sentinel.md, /home/destiny/Obsidian/Destiny/Sustenance.md, /home/destiny/Obsidian/Destiny/Victoria.md, /home/destiny/Obsidian/Destiny/Bridget.md, /home/destiny/Obsidian/Destiny/Chloe.md, /home/destiny/Obsidian/Destiny/Comms.md, /home/destiny/Obsidian/Destiny/Audrey.md
+- ebooks: ebook_the_simplest_backup_solar_setup_for_beginners.md, ebook_starting_preps_on_a_tight_budget.md, ebook_how_to_preserve_eggs_for_a_year_without_refrigeration.md, ebook_the_arkansas_woodsmans_field_manual.md, ebook_diy_5-gallon_water_filter.md
+- landings: landing_diy_5-gallon_water_filter.html, landing_the_simplest_backup_solar_setup_for_beginners.html, landing_how_to_preserve_eggs_for_a_year_without_refrigeration.html, landing_starting_preps_on_a_tight_budget.html
+
+## Self inventory 2026-09-26 09:28
+- agents: /home/destiny/Obsidian/Victoria.md, /home/destiny/Obsidian/Ozark Apothecary/Clara.md, /home/destiny/Obsidian/NW Investments/Denise.md, /home/destiny/Obsidian/Destiny/Provident.md, /home/destiny/Obsidian/Destiny/Sentinel.md, /home/destiny/Obsidian/Destiny/Sustenance.md, /home/destiny/Obsidian/Destiny/Victoria.md, /home/destiny/Obsidian/Destiny/Bridget.md, /home/destiny/Obsidian/Destiny/Chloe.md, /home/destiny/Obsidian/Destiny/Comms.md, /home/destiny/Obsidian/Destiny/Audrey.md
+- ebooks: ebook_the_simplest_backup_solar_setup_for_beginners.md, ebook_starting_preps_on_a_tight_budget.md, ebook_how_to_preserve_eggs_for_a_year_without_refrigeration.md, ebook_the_arkansas_woodsmans_field_manual.md, ebook_diy_5-gallon_water_filter.md
+- landings: landing_diy_5-gallon_water_filter.html, landing_the_simplest_backup_solar_setup_for_beginners.html, landing_how_to_preserve_eggs_for_a_year_without_refrigeration.html, landing_starting_preps_on_a_tight_budget.html
+
+## Self inventory 2026-09-26 09:30
+- agents: /home/destiny/Obsidian/Victoria.md, /home/destiny/Obsidian/Ozark Apothecary/Clara.md, /home/destiny/Obsidian/NW Investments/Denise.md, /home/destiny/Obsidian/Destiny/Provident.md, /home/destiny/Obsidian/Destiny/Sentinel.md, /home/destiny/Obsidian/Destiny/Sustenance.md, /home/destiny/Obsidian/Destiny/Victoria.md, /home/destiny/Obsidian/Destiny/Bridget.md, /home/destiny/Obsidian/Destiny/Chloe.md, /home/destiny/Obsidian/Destiny/Comms.md, /home/destiny/Obsidian/Destiny/Audrey.md
+- ebooks: ebook_the_simplest_backup_solar_setup_for_beginners.md, ebook_starting_preps_on_a_tight_budget.md, ebook_how_to_preserve_eggs_for_a_year_without_refrigeration.md, ebook_the_arkansas_woodsmans_field_manual.md, ebook_diy_5-gallon_water_filter.md
+- landings: landing_diy_5-gallon_water_filter.html, landing_the_simplest_backup_solar_setup_for_beginners.html, landing_how_to_preserve_eggs_for_a_year_without_refrigeration.html, landing_starting_preps_on_a_tight_budget.html
+
+## Self inventory 2026-09-26 09:30
+- agents: /home/destiny/Obsidian/Victoria.md, /home/destiny/Obsidian/Ozark Apothecary/Clara.md, /home/destiny/Obsidian/NW Investments/Denise.md, /home/destiny/Obsidian/Destiny/Provident.md, /home/destiny/Obsidian/Destiny/Sentinel.md, /home/destiny/Obsidian/Destiny/Sustenance.md, /home/destiny/Obsidian/Destiny/Victoria.md, /home/destiny/Obsidian/Destiny/Bridget.md, /home/destiny/Obsidian/Destiny/Chloe.md, /home/destiny/Obsidian/Destiny/Comms.md, /home/destiny/Obsidian/Destiny/Audrey.md
+- ebooks: ebook_the_simplest_backup_solar_setup_for_beginners.md, ebook_starting_preps_on_a_tight_budget.md, ebook_how_to_preserve_eggs_for_a_year_without_refrigeration.md, ebook_the_arkansas_woodsmans_field_manual.md, ebook_diy_5-gallon_water_filter.md
+- landings: landing_diy_5-gallon_water_filter.html, landing_the_simplest_backup_solar_setup_for_beginners.html, landing_how_to_preserve_eggs_for_a_year_without_refrigeration.html, landing_starting_preps_on_a_tight_budget.html
+
+## Self inventory 2026-09-26 09:32
+- agents: /home/destiny/Obsidian/Victoria.md, /home/destiny/Obsidian/Ozark Apothecary/Clara.md, /home/destiny/Obsidian/NW Investments/Denise.md, /home/destiny/Obsidian/Destiny/Provident.md, /home/destiny/Obsidian/Destiny/Sentinel.md, /home/destiny/Obsidian/Destiny/Sustenance.md, /home/destiny/Obsidian/Destiny/Victoria.md, /home/destiny/Obsidian/Destiny/Bridget.md, /home/destiny/Obsidian/Destiny/Chloe.md, /home/destiny/Obsidian/Destiny/Comms.md, /home/destiny/Obsidian/Destiny/Audrey.md
+- ebooks: ebook_the_simplest_backup_solar_setup_for_beginners.md, ebook_starting_preps_on_a_tight_budget.md, ebook_how_to_preserve_eggs_for_a_year_without_refrigeration.md, ebook_the_arkansas_woodsmans_field_manual.md, ebook_diy_5-gallon_water_filter.md
+- landings: landing_diy_5-gallon_water_filter.html, landing_the_simplest_backup_solar_setup_for_beginners.html, landing_how_to_preserve_eggs_for_a_year_without_refrigeration.html, landing_starting_preps_on_a_tight_budget.html
+
+## Self inventory 2026-09-26 09:34
+- agents: /home/destiny/Obsidian/Victoria.md, /home/destiny/Obsidian/Ozark Apothecary/Clara.md, /home/destiny/Obsidian/NW Investments/Denise.md, /home/destiny/Obsidian/Destiny/Provident.md, /home/destiny/Obsidian/Destiny/Sentinel.md, /home/destiny/Obsidian/Destiny/Sustenance.md, /home/destiny/Obsidian/Destiny/Victoria.md, /home/destiny/Obsidian/Destiny/Bridget.md, /home/destiny/Obsidian/Destiny/Chloe.md, /home/destiny/Obsidian/Destiny/Comms.md, /home/destiny/Obsidian/Destiny/Audrey.md
+- ebooks: ebook_the_simplest_backup_solar_setup_for_beginners.md, ebook_starting_preps_on_a_tight_budget.md, ebook_how_to_preserve_eggs_for_a_year_without_refrigeration.md, ebook_the_arkansas_woodsmans_field_manual.md, ebook_diy_5-gallon_water_filter.md
+- landings: landing_diy_5-gallon_water_filter.html, landing_the_simplest_backup_solar_setup_for_beginners.html, landing_how_to_preserve_eggs_for_a_year_without_refrigeration.html, landing_starting_preps_on_a_tight_budget.html
+
+## Self inventory 2026-09-26 09:36
+- agents: /home/destiny/Obsidian/Victoria.md, /home/destiny/Obsidian/Ozark Apothecary/Clara.md, /home/destiny/Obsidian/NW Investments/Denise.md, /home/destiny/Obsidian/Destiny/Provident.md, /home/destiny/Obsidian/Destiny/Sentinel.md, /home/destiny/Obsidian/Destiny/Sustenance.md, /home/destiny/Obsidian/Destiny/Victoria.md, /home/destiny/Obsidian/Destiny/Bridget.md, /home/destiny/Obsidian/Destiny/Chloe.md, /home/destiny/Obsidian/Destiny/Comms.md, /home/destiny/Obsidian/Destiny/Audrey.md
+- ebooks: ebook_the_simplest_backup_solar_setup_for_beginners.md, ebook_starting_preps_on_a_tight_budget.md, ebook_how_to_preserve_eggs_for_a_year_without_refrigeration.md, ebook_the_arkansas_woodsmans_field_manual.md, ebook_diy_5-gallon_water_filter.md
+- landings: landing_diy_5-gallon_water_filter.html, landing_the_simplest_backup_solar_setup_for_beginners.html, landing_how_to_preserve_eggs_for_a_year_without_refrigeration.html, landing_starting_preps_on_a_tight_budget.html
+
+## Self inventory 2026-09-26 09:38
+- agents: /home/destiny/Obsidian/Victoria.md, /home/destiny/Obsidian/Ozark Apothecary/Clara.md, /home/destiny/Obsidian/NW Investments/Denise.md, /home/destiny/Obsidian/Destiny/Provident.md, /home/destiny/Obsidian/Destiny/Sentinel.md, /home/destiny/Obsidian/Destiny/Sustenance.md, /home/destiny/Obsidian/Destiny/Victoria.md, /home/destiny/Obsidian/Destiny/Bridget.md, /home/destiny/Obsidian/Destiny/Chloe.md, /home/destiny/Obsidian/Destiny/Comms.md, /home/destiny/Obsidian/Destiny/Audrey.md
+- ebooks: ebook_the_simplest_backup_solar_setup_for_beginners.md, ebook_starting_preps_on_a_tight_budget.md, ebook_how_to_preserve_eggs_for_a_year_without_refrigeration.md, ebook_the_arkansas_woodsmans_field_manual.md, ebook_diy_5-gallon_water_filter.md
+- landings: landing_diy_5-gallon_water_filter.html, landing_the_simplest_backup_solar_setup_for_beginners.html, landing_how_to_preserve_eggs_for_a_year_without_refrigeration.html, landing_starting_preps_on_a_tight_budget.html
+
+## Self inventory 2026-09-26 09:40
+- agents: /home/destiny/Obsidian/Victoria.md, /home/destiny/Obsidian/Ozark Apothecary/Clara.md, /home/destiny/Obsidian/NW Investments/Denise.md, /home/destiny/Obsidian/Destiny/Provident.md, /home/destiny/Obsidian/Destiny/Sentinel.md, /home/destiny/Obsidian/Destiny/Sustenance.md, /home/destiny/Obsidian/Destiny/Victoria.md, /home/destiny/Obsidian/Destiny/Bridget.md, /home/destiny/Obsidian/Destiny/Chloe.md, /home/destiny/Obsidian/Destiny/Comms.md, /home/destiny/Obsidian/Destiny/Audrey.md
+- ebooks: ebook_the_simplest_backup_solar_setup_for_beginners.md, ebook_starting_preps_on_a_tight_budget.md, ebook_how_to_preserve_eggs_for_a_year_without_refrigeration.md, ebook_the_arkansas_woodsmans_field_manual.md, ebook_diy_5-gallon_water_filter.md
+- landings: landing_diy_5-gallon_water_filter.html, landing_the_simplest_backup_solar_setup_for_beginners.html, landing_how_to_preserve_eggs_for_a_year_without_refrigeration.html, landing_starting_preps_on_a_tight_budget.html
+
+## Self inventory 2026-09-26 09:42
+- agents: /home/destiny/Obsidian/Victoria.md, /home/destiny/Obsidian/Ozark Apothecary/Clara.md, /home/destiny/Obsidian/NW Investments/Denise.md, /home/destiny/Obsidian/Destiny/Provident.md, /home/destiny/Obsidian/Destiny/Sentinel.md, /home/destiny/Obsidian/Destiny/Sustenance.md, /home/destiny/Obsidian/Destiny/Victoria.md, /home/destiny/Obsidian/Destiny/Bridget.md, /home/destiny/Obsidian/Destiny/Chloe.md, /home/destiny/Obsidian/Destiny/Comms.md, /home/destiny/Obsidian/Destiny/Audrey.md
+- ebooks: ebook_the_simplest_backup_solar_setup_for_beginners.md, ebook_starting_preps_on_a_tight_budget.md, ebook_how_to_preserve_eggs_for_a_year_without_refrigeration.md, ebook_the_arkansas_woodsmans_field_manual.md, ebook_diy_5-gallon_water_filter.md
+- landings: landing_diy_5-gallon_water_filter.html, landing_the_simplest_backup_solar_setup_for_beginners.html, landing_how_to_preserve_eggs_for_a_year_without_refrigeration.html, landing_starting_preps_on_a_tight_budget.html
+
+## Self inventory 2026-09-26 09:44
+- agents: /home/destiny/Obsidian/Victoria.md, /home/destiny/Obsidian/Ozark Apothecary/Clara.md, /home/destiny/Obsidian/NW Investments/Denise.md, /home/destiny/Obsidian/Destiny/Provident.md, /home/destiny/Obsidian/Destiny/Sentinel.md, /home/destiny/Obsidian/Destiny/Sustenance.md, /home/destiny/Obsidian/Destiny/Victoria.md, /home/destiny/Obsidian/Destiny/Bridget.md, /home/destiny/Obsidian/Destiny/Chloe.md, /home/destiny/Obsidian/Destiny/Comms.md, /home/destiny/Obsidian/Destiny/Audrey.md
+- ebooks: ebook_the_simplest_backup_solar_setup_for_beginners.md, ebook_starting_preps_on_a_tight_budget.md, ebook_how_to_preserve_eggs_for_a_year_without_refrigeration.md, ebook_the_arkansas_woodsmans_field_manual.md, ebook_diy_5-gallon_water_filter.md
+- landings: landing_diy_5-gallon_water_filter.html, landing_the_simplest_backup_solar_setup_for_beginners.html, landing_how_to_preserve_eggs_for_a_year_without_refrigeration.html, landing_starting_preps_on_a_tight_budget.html
+
+## Self inventory 2026-09-26 09:45
+- agents: /home/destiny/Obsidian/Victoria.md, /home/destiny/Obsidian/Ozark Apothecary/Clara.md, /home/destiny/Obsidian/NW Investments/Denise.md, /home/destiny/Obsidian/Destiny/Provident.md, /home/destiny/Obsidian/Destiny/Sentinel.md, /home/destiny/Obsidian/Destiny/Sustenance.md, /home/destiny/Obsidian/Destiny/Victoria.md, /home/destiny/Obsidian/Destiny/Bridget.md, /home/destiny/Obsidian/Destiny/Chloe.md, /home/destiny/Obsidian/Destiny/Comms.md, /home/destiny/Obsidian/Destiny/Audrey.md
+- ebooks: ebook_the_simplest_backup_solar_setup_for_beginners.md, ebook_starting_preps_on_a_tight_budget.md, ebook_how_to_preserve_eggs_for_a_year_without_refrigeration.md, ebook_the_arkansas_woodsmans_field_manual.md, ebook_diy_5-gallon_water_filter.md
+- landings: landing_diy_5-gallon_water_filter.html, landing_the_simplest_backup_solar_setup_for_beginners.html, landing_how_to_preserve_eggs_for_a_year_without_refrigeration.html, landing_starting_preps_on_a_tight_budget.html
+
+## Self inventory 2026-09-26 09:46
+- agents: /home/destiny/Obsidian/Victoria.md, /home/destiny/Obsidian/Ozark Apothecary/Clara.md, /home/destiny/Obsidian/NW Investments/Denise.md, /home/destiny/Obsidian/Destiny/Provident.md, /home/destiny/Obsidian/Destiny/Sentinel.md, /home/destiny/Obsidian/Destiny/Sustenance.md, /home/destiny/Obsidian/Destiny/Victoria.md, /home/destiny/Obsidian/Destiny/Bridget.md, /home/destiny/Obsidian/Destiny/Chloe.md, /home/destiny/Obsidian/Destiny/Comms.md, /home/destiny/Obsidian/Destiny/Audrey.md
+- ebooks: ebook_the_simplest_backup_solar_setup_for_beginners.md, ebook_starting_preps_on_a_tight_budget.md, ebook_how_to_preserve_eggs_for_a_year_without_refrigeration.md, ebook_the_arkansas_woodsmans_field_manual.md, ebook_diy_5-gallon_water_filter.md
+- landings: landing_diy_5-gallon_water_filter.html, landing_the_simplest_backup_solar_setup_for_beginners.html, landing_how_to_preserve_eggs_for_a_year_without_refrigeration.html, landing_starting_preps_on_a_tight_budget.html
+
+## Self inventory 2026-09-26 09:48
+- agents: /home/destiny/Obsidian/Victoria.md, /home/destiny/Obsidian/Ozark Apothecary/Clara.md, /home/destiny/Obsidian/NW Investments/Denise.md, /home/destiny/Obsidian/Destiny/Provident.md, /home/destiny/Obsidian/Destiny/Sentinel.md, /home/destiny/Obsidian/Destiny/Sustenance.md, /home/destiny/Obsidian/Destiny/Victoria.md, /home/destiny/Obsidian/Destiny/Bridget.md, /home/destiny/Obsidian/Destiny/Chloe.md, /home/destiny/Obsidian/Destiny/Comms.md, /home/destiny/Obsidian/Destiny/Audrey.md
+- ebooks: ebook_the_simplest_backup_solar_setup_for_beginners.md, ebook_starting_preps_on_a_tight_budget.md, ebook_how_to_preserve_eggs_for_a_year_without_refrigeration.md, ebook_the_arkansas_woodsmans_field_manual.md, ebook_diy_5-gallon_water_filter.md
+- landings: landing_diy_5-gallon_water_filter.html, landing_the_simplest_backup_solar_setup_for_beginners.html, landing_how_to_preserve_eggs_for_a_year_without_refrigeration.html, landing_starting_preps_on_a_tight_budget.html
+
+## Self inventory 2026-09-26 09:50
+- agents: /home/destiny/Obsidian/Victoria.md, /home/destiny/Obsidian/Ozark Apothecary/Clara.md, /home/destiny/Obsidian/NW Investments/Denise.md, /home/destiny/Obsidian/Destiny/Provident.md, /home/destiny/Obsidian/Destiny/Sentinel.md, /home/destiny/Obsidian/Destiny/Sustenance.md, /home/destiny/Obsidian/Destiny/Victoria.md, /home/destiny/Obsidian/Destiny/Bridget.md, /home/destiny/Obsidian/Destiny/Chloe.md, /home/destiny/Obsidian/Destiny/Comms.md, /home/destiny/Obsidian/Destiny/Audrey.md
+- ebooks: ebook_the_simplest_backup_solar_setup_for_beginners.md, ebook_starting_preps_on_a_tight_budget.md, ebook_how_to_preserve_eggs_for_a_year_without_refrigeration.md, ebook_the_arkansas_woodsmans_field_manual.md, ebook_diy_5-gallon_water_filter.md
+- landings: landing_diy_5-gallon_water_filter.html, landing_the_simplest_backup_solar_setup_for_beginners.html, landing_how_to_preserve_eggs_for_a_year_without_refrigeration.html, landing_starting_preps_on_a_tight_budget.html
+
+## Self inventory 2026-09-26 09:52
+- agents: /home/destiny/Obsidian/Victoria.md, /home/destiny/Obsidian/Ozark Apothecary/Clara.md, /home/destiny/Obsidian/NW Investments/Denise.md, /home/destiny/Obsidian/Destiny/Provident.md, /home/destiny/Obsidian/Destiny/Sentinel.md, /home/destiny/Obsidian/Destiny/Sustenance.md, /home/destiny/Obsidian/Destiny/Victoria.md, /home/destiny/Obsidian/Destiny/Bridget.md, /home/destiny/Obsidian/Destiny/Chloe.md, /home/destiny/Obsidian/Destiny/Comms.md, /home/destiny/Obsidian/Destiny/Audrey.md
+- ebooks: ebook_the_simplest_backup_solar_setup_for_beginners.md, ebook_starting_preps_on_a_tight_budget.md, ebook_how_to_preserve_eggs_for_a_year_without_refrigeration.md, ebook_the_arkansas_woodsmans_field_manual.md, ebook_diy_5-gallon_water_filter.md
+- landings: landing_diy_5-gallon_water_filter.html, landing_the_simplest_backup_solar_setup_for_beginners.html, landing_how_to_preserve_eggs_for_a_year_without_refrigeration.html, landing_starting_preps_on_a_tight_budget.html
+
+## Self inventory 2026-09-26 09:54
+- agents: /home/destiny/Obsidian/Victoria.md, /home/destiny/Obsidian/Ozark Apothecary/Clara.md, /home/destiny/Obsidian/NW Investments/Denise.md, /home/destiny/Obsidian/Destiny/Provident.md, /home/destiny/Obsidian/Destiny/Sentinel.md, /home/destiny/Obsidian/Destiny/Sustenance.md, /home/destiny/Obsidian/Destiny/Victoria.md, /home/destiny/Obsidian/Destiny/Bridget.md, /home/destiny/Obsidian/Destiny/Chloe.md, /home/destiny/Obsidian/Destiny/Comms.md, /home/destiny/Obsidian/Destiny/Audrey.md
+- ebooks: ebook_the_simplest_backup_solar_setup_for_beginners.md, ebook_starting_preps_on_a_tight_budget.md, ebook_how_to_preserve_eggs_for_a_year_without_refrigeration.md, ebook_the_arkansas_woodsmans_field_manual.md, ebook_diy_5-gallon_water_filter.md
+- landings: landing_diy_5-gallon_water_filter.html, landing_the_simplest_backup_solar_setup_for_beginners.html, landing_how_to_preserve_eggs_for_a_year_without_refrigeration.html, landing_starting_preps_on_a_tight_budget.html
+
+## Self inventory 2026-09-26 09:56
+- agents: /home/destiny/Obsidian/Victoria.md, /home/destiny/Obsidian/Ozark Apothecary/Clara.md, /home/destiny/Obsidian/NW Investments/Denise.md, /home/destiny/Obsidian/Destiny/Provident.md, /home/destiny/Obsidian/Destiny/Sentinel.md, /home/destiny/Obsidian/Destiny/Sustenance.md, /home/destiny/Obsidian/Destiny/Victoria.md, /home/destiny/Obsidian/Destiny/Bridget.md, /home/destiny/Obsidian/Destiny/Chloe.md, /home/destiny/Obsidian/Destiny/Comms.md, /home/destiny/Obsidian/Destiny/Audrey.md
+- ebooks: ebook_the_simplest_backup_solar_setup_for_beginners.md, ebook_starting_preps_on_a_tight_budget.md, ebook_how_to_preserve_eggs_for_a_year_without_refrigeration.md, ebook_the_arkansas_woodsmans_field_manual.md, ebook_diy_5-gallon_water_filter.md
+- landings: landing_diy_5-gallon_water_filter.html, landing_the_simplest_backup_solar_setup_for_beginners.html, landing_how_to_preserve_eggs_for_a_year_without_refrigeration.html, landing_starting_preps_on_a_tight_budget.html
+
+## Self inventory 2026-09-26 09:58
+- agents: /home/destiny/Obsidian/Victoria.md, /home/destiny/Obsidian/Ozark Apothecary/Clara.md, /home/destiny/Obsidian/NW Investments/Denise.md, /home/destiny/Obsidian/Destiny/Provident.md, /home/destiny/Obsidian/Destiny/Sentinel.md, /home/destiny/Obsidian/Destiny/Sustenance.md, /home/destiny/Obsidian/Destiny/Victoria.md, /home/destiny/Obsidian/Destiny/Bridget.md, /home/destiny/Obsidian/Destiny/Chloe.md, /home/destiny/Obsidian/Destiny/Comms.md, /home/destiny/Obsidian/Destiny/Audrey.md
+- ebooks: ebook_the_simplest_backup_solar_setup_for_beginners.md, ebook_starting_preps_on_a_tight_budget.md, ebook_how_to_preserve_eggs_for_a_year_without_refrigeration.md, ebook_the_arkansas_woodsmans_field_manual.md, ebook_diy_5-gallon_water_filter.md
+- landings: landing_diy_5-gallon_water_filter.html, landing_the_simplest_backup_solar_setup_for_beginners.html, landing_how_to_preserve_eggs_for_a_year_without_refrigeration.html, landing_starting_preps_on_a_tight_budget.html
+
+## Self inventory 2026-09-26 10:00
+- agents: /home/destiny/Obsidian/Victoria.md, /home/destiny/Obsidian/Ozark Apothecary/Clara.md, /home/destiny/Obsidian/NW Investments/Denise.md, /home/destiny/Obsidian/Destiny/Provident.md, /home/destiny/Obsidian/Destiny/Sentinel.md, /home/destiny/Obsidian/Destiny/Sustenance.md, /home/destiny/Obsidian/Destiny/Victoria.md, /home/destiny/Obsidian/Destiny/Bridget.md, /home/destiny/Obsidian/Destiny/Chloe.md, /home/destiny/Obsidian/Destiny/Comms.md, /home/destiny/Obsidian/Destiny/Audrey.md
+- ebooks: ebook_the_simplest_backup_solar_setup_for_beginners.md, ebook_starting_preps_on_a_tight_budget.md, ebook_how_to_preserve_eggs_for_a_year_without_refrigeration.md, ebook_the_arkansas_woodsmans_field_manual.md, ebook_diy_5-gallon_water_filter.md
+- landings: landing_diy_5-gallon_water_filter.html, landing_the_simplest_backup_solar_setup_for_beginners.html, landing_how_to_preserve_eggs_for_a_year_without_refrigeration.html, landing_starting_preps_on_a_tight_budget.html
+
+## Self inventory 2026-09-26 10:00
+- agents: /home/destiny/Obsidian/Victoria.md, /home/destiny/Obsidian/Ozark Apothecary/Clara.md, /home/destiny/Obsidian/NW Investments/Denise.md, /home/destiny/Obsidian/Destiny/Provident.md, /home/destiny/Obsidian/Destiny/Sentinel.md, /home/destiny/Obsidian/Destiny/Sustenance.md, /home/destiny/Obsidian/Destiny/Victoria.md, /home/destiny/Obsidian/Destiny/Bridget.md, /home/destiny/Obsidian/Destiny/Chloe.md, /home/destiny/Obsidian/Destiny/Comms.md, /home/destiny/Obsidian/Destiny/Audrey.md
+- ebooks: ebook_the_simplest_backup_solar_setup_for_beginners.md, ebook_starting_preps_on_a_tight_budget.md, ebook_how_to_preserve_eggs_for_a_year_without_refrigeration.md, ebook_the_arkansas_woodsmans_field_manual.md, ebook_diy_5-gallon_water_filter.md
+- landings: landing_diy_5-gallon_water_filter.html, landing_the_simplest_backup_solar_setup_for_beginners.html, landing_how_to_preserve_eggs_for_a_year_without_refrigeration.html, landing_starting_preps_on_a_tight_budget.html
+
+## Self inventory 2026-09-26 10:02
+- agents: /home/destiny/Obsidian/Victoria.md, /home/destiny/Obsidian/Ozark Apothecary/Clara.md, /home/destiny/Obsidian/NW Investments/Denise.md, /home/destiny/Obsidian/Destiny/Provident.md, /home/destiny/Obsidian/Destiny/Sentinel.md, /home/destiny/Obsidian/Destiny/Sustenance.md, /home/destiny/Obsidian/Destiny/Victoria.md, /home/destiny/Obsidian/Destiny/Bridget.md, /home/destiny/Obsidian/Destiny/Chloe.md, /home/destiny/Obsidian/Destiny/Comms.md, /home/destiny/Obsidian/Destiny/Audrey.md
+- ebooks: ebook_the_simplest_backup_solar_setup_for_beginners.md, ebook_starting_preps_on_a_tight_budget.md, ebook_how_to_preserve_eggs_for_a_year_without_refrigeration.md, ebook_the_arkansas_woodsmans_field_manual.md, ebook_diy_5-gallon_water_filter.md
+- landings: landing_diy_5-gallon_water_filter.html, landing_the_simplest_backup_solar_setup_for_beginners.html, landing_how_to_preserve_eggs_for_a_year_without_refrigeration.html, landing_starting_preps_on_a_tight_budget.html
+
+## Self inventory 2026-09-26 10:04
+- agents: /home/destiny/Obsidian/Victoria.md, /home/destiny/Obsidian/Ozark Apothecary/Clara.md, /home/destiny/Obsidian/NW Investments/Denise.md, /home/destiny/Obsidian/Destiny/Provident.md, /home/destiny/Obsidian/Destiny/Sentinel.md, /home/destiny/Obsidian/Destiny/Sustenance.md, /home/destiny/Obsidian/Destiny/Victoria.md, /home/destiny/Obsidian/Destiny/Bridget.md, /home/destiny/Obsidian/Destiny/Chloe.md, /home/destiny/Obsidian/Destiny/Comms.md, /home/destiny/Obsidian/Destiny/Audrey.md
+- ebooks: ebook_the_simplest_backup_solar_setup_for_beginners.md, ebook_starting_preps_on_a_tight_budget.md, ebook_how_to_preserve_eggs_for_a_year_without_refrigeration.md, ebook_the_arkansas_woodsmans_field_manual.md, ebook_diy_5-gallon_water_filter.md
+- landings: landing_diy_5-gallon_water_filter.html, landing_the_simplest_backup_solar_setup_for_beginners.html, landing_how_to_preserve_eggs_for_a_year_without_refrigeration.html, landing_starting_preps_on_a_tight_budget.html
+
+## Self inventory 2026-09-26 10:06
+- agents: /home/destiny/Obsidian/Victoria.md, /home/destiny/Obsidian/Ozark Apothecary/Clara.md, /home/destiny/Obsidian/NW Investments/Denise.md, /home/destiny/Obsidian/Destiny/Provident.md, /home/destiny/Obsidian/Destiny/Sentinel.md, /home/destiny/Obsidian/Destiny/Sustenance.md, /home/destiny/Obsidian/Destiny/Victoria.md, /home/destiny/Obsidian/Destiny/Bridget.md, /home/destiny/Obsidian/Destiny/Chloe.md, /home/destiny/Obsidian/Destiny/Comms.md, /home/destiny/Obsidian/Destiny/Audrey.md
+- ebooks: ebook_the_simplest_backup_solar_setup_for_beginners.md, ebook_starting_preps_on_a_tight_budget.md, ebook_how_to_preserve_eggs_for_a_year_without_refrigeration.md, ebook_the_arkansas_woodsmans_field_manual.md, ebook_diy_5-gallon_water_filter.md
+- landings: landing_diy_5-gallon_water_filter.html, landing_the_simplest_backup_solar_setup_for_beginners.html, landing_how_to_preserve_eggs_for_a_year_without_refrigeration.html, landing_starting_preps_on_a_tight_budget.html
+
+## Self inventory 2026-09-26 10:08
+- agents: /home/destiny/Obsidian/Victoria.md, /home/destiny/Obsidian/Ozark Apothecary/Clara.md, /home/destiny/Obsidian/NW Investments/Denise.md, /home/destiny/Obsidian/Destiny/Provident.md, /home/destiny/Obsidian/Destiny/Sentinel.md, /home/destiny/Obsidian/Destiny/Sustenance.md, /home/destiny/Obsidian/Destiny/Victoria.md, /home/destiny/Obsidian/Destiny/Bridget.md, /home/destiny/Obsidian/Destiny/Chloe.md, /home/destiny/Obsidian/Destiny/Comms.md, /home/destiny/Obsidian/Destiny/Audrey.md
+- ebooks: ebook_the_simplest_backup_solar_setup_for_beginners.md, ebook_starting_preps_on_a_tight_budget.md, ebook_how_to_preserve_eggs_for_a_year_without_refrigeration.md, ebook_the_arkansas_woodsmans_field_manual.md, ebook_diy_5-gallon_water_filter.md
+- landings: landing_diy_5-gallon_water_filter.html, landing_the_simplest_backup_solar_setup_for_beginners.html, landing_how_to_preserve_eggs_for_a_year_without_refrigeration.html, landing_starting_preps_on_a_tight_budget.html
+
+## Self inventory 2026-09-26 10:10
+- agents: /home/destiny/Obsidian/Victoria.md, /home/destiny/Obsidian/Ozark Apothecary/Clara.md, /home/destiny/Obsidian/NW Investments/Denise.md, /home/destiny/Obsidian/Destiny/Provident.md, /home/destiny/Obsidian/Destiny/Sentinel.md, /home/destiny/Obsidian/Destiny/Sustenance.md, /home/destiny/Obsidian/Destiny/Victoria.md, /home/destiny/Obsidian/Destiny/Bridget.md, /home/destiny/Obsidian/Destiny/Chloe.md, /home/destiny/Obsidian/Destiny/Comms.md, /home/destiny/Obsidian/Destiny/Audrey.md
+- ebooks: ebook_the_simplest_backup_solar_setup_for_beginners.md, ebook_starting_preps_on_a_tight_budget.md, ebook_how_to_preserve_eggs_for_a_year_without_refrigeration.md, ebook_the_arkansas_woodsmans_field_manual.md, ebook_diy_5-gallon_water_filter.md
+- landings: landing_diy_5-gallon_water_filter.html, landing_the_simplest_backup_solar_setup_for_beginners.html, landing_how_to_preserve_eggs_for_a_year_without_refrigeration.html, landing_starting_preps_on_a_tight_budget.html
+
+## Self inventory 2026-09-26 10:12
+- agents: /home/destiny/Obsidian/Victoria.md, /home/destiny/Obsidian/Ozark Apothecary/Clara.md, /home/destiny/Obsidian/NW Investments/Denise.md, /home/destiny/Obsidian/Destiny/Provident.md, /home/destiny/Obsidian/Destiny/Sentinel.md, /home/destiny/Obsidian/Destiny/Sustenance.md, /home/destiny/Obsidian/Destiny/Victoria.md, /home/destiny/Obsidian/Destiny/Bridget.md, /home/destiny/Obsidian/Destiny/Chloe.md, /home/destiny/Obsidian/Destiny/Comms.md, /home/destiny/Obsidian/Destiny/Audrey.md
+- ebooks: ebook_the_simplest_backup_solar_setup_for_beginners.md, ebook_starting_preps_on_a_tight_budget.md, ebook_how_to_preserve_eggs_for_a_year_without_refrigeration.md, ebook_the_arkansas_woodsmans_field_manual.md, ebook_diy_5-gallon_water_filter.md
+- landings: landing_diy_5-gallon_water_filter.html, landing_the_simplest_backup_solar_setup_for_beginners.html, landing_how_to_preserve_eggs_for_a_year_without_refrigeration.html, landing_starting_preps_on_a_tight_budget.html
+
+## Self inventory 2026-09-26 10:14
+- agents: /home/destiny/Obsidian/Victoria.md, /home/destiny/Obsidian/Ozark Apothecary/Clara.md, /home/destiny/Obsidian/NW Investments/Denise.md, /home/destiny/Obsidian/Destiny/Provident.md, /home/destiny/Obsidian/Destiny/Sentinel.md, /home/destiny/Obsidian/Destiny/Sustenance.md, /home/destiny/Obsidian/Destiny/Victoria.md, /home/destiny/Obsidian/Destiny/Bridget.md, /home/destiny/Obsidian/Destiny/Chloe.md, /home/destiny/Obsidian/Destiny/Comms.md, /home/destiny/Obsidian/Destiny/Audrey.md
+- ebooks: ebook_the_simplest_backup_solar_setup_for_beginners.md, ebook_starting_preps_on_a_tight_budget.md, ebook_how_to_preserve_eggs_for_a_year_without_refrigeration.md, ebook_the_arkansas_woodsmans_field_manual.md, ebook_diy_5-gallon_water_filter.md
+- landings: landing_diy_5-gallon_water_filter.html, landing_the_simplest_backup_solar_setup_for_beginners.html, landing_how_to_preserve_eggs_for_a_year_without_refrigeration.html, landing_starting_preps_on_a_tight_budget.html
+
+## Self inventory 2026-09-26 10:15
+- agents: /home/destiny/Obsidian/Victoria.md, /home/destiny/Obsidian/Ozark Apothecary/Clara.md, /home/destiny/Obsidian/NW Investments/Denise.md, /home/destiny/Obsidian/Destiny/Provident.md, /home/destiny/Obsidian/Destiny/Sentinel.md, /home/destiny/Obsidian/Destiny/Sustenance.md, /home/destiny/Obsidian/Destiny/Victoria.md, /home/destiny/Obsidian/Destiny/Bridget.md, /home/destiny/Obsidian/Destiny/Chloe.md, /home/destiny/Obsidian/Destiny/Comms.md, /home/destiny/Obsidian/Destiny/Audrey.md
+- ebooks: ebook_the_simplest_backup_solar_setup_for_beginners.md, ebook_starting_preps_on_a_tight_budget.md, ebook_how_to_preserve_eggs_for_a_year_without_refrigeration.md, ebook_the_arkansas_woodsmans_field_manual.md, ebook_diy_5-gallon_water_filter.md
+- landings: landing_diy_5-gallon_water_filter.html, landing_the_simplest_backup_solar_setup_for_beginners.html, landing_how_to_preserve_eggs_for_a_year_without_refrigeration.html, landing_starting_preps_on_a_tight_budget.html
+
+## Self inventory 2026-09-26 10:16
+- agents: /home/destiny/Obsidian/Victoria.md, /home/destiny/Obsidian/Ozark Apothecary/Clara.md, /home/destiny/Obsidian/NW Investments/Denise.md, /home/destiny/Obsidian/Destiny/Provident.md, /home/destiny/Obsidian/Destiny/Sentinel.md, /home/destiny/Obsidian/Destiny/Sustenance.md, /home/destiny/Obsidian/Destiny/Victoria.md, /home/destiny/Obsidian/Destiny/Bridget.md, /home/destiny/Obsidian/Destiny/Chloe.md, /home/destiny/Obsidian/Destiny/Comms.md, /home/destiny/Obsidian/Destiny/Audrey.md
+- ebooks: ebook_the_simplest_backup_solar_setup_for_beginners.md, ebook_starting_preps_on_a_tight_budget.md, ebook_how_to_preserve_eggs_for_a_year_without_refrigeration.md, ebook_the_arkansas_woodsmans_field_manual.md, ebook_diy_5-gallon_water_filter.md
+- landings: landing_diy_5-gallon_water_filter.html, landing_the_simplest_backup_solar_setup_for_beginners.html, landing_how_to_preserve_eggs_for_a_year_without_refrigeration.html, landing_starting_preps_on_a_tight_budget.html
+
+## Self inventory 2026-09-26 10:18
+- agents: /home/destiny/Obsidian/Victoria.md, /home/destiny/Obsidian/Ozark Apothecary/Clara.md, /home/destiny/Obsidian/NW Investments/Denise.md, /home/destiny/Obsidian/Destiny/Provident.md, /home/destiny/Obsidian/Destiny/Sentinel.md, /home/destiny/Obsidian/Destiny/Sustenance.md, /home/destiny/Obsidian/Destiny/Victoria.md, /home/destiny/Obsidian/Destiny/Bridget.md, /home/destiny/Obsidian/Destiny/Chloe.md, /home/destiny/Obsidian/Destiny/Comms.md, /home/destiny/Obsidian/Destiny/Audrey.md
+- ebooks: ebook_the_simplest_backup_solar_setup_for_beginners.md, ebook_starting_preps_on_a_tight_budget.md, ebook_how_to_preserve_eggs_for_a_year_without_refrigeration.md, ebook_the_arkansas_woodsmans_field_manual.md, ebook_diy_5-gallon_water_filter.md
+- landings: landing_diy_5-gallon_water_filter.html, landing_the_simplest_backup_solar_setup_for_beginners.html, landing_how_to_preserve_eggs_for_a_year_without_refrigeration.html, landing_starting_preps_on_a_tight_budget.html
+
+## Self inventory 2026-09-26 10:20
+- agents: /home/destiny/Obsidian/Victoria.md, /home/destiny/Obsidian/Ozark Apothecary/Clara.md, /home/destiny/Obsidian/NW Investments/Denise.md, /home/destiny/Obsidian/Destiny/Provident.md, /home/destiny/Obsidian/Destiny/Sentinel.md, /home/destiny/Obsidian/Destiny/Sustenance.md, /home/destiny/Obsidian/Destiny/Victoria.md, /home/destiny/Obsidian/Destiny/Bridget.md, /home/destiny/Obsidian/Destiny/Chloe.md, /home/destiny/Obsidian/Destiny/Comms.md, /home/destiny/Obsidian/Destiny/Audrey.md
+- ebooks: ebook_the_simplest_backup_solar_setup_for_beginners.md, ebook_starting_preps_on_a_tight_budget.md, ebook_how_to_preserve_eggs_for_a_year_without_refrigeration.md, ebook_the_arkansas_woodsmans_field_manual.md, ebook_diy_5-gallon_water_filter.md
+- landings: landing_diy_5-gallon_water_filter.html, landing_the_simplest_backup_solar_setup_for_beginners.html, landing_how_to_preserve_eggs_for_a_year_without_refrigeration.html, landing_starting_preps_on_a_tight_budget.html
+
+## Autonomous Research Directive
+- **Self-Directed Research:** Destiny has full authority to independently conduct research, identify required tools, analyze market trends, and gather data without requiring external prompts or manual queries.
