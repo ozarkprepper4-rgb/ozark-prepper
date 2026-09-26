@@ -1,0 +1,52 @@
+from pathlib import Path
+from datetime import datetime, timezone
+import json, urllib.request
+
+OZ = Path("/home/destiny/Obsidian/Ozark Prepper")
+SA = OZ / "Sub-Agents"
+LOG = OZ / "Victoria_Operational_Log.md"
+TRACK = Path("/home/destiny/Obsidian/Destiny/Three_Brain_Architecture/.victoria_team_index.txt")
+AGENTS = [
+    ("Audrey", SA / "Audrey_Research", "Write a research brief for a new high quality Ozark Prepper ebook that would help a beginner. Include outline of 10 chapters and what makes it worth buying."),
+    ("Bridget", SA / "Bridget_Creative", "Write one faceless YouTube script, 60 to 90 seconds, that points people to an Ozark Prepper ebook. Hook first. Plain language."),
+    ("Chloe", SA / "Chloe_SEO", "Write SEO title, meta description, and tags for an Ozark Prepper ebook landing page so strangers can find it."),
+    ("Daphne", SA / "Daphne_Publishing", "Write the exact publishing steps to get one existing Ozark Prepper ebook sold on the website. No fake sales."),
+    ("Evelyn", SA / "Evelyn_Web", "Write homepage changes for the Ozark Prepper website so the 5 ebooks are easy to see and buy."),
+    ("Fiona", SA / "Fiona_Design", "Write a thumbnail and ebook cover brief: words on screen, picture, colors."),
+    ("Bella", OZ / "Bella", "Write a faceless video shot list and first YouTube description with a link placeholder to the ebook."),
+    ("Maggie", SA / "Maggie_Marketing", "Write 3 legal free promo posts: one Reddit, one Quora, one Facebook, each pointing to an Ozark Prepper ebook. No spam lies. No fake accounts talk."),
+    ("Hannah", SA / "Hannah_Community", "Write 5 short friendly replies Ozark Prepper can use on YouTube or Facebook comments. Helpful, not salesy."),
+]
+
+def _ask(prompt):
+    import time
+    lock = Path("/tmp/destiny_model_busy.lock")
+    for _ in range(60):
+        if not lock.exists():
+            break
+        time.sleep(2)
+    payload = {"model": "qwen2.5:14b", "prompt": prompt, "stream": False, "options": {"num_predict": 220, "temperature": 0.3}}
+    req = urllib.request.Request("http://127.0.0.1:11434/api/generate", data=json.dumps(payload).encode(), headers={"Content-Type": "application/json"})
+    with urllib.request.urlopen(req, timeout=300) as r:
+        return json.loads(r.read().decode()).get("response", "").strip()
+
+def run():
+    i = 0
+    if TRACK.exists():
+        try:
+            i = int(TRACK.read_text().strip())
+        except Exception:
+            i = 0
+    name, folder, job = AGENTS[i % len(AGENTS)]
+    folder.mkdir(parents=True, exist_ok=True)
+    stamp = datetime.now(timezone.utc).strftime("%Y-%m-%d_%H%M")
+    out = folder / (name.lower() + "_work_" + stamp + ".md")
+    body = _ask("You are " + name + " under Victoria, CEO of Ozark Prepper only. Your company sells prepper ebooks and must bring in money. " + job)
+    out.write_text("# " + name + " work " + stamp + "\n\n" + body + "\n", encoding="utf-8")
+    TRACK.write_text(str(i + 1))
+    old = LOG.read_text(encoding="utf-8") if LOG.exists() else "# Victoria Operational Log\n"
+    LOG.write_text(old + "\n## " + stamp + " UTC\n" + name + " wrote " + out.name + "\n", encoding="utf-8")
+    return "victoria team: " + name + " wrote " + out.name
+
+if __name__ == "__main__":
+    print(run())

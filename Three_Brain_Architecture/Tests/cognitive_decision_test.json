@@ -1,0 +1,20 @@
+{
+  "timestamp": "2026-08-27T01:35:41.097995+00:00",
+  "input": {
+    "high_risk_patterns": [
+      "High frequency failure: fail_task (2 recent)",
+      "High frequency failure: controlled_test_research (2 recent)"
+    ],
+    "adaptive_directives": [
+      "Increase verification and caution for research tasks."
+    ]
+  },
+  "decision": {
+    "research_tasks": {
+      "verification_required": true,
+      "caution_level": "increased"
+    }
+  },
+  "reason": "Increase verification and caution for research tasks.",
+  "result": "PASS"
+}

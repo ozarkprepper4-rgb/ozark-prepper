@@ -1,0 +1,165 @@
+from pathlib import Path
+import json
+import urllib.request
+
+VAULT = Path("/home/destiny/Obsidian")
+
+def _ollama(prompt):
+    payload = {
+        "model": "llama3.2:latest",
+        "prompt": prompt,
+        "stream": False,
+        "options": {
+            "num_predict": 120,
+            "temperature": 0.2
+        }
+    }
+
+    req = urllib.request.Request(
+        "http://127.0.0.1:11434/api/generate",
+        data=json.dumps(payload).encode(),
+        headers={"Content-Type": "application/json"}
+    )
+
+    with urllib.request.urlopen(req, timeout=90) as r:
+        return json.loads(r.read().decode()).get("response", "I'm here.").strip()
+
+
+def _is_casual(task):
+    text = task.strip().lower()
+
+    casual_phrases = (
+        "hello",
+        "hi",
+        "hey",
+        "good morning",
+        "good afternoon",
+        "good evening",
+        "how are you",
+        "how are things",
+        "how's it going",
+        "hows it going",
+        "what's up",
+        "whats up",
+    )
+
+    task_words = (
+        "obsidian",
+        "vault",
+        "remember",
+        "what do you know",
+        "project",
+        "video",
+        "youtube",
+        "research",
+        "search",
+        "file",
+        "note",
+        "task",
+        "run ",
+        "execute",
+        "build",
+        "fix",
+        "check ",
+        "look up",
+    )
+
+    return (
+        len(text) <= 180
+        and any(x in text for x in casual_phrases)
+        and not any(x in text for x in task_words)
+    )
+
+
+def _load_relevant_memory(task):
+    task_words = {
+        word.strip(".,!?").lower()
+        for word in task.split()
+        if len(word.strip(".,!?")) >= 4
+    }
+
+    priority_names = (
+        "Destiny.md",
+        "SOUL.md",
+        "Neil Wilcox.md",
+        "Knowledge_Base.md",
+    )
+
+    parts = []
+
+    for f in sorted(VAULT.rglob("*.md")):
+        try:
+            text = f.read_text(encoding="utf-8", errors="ignore")
+        except Exception:
+            continue
+
+        lower = text.lower()
+
+        score = sum(1 for word in task_words if word in lower)
+
+        # Prefer the Knowledge Base for concrete factual questions.
+        if f.name == "Knowledge_Base.md":
+            score += 5
+        elif f.name in priority_names:
+            score += 1
+
+        # Strongly prefer files whose filename is explicitly referenced.
+        filename_words = f.stem.lower().replace("_", " ").split()
+        score += sum(3 for word in filename_words if word in task_words)
+
+        if score > 0:
+            parts.append((score, f.name + ":\n" + text[:1800]))
+
+    parts.sort(key=lambda x: x[0], reverse=True)
+
+    return "\n\n".join(text for _, text in parts[:5])[:7000]
+
+
+def run(task):
+    if _is_casual(task):
+        prompt = f"""You are Destiny.
+
+The user is talking casually with you.
+
+Reply naturally in 1-3 short sentences.
+
+Rules:
+- Do not address the user by a personal name.
+- Do not mention stored memories, projects, videos, health, tools, system activity, or earlier conversations unless the user mentions them first.
+- Do not invent anything about the outside world, surroundings, city, weather, people, systems, tools, status, activity, or events.
+- Do not claim anything is running, online, working, updated, checked, monitored, completed, or observed unless real evidence is provided in this exact message.
+- Do not invent anything that happened earlier.
+- For a greeting, simply greet the user warmly and conversationally.
+- If asked how you are, answer only in a conversational sense, such as "I'm doing well" or "I'm here and ready to talk."
+- Keep the reply natural, warm, and short.
+
+USER:
+{task}
+
+DESTINY:
+"""
+        return _ollama(prompt)
+
+    memory = _load_relevant_memory(task)
+
+    prompt = f"""You are Destiny, the user's AI assistant.
+
+Use the relevant Obsidian memory below when it helps answer the current request.
+
+Important rules:
+- Stored memory is background knowledge, not proof that something happened recently.
+- Do not invent recent actions, completed work, conversations, videos watched, system checks, health events, or tool activity.
+- Speak directly to the user using you/your/we/our.
+- Do not address the user by name unless explicitly asked.
+- If the requested fact is not supported by the memory below, say you do not have enough verified information.
+
+RELEVANT OBSIDIAN MEMORY:
+{memory if memory else "No relevant stored memory found."}
+
+USER:
+{task}
+
+DESTINY:
+"""
+
+    return _ollama(prompt)

@@ -1,0 +1,258 @@
+#!/usr/bin/env python3
+import json
+import re
+import urllib.request
+from pathlib import Path
+from youtube_transcript_api import YouTubeTranscriptApi
+
+
+def extract_video_id(url_or_id):
+    if len(url_or_id) == 11 and "/" not in url_or_id:
+        return url_or_id
+    match = re.search(r'(?:v=|youtu\.be/|embed/)([A-Za-z0-9_-]{11})', url_or_id)
+    return match.group(1) if match else None
+
+
+def _format_timestamp(seconds):
+    seconds = int(seconds or 0)
+    hours, remainder = divmod(seconds, 3600)
+    minutes, seconds = divmod(remainder, 60)
+
+    if hours:
+        return f"{hours:02d}:{minutes:02d}:{seconds:02d}"
+    return f"{minutes:02d}:{seconds:02d}"
+
+
+def chunk_segments(segments, max_chars=6000):
+    """Split a complete transcript into timestamped chunks without losing segments."""
+    chunks = []
+    current = []
+    current_chars = 0
+
+    for segment in segments:
+        line = f'[{segment["timestamp"]}] {segment["text"]}'
+        line_size = len(line) + 1
+
+        if current and current_chars + line_size > max_chars:
+            chunks.append({
+                "start": current[0]["timestamp"],
+                "end": current[-1]["timestamp"],
+                "text": "\n".join(
+                    f'[{item["timestamp"]}] {item["text"]}'
+                    for item in current
+                )
+            })
+            current = []
+            current_chars = 0
+
+        current.append(segment)
+        current_chars += line_size
+
+    if current:
+        chunks.append({
+            "start": current[0]["timestamp"],
+            "end": current[-1]["timestamp"],
+            "text": "\n".join(
+                f'[{item["timestamp"]}] {item["text"]}'
+                for item in current
+            )
+        })
+
+    return chunks
+
+
+def analyze_chunk(chunk, chunk_number, total_chunks, model="qwen2.5:14b"):
+    """Analyze one transcript chunk at a time with the local Destiny model."""
+    prompt = f"""You are analyzing section {chunk_number} of {total_chunks} from a video.
+
+TIME RANGE: {chunk["start"]} to {chunk["end"]}
+
+TRANSCRIPT:
+{chunk["text"]}
+
+Analyze THIS ENTIRE SECTION carefully. Preserve the important details rather than giving a vague summary.
+
+Return:
+- Every major subject, technology, concept, or event discussed.
+- Important finer details, examples, predictions, capabilities, limitations, and consequences.
+- Any numbered/listed items introduced in this section.
+- Important connections to earlier or later ideas when the transcript indicates them.
+- Useful timestamps for significant topics.
+
+Do not invent information that is not present in this section.
+"""
+
+    payload = json.dumps({
+        "model": model,
+        "prompt": prompt,
+        "stream": False,
+        "options": {
+            "temperature": 0.1,
+            "num_predict": 1200
+        }
+    }).encode("utf-8")
+
+    request = urllib.request.Request(
+        "http://127.0.0.1:11434/api/generate",
+        data=payload,
+        headers={"Content-Type": "application/json"}
+    )
+
+    with urllib.request.urlopen(request, timeout=300) as response:
+        result = json.loads(response.read().decode("utf-8"))
+
+    return result.get("response", "").strip()
+
+
+def analyze_chunks(chunks, model="qwen2.5:14b", checkpoint_path=None):
+    """Analyze sequentially and save each completed chunk so interrupted jobs can resume."""
+    checkpoint = Path(checkpoint_path) if checkpoint_path else None
+    analyses = []
+
+    if checkpoint and checkpoint.exists():
+        try:
+            saved = json.loads(checkpoint.read_text(encoding="utf-8"))
+            if isinstance(saved, list):
+                analyses = saved
+        except Exception:
+            analyses = []
+
+    completed = {item.get("chunk") for item in analyses}
+
+    for index, chunk in enumerate(chunks, 1):
+        if index in completed:
+            print(f"CHUNK {index} ALREADY COMPLETE — RESUMING")
+            continue
+
+        print(f"ANALYZING CHUNK {index} OF {len(chunks)}")
+
+        try:
+            analysis = analyze_chunk(
+                chunk,
+                index,
+                len(chunks),
+                model=model
+            )
+        except Exception as exc:
+            raise RuntimeError(
+                f"Chunk {index} stopped safely. Completed chunks remain checkpointed. "
+                f"Resume after Ollama is healthy. Error: {exc}"
+            ) from exc
+
+        analyses.append({
+            "chunk": index,
+            "start": chunk["start"],
+            "end": chunk["end"],
+            "analysis": analysis
+        })
+
+        analyses.sort(key=lambda item: item["chunk"])
+
+        if checkpoint:
+            checkpoint.parent.mkdir(parents=True, exist_ok=True)
+            checkpoint.write_text(
+                json.dumps(analyses, indent=2),
+                encoding="utf-8"
+            )
+
+        print(f"CHUNK {index} SAVED")
+
+    return analyses
+
+
+def synthesize_video(analyses, model="qwen2.5:14b"):
+    """Combine all section analyses into one coherent whole-video understanding."""
+    combined = "\n\n".join(
+        f'=== SECTION {item["chunk"]} ({item["start"]} to {item["end"]}) ===\n{item["analysis"]}'
+        for item in analyses
+    )
+
+    prompt = f"""You are creating the final understanding of an entire video.
+
+Below are detailed analyses of EVERY section of the video, in chronological order.
+
+{combined}
+
+Build one coherent whole-video analysis from ALL sections.
+
+Requirements:
+- Identify the video's overall subject and purpose.
+- Preserve every major technology, subject, numbered item, concept, prediction, demonstration, and important example found across the sections.
+- If the video contains a numbered list, reconstruct the complete list in order.
+- Explain important relationships and themes that connect different parts of the video.
+- Preserve useful timestamps when available.
+- Include finer details that materially affect understanding.
+- Distinguish predictions/speculation from demonstrated or current capabilities when the section analyses make that distinction possible.
+- Do not focus only on the beginning or a few selected sections.
+- Do not invent material that is absent from the section analyses.
+"""
+
+    payload = json.dumps({
+        "model": model,
+        "prompt": prompt,
+        "stream": False,
+        "options": {
+            "temperature": 0.1,
+            "num_predict": 2500
+        }
+    }).encode("utf-8")
+
+    request = urllib.request.Request(
+        "http://127.0.0.1:11434/api/generate",
+        data=payload,
+        headers={"Content-Type": "application/json"}
+    )
+
+    with urllib.request.urlopen(request, timeout=900) as response:
+        result = json.loads(response.read().decode("utf-8"))
+
+    return result.get("response", "").strip()
+
+
+def watch_video(url_or_id, max_chars=None):
+    video_id = extract_video_id(url_or_id)
+    if not video_id:
+        return {"error": "Could not extract video ID"}
+
+    transcript = YouTubeTranscriptApi().fetch(video_id).to_raw_data()
+
+    segments = []
+    for entry in transcript:
+        text = entry.get("text", "").strip()
+        if not text:
+            continue
+
+        start = float(entry.get("start", 0))
+        segments.append({
+            "start": start,
+            "timestamp": _format_timestamp(start),
+            "text": text
+        })
+
+    full_text = " ".join(segment["text"] for segment in segments)
+    timestamped_text = "\n".join(
+        f'[{segment["timestamp"]}] {segment["text"]}'
+        for segment in segments
+    )
+
+    # max_chars remains supported for older callers, but None means
+    # return the complete transcript without silently throwing content away.
+    output_text = full_text if max_chars is None else full_text[:max_chars]
+
+    return {
+        "video_id": video_id,
+        "transcript_summary": output_text,
+        "full_transcript": full_text,
+        "timestamped_transcript": timestamped_text,
+        "segments": segments,
+        "full_length": len(full_text),
+        "segment_count": len(segments),
+        "chunks": chunk_segments(segments),
+        "chunk_count": len(chunk_segments(segments))
+    }
+
+
+if __name__ == "__main__":
+    import sys
+    q = sys.argv[1] if len(sys.argv) > 1 else "dQw4w9WgXcQ"
+    print(json.dumps(watch_video(q), indent=2))

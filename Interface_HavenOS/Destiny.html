@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>DESTINY</title>
+<style>
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:#000;color:#8fe4f2;font-family:Consolas,"Segoe UI",sans-serif}
+body{background:radial-gradient(circle at 50% 48%,#082028 0 16%,#000 58%)}
+.app{height:100%;display:grid;grid-template-rows:48px 1fr 56px}
+header,footer{display:flex;align-items:center;justify-content:space-between;padding:0 14px;color:#58e7ff;letter-spacing:.2em;font-size:12px;border-bottom:1px solid #133a44}
+footer{border:0;border-top:1px solid #133a44}
+.stage{position:relative;overflow:hidden}
+.ring{position:absolute;left:50%;top:48%;transform:translate(-50%,-50%);border-radius:50%;border:1px solid rgba(88,231,255,.32)}
+.a{width:520px;height:520px;border-width:2px;box-shadow:0 0 40px #0a4a55 inset}
+.b{width:390px;height:390px;border-style:double}
+.c{width:270px;height:270px;border-style:dashed}
+.d{width:160px;height:160px}
+.core{position:absolute;left:50%;top:48%;transform:translate(-50%,-50%);width:72px;height:72px;border-radius:50%;background:radial-gradient(circle,#f4ffff 0 18%,#3ad0e6 40%,#04181e 72%);box-shadow:0 0 22px #58e7ff}
+.core.talk{animation:pulse .65s infinite}
+@keyframes pulse{50%{box-shadow:0 0 46px #fff;transform:translate(-50%,-50%) scale(1.08)}}
+.tick{position:absolute;width:90px;height:90px;border:1px solid rgba(88,231,255,.35);border-radius:50%}
+.t1{left:8%;top:16%}.t2{left:10%;bottom:18%}.t3{right:8%;top:14%}.t4{right:9%;bottom:16%}
+.panel{position:absolute;width:200px;padding:10px;border:1px solid #1a4d58;background:#000c}
+.pL{left:16px;top:20px}.pR{right:16px;top:20px}
+.panel b{display:block;color:#e2c37a;font-size:10px;letter-spacing:.16em;margin-bottom:6px}
+.meter{height:6px;background:#102226;margin-top:8px}.meter>i{display:block;height:100%;width:16%;background:#58e7ff}
+#feed{position:absolute;left:22%;right:22%;bottom:6px;height:28%;overflow:auto}
+.msg{margin:6px 0;padding:8px 10px;max-width:80%}
+.neil{margin-left:auto;border:1px solid #e2c37a66}
+.des{border:1px solid #58e7ff55}
+.row{display:flex;gap:8px;width:100%}
+textarea{flex:1;min-height:38px;background:#06141a;color:#e8f6fa;border:1px solid #1c4d58;padding:8px;font:inherit;resize:none}
+button{background:transparent;color:#58e7ff;border:1px solid #58e7ff;padding:0 14px;letter-spacing:.12em}
+.ok{color:#6ee7b0}.bad{color:#e2a56a}
+</style>
+</head>
+<body>
+<div class="app">
+  <header><div>DESTINY</div><div id="link">LINKING…</div></header>
+  <div class="stage">
+    <div class="ring a"></div><div class="ring b"></div><div class="ring c"></div><div class="ring d"></div>
+    <div class="core" id="arc"></div>
+    <div class="tick t1"></div><div class="tick t2"></div><div class="tick t3"></div><div class="tick t4"></div>
+    <div class="panel pL"><b>STATUS</b>LOCAL<br><span id="clk"></span></div>
+    <div class="panel pR">
+      <b>RAM</b><span id="ram">--</span><div class="meter"><i id="rambar"></i></div>
+      <b style="margin-top:10px">GPU</b><span id="gpu">--</span><div class="meter"><i id="gpubar"></i></div>
+    </div>
+    <div id="feed"></div>
+  </div>
+  <footer>
+    <div class="row">
+      <textarea id="box" placeholder="Talk to Destiny"></textarea>
+      <button id="go">SEND</button>
+    </div>
+  </footer>
+</div>
+<script>
+const feed=document.getElementById('feed'), box=document.getElementById('box'), arc=document.getElementById('arc'), link=document.getElementById('link');
+function add(t,c){const d=document.createElement('div');d.className='msg '+c;d.textContent=t;feed.appendChild(d);feed.scrollTop=feed.scrollHeight}
+async function send(){
+  const t=box.value.trim(); if(!t) return;
+  add(t,'neil'); box.value=''; arc.classList.add('talk');
+  try{
+    const r=await fetch('http://127.0.0.1:8420/ask',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:t})});
+    const j=await r.json(); add(j.reply||'No reply','des'); link.textContent='ONLINE'; link.className='ok';
+  }catch(e){ add('No link to Destiny.','sys'); link.textContent='OFFLINE'; link.className='bad'; }
+  arc.classList.remove('talk');
+}
+document.getElementById('go').onclick=send;
+box.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send()}});
+setInterval(()=>document.getElementById('clk').textContent=new Date().toLocaleTimeString(),1000);
+async function stats(){
+  try{
+    const r=await fetch('http://127.0.0.1:8420/sys'); const j=await r.json();
+    document.getElementById('ram').textContent=j.ram||'--';
+    document.getElementById('gpu').textContent=j.gpu||'--';
+    document.getElementById('rambar').style.width=(j.ram_pct||16)+'%';
+    document.getElementById('gpubar').style.width=(j.gpu_pct||16)+'%';
+    link.textContent='ONLINE'; link.className='ok';
+  }catch(_){ link.textContent='OFFLINE'; link.className='bad'; }
+}
+stats(); setInterval(stats,5000);
+</script>
+</body>
+</html>

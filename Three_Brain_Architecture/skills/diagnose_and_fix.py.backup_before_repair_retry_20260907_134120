@@ -1,0 +1,44 @@
+from pathlib import Path
+import json
+import urllib.request
+import sys
+import ast
+
+sys.path.insert(0, '/home/destiny/Obsidian/Destiny/Three_Brain_Architecture/skills')
+import safe_self_edit
+
+def _ask_model(prompt):
+    payload = {"model": "qwen2.5:14b", "prompt": prompt, "stream": False, "options": {"num_predict": 600, "temperature": 0.1}}
+    req = urllib.request.Request("http://127.0.0.1:11434/api/generate", data=json.dumps(payload).encode(), headers={"Content-Type": "application/json"})
+    with urllib.request.urlopen(req, timeout=180) as r:
+        return json.loads(r.read().decode()).get("response", "").strip()
+
+def run(file_path, problem_description):
+    target = Path(file_path)
+    if not target.exists():
+        return {"status": "failed", "error": "File does not exist"}
+
+    code = target.read_text(encoding="utf-8")
+    prompt = "Here is a Python file:\n\n" + code + "\n\nProblem: " + problem_description + "\n\nIdentify the exact broken line or lines, copied exactly as they appear in the file. Respond in this exact format with no extra text:\nBROKEN:\n<exact broken line(s)>\nFIXED:\n<corrected line(s)>"
+    response = _ask_model(prompt)
+
+    if "BROKEN:" not in response or "FIXED:" not in response:
+        return {"status": "diagnosis_failed", "raw_response": response}
+
+    try:
+        broken = response.split("BROKEN:")[1].split("FIXED:")[0].strip()
+        fixed = response.split("FIXED:")[1].strip()
+    except Exception as e:
+        return {"status": "parse_failed", "error": str(e), "raw_response": response}
+
+    if broken not in code:
+        return {"status": "broken_text_not_found", "attempted": broken}
+
+    test_code = code.replace(broken, fixed, 1)
+    try:
+        ast.parse(test_code)
+    except SyntaxError as e:
+        return {"status": "fix_has_syntax_error", "error": str(e)}
+
+    result = safe_self_edit.edit(str(target), broken, fixed, reason="auto-diagnosed: " + problem_description)
+    return {"status": "applied" if result.get("status") == "success" else "failed", "details": result}

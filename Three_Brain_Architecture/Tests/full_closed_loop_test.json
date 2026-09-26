@@ -1,0 +1,53 @@
+{
+  "timestamp": "2026-08-27T01:46:23.575163+00:00",
+  "test": "full_closed_loop",
+  "stages": {
+    "ml_prediction": "PASS",
+    "adaptive_rules": "PASS",
+    "cognitive_directives": "PASS",
+    "dl_brain": "PASS",
+    "adaptive_behavior": "PASS",
+    "learning_recorder": "PASS"
+  },
+  "task": "Perform a controlled research task and verify the result before reporting success.",
+  "duration": 0.0005,
+  "dl_result": {
+    "timestamp": "2026-08-27T01:46:23.574397+00:00",
+    "brain": "DL_Brain",
+    "task": "Perform a controlled research task and verify the result before reporting success.",
+    "context": {
+      "ml_predictions": [
+        "High frequency failure: fail_task (2 recent)",
+        "High frequency failure: controlled_test_research (2 recent)"
+      ],
+      "adaptive_rules": [
+        "three_brain_test",
+        "cognitive_engine_events",
+        "ml_adaptation_controlled_test_research",
+        "ml_adaptation_fail_task"
+      ],
+      "cognitive_directives": [
+        "Increase verification of task completion before reporting success.",
+        "Increase verification and caution for research tasks."
+      ],
+      "verification_required": true,
+      "research_caution": "increased"
+    },
+    "status": "READY",
+    "reasoning": {
+      "received": true,
+      "context_loaded": true,
+      "task_type": "reasoning"
+    }
+  },
+  "learning_record": {
+    "timestamp": "2026-08-26T20:46:23.574942",
+    "task_type": "closed_loop_research_task",
+    "status": "success",
+    "duration": 0.0005,
+    "outcome": "Task processed with adaptive verification and caution directives.",
+    "notes": "{\"verification_required\": true, \"research_caution\": \"increased\", \"directive_count\": 2}"
+  },
+  "closed_loop": "ML \u2192 ADAPTIVE \u2192 COGNITIVE \u2192 DL \u2192 RESULT \u2192 LEARNING RECORDER",
+  "overall": "PASS"
+}

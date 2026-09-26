@@ -1,0 +1,61 @@
+#!/usr/bin/env python3
+
+import json
+from datetime import datetime, timezone
+from pathlib import Path
+
+BASE = Path("/home/destiny/Obsidian/Destiny/Three_Brain_Architecture")
+KNOWLEDGE = Path("/home/destiny/Obsidian/Destiny/Knowledge_Base.md")
+LOG = BASE / "Logs/knowledge_capture.json"
+
+
+def capture(task, result):
+    response = (
+        result.get("model_response")
+        or result.get("dl_result", {}).get("model_response", "")
+    )
+
+    if not response:
+        return False
+
+    # Only preserve completed, meaningful work.
+    if result.get("status") != "PASS":
+        return False
+
+    entry = f"""
+## {datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")}
+
+**Task:** {task}
+
+**Verified Result:**
+{response}
+
+**Source:** Destiny Three-Brain Architecture
+
+---
+"""
+
+    KNOWLEDGE.parent.mkdir(parents=True, exist_ok=True)
+
+    with KNOWLEDGE.open("a", encoding="utf-8") as f:
+        f.write(entry)
+
+    history = []
+
+    if LOG.exists():
+        try:
+            history = json.loads(LOG.read_text(encoding="utf-8"))
+        except Exception:
+            history = []
+
+    history.append({
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "task": task,
+        "status": "captured",
+        "knowledge_file": str(KNOWLEDGE)
+    })
+
+    LOG.parent.mkdir(parents=True, exist_ok=True)
+    LOG.write_text(json.dumps(history, indent=2), encoding="utf-8")
+
+    return True

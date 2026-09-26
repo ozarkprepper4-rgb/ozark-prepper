@@ -1,0 +1,22 @@
+import subprocess
+
+def run():
+    # Run self-checks every 15 minutes
+    subprocess.run(["python", "skills/self_run.py", "--interval", "900"])
+
+    # Delete empty notes
+    subprocess.run(["python", "vault_actions.py", "--action", "delete_empty_notes"])
+
+    # Use forge skill
+    subprocess.run(["python", "skills/forge_skill.py"])
+
+    # Save video lessons
+    subprocess.run(["python", "skills/save_video_lesson.py"])
+
+    # Check system status (example command, adjust as necessary)
+    output = subprocess.check_output(["nvidia-smi"])
+output = subprocess.check_output(["nvidia-smi"])
+print(output.decode())
+
+if __name__ == "__main__":
+    run()

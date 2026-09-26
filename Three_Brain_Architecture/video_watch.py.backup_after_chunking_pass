@@ -1,0 +1,108 @@
+#!/usr/bin/env python3
+import json
+import re
+from youtube_transcript_api import YouTubeTranscriptApi
+
+
+def extract_video_id(url_or_id):
+    if len(url_or_id) == 11 and "/" not in url_or_id:
+        return url_or_id
+    match = re.search(r'(?:v=|youtu\.be/|embed/)([A-Za-z0-9_-]{11})', url_or_id)
+    return match.group(1) if match else None
+
+
+def _format_timestamp(seconds):
+    seconds = int(seconds or 0)
+    hours, remainder = divmod(seconds, 3600)
+    minutes, seconds = divmod(remainder, 60)
+
+    if hours:
+        return f"{hours:02d}:{minutes:02d}:{seconds:02d}"
+    return f"{minutes:02d}:{seconds:02d}"
+
+
+def chunk_segments(segments, max_chars=12000):
+    """Split a complete transcript into timestamped chunks without losing segments."""
+    chunks = []
+    current = []
+    current_chars = 0
+
+    for segment in segments:
+        line = f'[{segment["timestamp"]}] {segment["text"]}'
+        line_size = len(line) + 1
+
+        if current and current_chars + line_size > max_chars:
+            chunks.append({
+                "start": current[0]["timestamp"],
+                "end": current[-1]["timestamp"],
+                "text": "\n".join(
+                    f'[{item["timestamp"]}] {item["text"]}'
+                    for item in current
+                )
+            })
+            current = []
+            current_chars = 0
+
+        current.append(segment)
+        current_chars += line_size
+
+    if current:
+        chunks.append({
+            "start": current[0]["timestamp"],
+            "end": current[-1]["timestamp"],
+            "text": "\n".join(
+                f'[{item["timestamp"]}] {item["text"]}'
+                for item in current
+            )
+        })
+
+    return chunks
+
+
+def watch_video(url_or_id, max_chars=None):
+    video_id = extract_video_id(url_or_id)
+    if not video_id:
+        return {"error": "Could not extract video ID"}
+
+    transcript = YouTubeTranscriptApi().fetch(video_id).to_raw_data()
+
+    segments = []
+    for entry in transcript:
+        text = entry.get("text", "").strip()
+        if not text:
+            continue
+
+        start = float(entry.get("start", 0))
+        segments.append({
+            "start": start,
+            "timestamp": _format_timestamp(start),
+            "text": text
+        })
+
+    full_text = " ".join(segment["text"] for segment in segments)
+    timestamped_text = "\n".join(
+        f'[{segment["timestamp"]}] {segment["text"]}'
+        for segment in segments
+    )
+
+    # max_chars remains supported for older callers, but None means
+    # return the complete transcript without silently throwing content away.
+    output_text = full_text if max_chars is None else full_text[:max_chars]
+
+    return {
+        "video_id": video_id,
+        "transcript_summary": output_text,
+        "full_transcript": full_text,
+        "timestamped_transcript": timestamped_text,
+        "segments": segments,
+        "full_length": len(full_text),
+        "segment_count": len(segments),
+        "chunks": chunk_segments(segments),
+        "chunk_count": len(chunk_segments(segments))
+    }
+
+
+if __name__ == "__main__":
+    import sys
+    q = sys.argv[1] if len(sys.argv) > 1 else "dQw4w9WgXcQ"
+    print(json.dumps(watch_video(q), indent=2))

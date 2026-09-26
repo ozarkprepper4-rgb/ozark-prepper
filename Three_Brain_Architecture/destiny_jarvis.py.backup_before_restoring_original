@@ -1,0 +1,1278 @@
+#!/usr/bin/env python3
+
+import sys
+import math
+import time
+import threading
+import subprocess
+from pathlib import Path
+from datetime import datetime
+import tkinter as tk
+from tkinter import scrolledtext, messagebox
+
+BASE = Path("/home/destiny/Obsidian/Destiny/Three_Brain_Architecture")
+VAULT = Path("/home/destiny/Obsidian/Destiny")
+VOICE_SCRIPT = BASE / "destiny_voice.py"
+
+sys.path.insert(0, str(BASE))
+
+from cognitive_orchestrator import run
+from destiny_ptt import run_once as run_voice_once
+
+
+# ============================================================
+# COLORS
+# ============================================================
+
+BG = "#050912"
+PANEL = "#08111f"
+PANEL_2 = "#0b1728"
+CYAN = "#00e5ff"
+CYAN_DIM = "#087f8c"
+BLUE = "#008cff"
+TEXT = "#d9f7ff"
+TEXT_DIM = "#6fa4b5"
+GREEN = "#38ff9c"
+YELLOW = "#ffd166"
+RED = "#ff4567"
+BORDER = "#123a52"
+
+
+class DestinyJarvis:
+
+    def __init__(self, root):
+        self.root = root
+        self.root.title("DESTINY — Cognitive Operations Interface")
+        self.root.geometry("1450x900")
+        self.root.minsize(1100, 700)
+        self.root.configure(bg=BG)
+
+        self.running_task = False
+        self.voice_process = None
+        self.core_phase = 0
+        self.task_count = 0
+
+        self.build_ui()
+        self.install_shortcuts()
+        self.refresh_system_status()
+        self.animate_core()
+        self.update_clock()
+
+        self.add_chat(
+            "DESTINY",
+            "Hello Neil. Destiny cognitive interface online."
+        )
+
+        self.log_activity("SYSTEM", "Jarvis interface initialized.")
+        self.log_activity("BRAIN", "Three-Brain connection ready.")
+
+    # ========================================================
+    # GUI BUILD
+    # ========================================================
+
+    def build_ui(self):
+
+        # ---------------- HEADER ----------------
+
+        header = tk.Frame(
+            self.root,
+            bg=BG,
+            height=95
+        )
+        header.pack(fill="x", padx=18, pady=(14, 5))
+
+        title_box = tk.Frame(header, bg=BG)
+        title_box.pack(side="left", fill="y")
+
+        tk.Label(
+            title_box,
+            text="D E S T I N Y",
+            font=("Arial", 28, "bold"),
+            fg=CYAN,
+            bg=BG
+        ).pack(anchor="w")
+
+        tk.Label(
+            title_box,
+            text="COGNITIVE OPERATIONS INTERFACE",
+            font=("Arial", 10, "bold"),
+            fg=TEXT_DIM,
+            bg=BG
+        ).pack(anchor="w", pady=(2, 0))
+
+        # Core animation
+        self.core_canvas = tk.Canvas(
+            header,
+            width=120,
+            height=80,
+            bg=BG,
+            highlightthickness=0
+        )
+        self.core_canvas.pack(side="left", padx=55)
+
+        # Header right
+        right_head = tk.Frame(header, bg=BG)
+        right_head.pack(side="right")
+
+        self.clock_label = tk.Label(
+            right_head,
+            text="",
+            font=("Consolas", 14, "bold"),
+            fg=TEXT,
+            bg=BG
+        )
+        self.clock_label.pack(anchor="e")
+
+        self.online_label = tk.Label(
+            right_head,
+            text="● SYSTEM ONLINE",
+            font=("Arial", 10, "bold"),
+            fg=GREEN,
+            bg=BG
+        )
+        self.online_label.pack(anchor="e", pady=(5, 0))
+
+        # ---------------- MAIN AREA ----------------
+
+        main = tk.Frame(self.root, bg=BG)
+        main.pack(
+            fill="both",
+            expand=True,
+            padx=18,
+            pady=8
+        )
+
+        main.grid_columnconfigure(0, weight=0)
+        main.grid_columnconfigure(1, weight=1)
+        main.grid_columnconfigure(2, weight=0)
+        main.grid_rowconfigure(0, weight=1)
+
+        # ====================================================
+        # LEFT SIDEBAR
+        # ====================================================
+
+        left = tk.Frame(
+            main,
+            bg=PANEL,
+            width=245,
+            highlightbackground=BORDER,
+            highlightthickness=1
+        )
+        left.grid(
+            row=0,
+            column=0,
+            sticky="nsew",
+            padx=(0, 10)
+        )
+        left.grid_propagate(False)
+
+        self.section_title(left, "THREE-BRAIN STATUS")
+
+        self.brain_labels = {}
+
+        self.add_brain_card(
+            left,
+            "Deep Learning",
+            "DL_Brain",
+            "DL"
+        )
+
+        self.add_brain_card(
+            left,
+            "Machine Learning",
+            "ML_Brain",
+            "ML"
+        )
+
+        self.add_brain_card(
+            left,
+            "Adaptive Brain",
+            "Adaptive_Brain",
+            "ADAPTIVE"
+        )
+
+        self.add_brain_card(
+            left,
+            "Cognitive Core",
+            "cognitive_orchestrator.py",
+            "CORE"
+        )
+
+        separator = tk.Frame(
+            left,
+            bg=BORDER,
+            height=1
+        )
+        separator.pack(fill="x", padx=15, pady=15)
+
+        self.task_label = tk.Label(
+            left,
+            text="TASKS PROCESSED: 0",
+            font=("Consolas", 10, "bold"),
+            fg=CYAN,
+            bg=PANEL
+        )
+        self.task_label.pack(pady=(0, 15))
+
+        self.side_button(
+            left,
+            "START VOICE",
+            self.start_voice,
+            GREEN
+        )
+
+        self.side_button(
+            left,
+            "STOP VOICE",
+            self.stop_voice,
+            RED
+        )
+
+        self.side_button(
+            left,
+            "REFRESH STATUS",
+            self.refresh_system_status,
+            CYAN
+        )
+
+        self.side_button(
+            left,
+            "COPY CHAT",
+            self.copy_all_chat,
+            CYAN
+        )
+
+        self.side_button(
+            left,
+            "CLEAR CHAT",
+            self.clear_chat,
+            YELLOW
+        )
+
+        self.side_button(
+            left,
+            "OPEN VAULT",
+            self.open_vault,
+            CYAN
+        )
+
+        # ====================================================
+        # CENTER COMMUNICATION
+        # ====================================================
+
+        center = tk.Frame(
+            main,
+            bg=PANEL,
+            highlightbackground=BORDER,
+            highlightthickness=1
+        )
+        center.grid(
+            row=0,
+            column=1,
+            sticky="nsew",
+            padx=5
+        )
+
+        center.grid_rowconfigure(1, weight=1)
+        center.grid_columnconfigure(0, weight=1)
+
+        tk.Label(
+            center,
+            text="LIVE COMMUNICATION",
+            bg=PANEL,
+            fg=CYAN,
+            font=("Arial", 10, "bold"),
+            anchor="w"
+        ).grid(
+            row=0,
+            column=0,
+            sticky="ew",
+            padx=15,
+            pady=(14, 10)
+        )
+
+        self.chat = scrolledtext.ScrolledText(
+            center,
+            wrap=tk.WORD,
+            bg="#060d17",
+            fg=TEXT,
+            insertbackground=CYAN,
+            selectbackground=CYAN_DIM,
+            font=("Arial", 12),
+            relief="flat",
+            padx=18,
+            pady=16
+        )
+
+        self.chat.grid(
+            row=1,
+            column=0,
+            sticky="nsew",
+            padx=12,
+            pady=(0, 8)
+        )
+
+        self.chat.configure(state="disabled")
+
+        # status row
+        status_frame = tk.Frame(center, bg=PANEL)
+        status_frame.grid(
+            row=2,
+            column=0,
+            sticky="ew",
+            padx=12,
+            pady=(0, 6)
+        )
+
+        tk.Label(
+            status_frame,
+            text="STATUS:",
+            font=("Consolas", 10, "bold"),
+            fg=TEXT_DIM,
+            bg=PANEL
+        ).pack(side="left")
+
+        self.status_label = tk.Label(
+            status_frame,
+            text="READY",
+            font=("Consolas", 10, "bold"),
+            fg=GREEN,
+            bg=PANEL
+        )
+        self.status_label.pack(side="left", padx=(7, 0))
+
+        # Input
+        input_frame = tk.Frame(
+            center,
+            bg=PANEL_2,
+            highlightbackground=BORDER,
+            highlightthickness=1
+        )
+        input_frame.grid(
+            row=3,
+            column=0,
+            sticky="ew",
+            padx=12,
+            pady=(2, 12)
+        )
+
+        input_frame.grid_columnconfigure(0, weight=1)
+
+        self.entry = tk.Text(
+            input_frame,
+            height=3,
+            bg=PANEL_2,
+            fg=TEXT,
+            insertbackground=CYAN,
+            selectbackground=CYAN_DIM,
+            font=("Arial", 12),
+            relief="flat",
+            padx=12,
+            pady=10
+        )
+
+        self.entry.grid(
+            row=0,
+            column=0,
+            sticky="ew"
+        )
+
+        self.send_button = tk.Button(
+            input_frame,
+            text="SEND",
+            command=self.send,
+            bg=CYAN_DIM,
+            fg="white",
+            activebackground=CYAN,
+            activeforeground="#001219",
+            font=("Arial", 11, "bold"),
+            relief="flat",
+            padx=24
+        )
+
+        self.send_button.grid(
+            row=0,
+            column=1,
+            sticky="ns",
+            padx=(5, 0)
+        )
+
+        self.talk_button = tk.Button(
+            input_frame,
+            text="🎙  TALK TO DESTINY",
+            command=self.talk_to_destiny,
+            bg="#12495a",
+            fg=GREEN,
+            activebackground=CYAN,
+            activeforeground="#001219",
+            font=("Arial", 13, "bold"),
+            relief="flat",
+            pady=12
+        )
+
+        self.talk_button.grid(
+            row=1,
+            column=0,
+            columnspan=2,
+            sticky="ew",
+            pady=(7, 0)
+        )
+
+        # ====================================================
+        # RIGHT ACTIVITY PANEL
+        # ====================================================
+
+        right = tk.Frame(
+            main,
+            bg=PANEL,
+            width=300,
+            highlightbackground=BORDER,
+            highlightthickness=1
+        )
+        right.grid(
+            row=0,
+            column=2,
+            sticky="nsew",
+            padx=(10, 0)
+        )
+        right.grid_propagate(False)
+
+        self.section_title(right, "ACTIVITY STREAM")
+
+        self.activity = scrolledtext.ScrolledText(
+            right,
+            bg="#060d17",
+            fg=TEXT_DIM,
+            font=("Consolas", 9),
+            wrap=tk.WORD,
+            relief="flat",
+            padx=10,
+            pady=10
+        )
+
+        self.activity.pack(
+            fill="both",
+            expand=True,
+            padx=10,
+            pady=(0, 10)
+        )
+
+        self.activity.configure(state="disabled")
+
+        # ---------------- FOOTER ----------------
+
+        footer = tk.Frame(
+            self.root,
+            bg=BG,
+            height=30
+        )
+        footer.pack(
+            fill="x",
+            padx=20,
+            pady=(0, 10)
+        )
+
+        self.voice_status_label = tk.Label(
+            footer,
+            text="VOICE: STANDBY",
+            bg=BG,
+            fg=TEXT_DIM,
+            font=("Consolas", 9, "bold")
+        )
+        self.voice_status_label.pack(side="left")
+
+        tk.Label(
+            footer,
+            text="DESTINY • LOCAL COGNITIVE SYSTEM",
+            bg=BG,
+            fg=TEXT_DIM,
+            font=("Consolas", 9)
+        ).pack(side="right")
+
+        self.make_context_menu(self.chat)
+        self.make_context_menu(self.activity)
+        self.make_context_menu(self.entry)
+
+    # ========================================================
+    # UI HELPERS
+    # ========================================================
+
+    def section_title(self, parent, text):
+        tk.Label(
+            parent,
+            text=text,
+            bg=PANEL,
+            fg=CYAN,
+            font=("Arial", 10, "bold"),
+            anchor="w"
+        ).pack(
+            fill="x",
+            padx=15,
+            pady=(14, 10)
+        )
+
+    def add_brain_card(
+        self,
+        parent,
+        title,
+        target,
+        key
+    ):
+        card = tk.Frame(
+            parent,
+            bg=PANEL_2,
+            highlightbackground=BORDER,
+            highlightthickness=1
+        )
+        card.pack(
+            fill="x",
+            padx=12,
+            pady=5
+        )
+
+        tk.Label(
+            card,
+            text=title,
+            bg=PANEL_2,
+            fg=TEXT,
+            font=("Arial", 10, "bold")
+        ).pack(
+            anchor="w",
+            padx=10,
+            pady=(7, 1)
+        )
+
+        label = tk.Label(
+            card,
+            text="● CHECKING",
+            bg=PANEL_2,
+            fg=YELLOW,
+            font=("Consolas", 9, "bold")
+        )
+        label.pack(
+            anchor="w",
+            padx=10,
+            pady=(1, 7)
+        )
+
+        self.brain_labels[key] = (
+            label,
+            target
+        )
+
+    def side_button(
+        self,
+        parent,
+        text,
+        command,
+        color
+    ):
+        button = tk.Button(
+            parent,
+            text=text,
+            command=command,
+            bg=PANEL_2,
+            fg=color,
+            activebackground="#10283b",
+            activeforeground="white",
+            relief="flat",
+            font=("Arial", 9, "bold"),
+            highlightbackground=BORDER,
+            highlightthickness=1
+        )
+
+        button.pack(
+            fill="x",
+            padx=15,
+            pady=4,
+            ipady=7
+        )
+
+    # ========================================================
+    # CHAT
+    # ========================================================
+
+    def add_chat(self, speaker, text):
+        self.chat.configure(state="normal")
+
+        timestamp = datetime.now().strftime("%H:%M:%S")
+
+        self.chat.insert(
+            tk.END,
+            f"[{timestamp}] {speaker}\n",
+            ("speaker",)
+        )
+
+        self.chat.insert(
+            tk.END,
+            f"{text}\n\n"
+        )
+
+        self.chat.tag_config(
+            "speaker",
+            foreground=CYAN,
+            font=("Arial", 10, "bold")
+        )
+
+        self.chat.see(tk.END)
+        self.chat.configure(state="disabled")
+
+    def send(self, event=None):
+        if self.running_task:
+            return "break"
+
+        message = self.entry.get(
+            "1.0",
+            tk.END
+        ).strip()
+
+        if not message:
+            return "break"
+
+        self.entry.delete(
+            "1.0",
+            tk.END
+        )
+
+        self.add_chat(
+            "NEIL",
+            message
+        )
+
+        self.running_task = True
+        self.set_status(
+            "PROCESSING",
+            YELLOW
+        )
+
+        self.log_activity(
+            "TASK",
+            message
+        )
+
+        threading.Thread(
+            target=self.process_task,
+            args=(message,),
+            daemon=True
+        ).start()
+
+        return "break"
+
+    def process_task(self, message):
+
+        try:
+            result = run(message)
+
+            if isinstance(result, dict):
+                response = (
+                    result.get("model_response")
+                    or result.get("message")
+                    or result.get("stdout")
+                    or str(result)
+                )
+            else:
+                response = str(result)
+
+            self.task_count += 1
+
+            self.root.after(
+                0,
+                lambda: self.finish_task(
+                    response,
+                    True
+                )
+            )
+
+        except Exception as exc:
+
+            self.root.after(
+                0,
+                lambda: self.finish_task(
+                    f"Error: {exc}",
+                    False
+                )
+            )
+
+    def finish_task(
+        self,
+        response,
+        success
+    ):
+        self.add_chat(
+            "DESTINY",
+            response
+        )
+
+        self.task_label.configure(
+            text=f"TASKS PROCESSED: {self.task_count}"
+        )
+
+        if success:
+            self.set_status(
+                "READY",
+                GREEN
+            )
+            self.log_activity(
+                "COMPLETE",
+                "Task completed."
+            )
+        else:
+            self.set_status(
+                "ERROR",
+                RED
+            )
+            self.log_activity(
+                "ERROR",
+                response
+            )
+
+        self.running_task = False
+
+    def clear_chat(self):
+        self.chat.configure(state="normal")
+        self.chat.delete(
+            "1.0",
+            tk.END
+        )
+        self.chat.configure(state="disabled")
+
+        self.add_chat(
+            "DESTINY",
+            "Conversation display cleared. I am ready."
+        )
+
+    def copy_all_chat(self):
+        content = self.chat.get(
+            "1.0",
+            tk.END
+        ).strip()
+
+        self.root.clipboard_clear()
+        self.root.clipboard_append(
+            content
+        )
+
+        self.log_activity(
+            "CLIPBOARD",
+            "Conversation copied."
+        )
+
+    # ========================================================
+    # VOICE PROCESS
+    # ========================================================
+
+    def talk_to_destiny(self):
+        if getattr(self, "_talking", False):
+            return
+
+        self._talking = True
+
+        self.talk_button.configure(
+            text="🎙  LISTENING...",
+            state="disabled"
+        )
+
+        self.set_status(
+            "LISTENING",
+            GREEN
+        )
+
+        self.log_activity(
+            "VOICE",
+            "Push-to-talk listening."
+        )
+
+        threading.Thread(
+            target=self._voice_worker,
+            daemon=True
+        ).start()
+
+    def _voice_worker(self):
+        try:
+            result = run_voice_once()
+
+            self.root.after(
+                0,
+                lambda r=result:
+                    self._finish_voice(r)
+            )
+
+        except Exception as exc:
+            self.root.after(
+                0,
+                lambda e=str(exc):
+                    self._voice_error(e)
+            )
+
+    def _finish_voice(self, result):
+        command = result.get("command", "")
+        response = result.get("response", "")
+
+        if command:
+            self.add_chat(
+                "NEIL",
+                command
+            )
+
+        if response:
+            self.add_chat(
+                "DESTINY",
+                response
+            )
+
+        if result.get("status") == "PASS":
+            self.task_count += 1
+            self.task_label.configure(
+                text=f"TASKS PROCESSED: {self.task_count}"
+            )
+
+        self._talking = False
+
+        self.talk_button.configure(
+            text="🎙  TALK TO DESTINY",
+            state="normal"
+        )
+
+        self.set_status(
+            "READY",
+            GREEN
+        )
+
+        self.log_activity(
+            "VOICE",
+            "Voice exchange complete."
+        )
+
+    def _voice_error(self, error):
+        self._talking = False
+
+        self.talk_button.configure(
+            text="🎙  TALK TO DESTINY",
+            state="normal"
+        )
+
+        self.set_status(
+            "VOICE ERROR",
+            RED
+        )
+
+        self.log_activity(
+            "VOICE ERROR",
+            error
+        )
+
+
+    def start_voice(self):
+
+        if not VOICE_SCRIPT.exists():
+            messagebox.showerror(
+                "Destiny Voice",
+                "destiny_voice.py was not found."
+            )
+            return
+
+        if (
+            self.voice_process
+            and self.voice_process.poll() is None
+        ):
+            self.voice_status_label.configure(
+                text="VOICE: RUNNING",
+                fg=GREEN
+            )
+            return
+
+        try:
+            self.voice_process = subprocess.Popen(
+                [
+                    sys.executable,
+                    str(VOICE_SCRIPT)
+                ],
+                cwd=str(BASE)
+            )
+
+            self.voice_status_label.configure(
+                text="VOICE: LISTENING",
+                fg=GREEN
+            )
+
+            self.log_activity(
+                "VOICE",
+                "Voice operator started."
+            )
+
+        except Exception as exc:
+            self.voice_status_label.configure(
+                text="VOICE: ERROR",
+                fg=RED
+            )
+
+            self.log_activity(
+                "VOICE ERROR",
+                str(exc)
+            )
+
+    def stop_voice(self):
+
+        if (
+            self.voice_process
+            and self.voice_process.poll() is None
+        ):
+            try:
+                self.voice_process.terminate()
+
+                try:
+                    self.voice_process.wait(
+                        timeout=3
+                    )
+                except subprocess.TimeoutExpired:
+                    self.voice_process.kill()
+
+            except Exception:
+                pass
+
+        self.voice_process = None
+
+        self.voice_status_label.configure(
+            text="VOICE: STANDBY",
+            fg=TEXT_DIM
+        )
+
+        self.log_activity(
+            "VOICE",
+            "Voice operator stopped."
+        )
+
+    # ========================================================
+    # SYSTEM STATUS
+    # ========================================================
+
+    def refresh_system_status(self):
+
+        for key, (
+            label,
+            target
+        ) in self.brain_labels.items():
+
+            path = BASE / target
+
+            if path.exists():
+                label.configure(
+                    text="● ONLINE",
+                    fg=GREEN
+                )
+            else:
+                label.configure(
+                    text="● NOT FOUND",
+                    fg=RED
+                )
+
+        self.log_activity(
+            "SYSTEM",
+            "Status refreshed."
+        )
+
+    def open_vault(self):
+        try:
+            subprocess.Popen(
+                [
+                    "xdg-open",
+                    str(VAULT)
+                ]
+            )
+        except Exception as exc:
+            self.log_activity(
+                "ERROR",
+                str(exc)
+            )
+
+    # ========================================================
+    # ACTIVITY LOG
+    # ========================================================
+
+    def log_activity(
+        self,
+        category,
+        message
+    ):
+
+        timestamp = datetime.now().strftime(
+            "%H:%M:%S"
+        )
+
+        self.activity.configure(
+            state="normal"
+        )
+
+        self.activity.insert(
+            tk.END,
+            f"[{timestamp}] {category}\n"
+            f"{message}\n\n"
+        )
+
+        self.activity.see(
+            tk.END
+        )
+
+        self.activity.configure(
+            state="disabled"
+        )
+
+    # ========================================================
+    # STATUS
+    # ========================================================
+
+    def set_status(
+        self,
+        text,
+        color
+    ):
+        self.status_label.configure(
+            text=text,
+            fg=color
+        )
+
+    # ========================================================
+    # CORE ANIMATION
+    # ========================================================
+
+    def animate_core(self):
+
+        c = self.core_canvas
+        c.delete("all")
+
+        cx = 60
+        cy = 40
+
+        self.core_phase += 0.08
+
+        pulse = (
+            math.sin(
+                self.core_phase
+            ) + 1
+        ) / 2
+
+        outer = 28 + pulse * 5
+        middle = 19 + pulse * 3
+        inner = 8 + pulse * 2
+
+        c.create_oval(
+            cx - outer,
+            cy - outer,
+            cx + outer,
+            cy + outer,
+            outline=CYAN_DIM,
+            width=2
+        )
+
+        c.create_oval(
+            cx - middle,
+            cy - middle,
+            cx + middle,
+            cy + middle,
+            outline=BLUE,
+            width=2
+        )
+
+        c.create_oval(
+            cx - inner,
+            cy - inner,
+            cx + inner,
+            cy + inner,
+            fill=CYAN,
+            outline=""
+        )
+
+        angle = self.core_phase * 2
+
+        for offset in (
+            0,
+            math.pi
+        ):
+            x = cx + math.cos(
+                angle + offset
+            ) * 34
+
+            y = cy + math.sin(
+                angle + offset
+            ) * 34
+
+            c.create_oval(
+                x - 3,
+                y - 3,
+                x + 3,
+                y + 3,
+                fill=GREEN,
+                outline=""
+            )
+
+        self.root.after(
+            50,
+            self.animate_core
+        )
+
+    # ========================================================
+    # CLOCK
+    # ========================================================
+
+    def update_clock(self):
+        self.clock_label.configure(
+            text=datetime.now().strftime(
+                "%A  %H:%M:%S"
+            ).upper()
+        )
+
+        self.root.after(
+            1000,
+            self.update_clock
+        )
+
+    # ========================================================
+    # COPY / PASTE SUPPORT
+    # ========================================================
+
+    def install_shortcuts(self):
+
+        self.entry.bind(
+            "<Return>",
+            self.send
+        )
+
+        self.entry.bind(
+            "<Control-Return>",
+            self.send
+        )
+
+        self.root.protocol(
+            "WM_DELETE_WINDOW",
+            self.on_close
+        )
+
+    def make_context_menu(
+        self,
+        widget
+    ):
+
+        menu = tk.Menu(
+            widget,
+            tearoff=0
+        )
+
+        menu.add_command(
+            label="Copy",
+            command=lambda:
+                widget.event_generate(
+                    "<<Copy>>"
+                )
+        )
+
+        menu.add_command(
+            label="Paste",
+            command=lambda:
+                widget.event_generate(
+                    "<<Paste>>"
+                )
+        )
+
+        menu.add_command(
+            label="Cut",
+            command=lambda:
+                widget.event_generate(
+                    "<<Cut>>"
+                )
+        )
+
+        menu.add_separator()
+
+        menu.add_command(
+            label="Select All",
+            command=lambda:
+                self.select_all(widget)
+        )
+
+        def popup(event):
+            try:
+                menu.tk_popup(
+                    event.x_root,
+                    event.y_root
+                )
+            finally:
+                menu.grab_release()
+
+        widget.bind(
+            "<Button-3>",
+            popup
+        )
+
+        widget.bind(
+            "<Control-c>",
+            lambda e:
+                widget.event_generate(
+                    "<<Copy>>"
+                )
+        )
+
+        widget.bind(
+            "<Control-v>",
+            lambda e:
+                widget.event_generate(
+                    "<<Paste>>"
+                )
+        )
+
+        widget.bind(
+            "<Control-x>",
+            lambda e:
+                widget.event_generate(
+                    "<<Cut>>"
+                )
+        )
+
+        widget.bind(
+            "<Control-a>",
+            lambda e:
+                self.select_all(widget)
+        )
+
+    def select_all(
+        self,
+        widget
+    ):
+        try:
+            if isinstance(
+                widget,
+                tk.Text
+            ):
+                widget.tag_add(
+                    "sel",
+                    "1.0",
+                    "end-1c"
+                )
+            else:
+                widget.selection_range(
+                    0,
+                    tk.END
+                )
+        except Exception:
+            pass
+
+        return "break"
+
+    # ========================================================
+    # CLOSE
+    # ========================================================
+
+    def on_close(self):
+
+        self.stop_voice()
+
+        self.root.destroy()
+
+
+def main():
+    root = tk.Tk()
+    DestinyJarvis(root)
+    root.mainloop()
+
+
+if __name__ == "__main__":
+    main()

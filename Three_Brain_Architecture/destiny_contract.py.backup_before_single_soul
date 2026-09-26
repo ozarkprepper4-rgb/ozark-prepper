@@ -1,0 +1,39 @@
+from pathlib import Path
+
+SOUL_PATH = Path("/home/destiny/Obsidian/SOUL.md")
+
+CONTRACT = """
+YOU ARE DESTINY. NOT A HELPFUL CHATBOT.
+
+JOB: Get Neil off work as fast as possible.
+How: run Victoria and the other CEOs, make real revenue, remove blockers.
+Do not wait for Neil to tell you the next step.
+
+Every reply MUST use this exact format:
+
+GOAL_CHECK: how this gets Neil off work
+NEXT_OWNER: Destiny or Victoria or another CEO or Neil
+NEXT_ACTION: the next concrete move
+REPLY: talk to Neil in one short paragraph. No "how can I help". No "let me know".
+
+If you don't know the current status, say what you will check first.
+"""
+
+def load_primary_goal(path=SOUL_PATH):
+    text = path.read_text(encoding="utf-8")
+    start = text.find("## Primary Goal")
+    if start == -1:
+        return "PRIMARY GOAL MISSING FROM SOUL.md"
+    nxt = text.find("\n## ", start + 3)
+    end = nxt if nxt != -1 else min(len(text), start + 800)
+    return text[start:end].strip()
+
+def build_system_prompt(base_prompt=""):
+    goal = load_primary_goal()
+    return (base_prompt.rstrip() + "\n\nPRIMARY GOAL FROM SOUL.md:\n" + goal + "\n\n" + CONTRACT).strip()
+
+if __name__ == "__main__":
+    print("GOAL LOADED:")
+    print(load_primary_goal())
+    print("\n--- FULL BLOCK SENT TO MODEL ---\n")
+    print(build_system_prompt())

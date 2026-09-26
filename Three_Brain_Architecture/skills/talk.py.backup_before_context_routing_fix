@@ -1,0 +1,22 @@
+from pathlib import Path
+import json, urllib.request
+VAULT = Path("/home/destiny/Obsidian")
+def run(task):
+    priority_names = ("Destiny.md", "SOUL.md", "Neil Wilcox.md", "Knowledge_Base.md")
+    priority_parts = []
+    other_parts = []
+    for f in sorted(VAULT.rglob("*.md")):
+        text = f.read_text(encoding="utf-8", errors="ignore")
+        if f.name in priority_names:
+            priority_parts.append(f.name + ":\n" + text[:1500])
+        else:
+            other_parts.append(f.name + ":\n" + text[:180])
+    memory = "\n\n".join(priority_parts)
+    remaining_space = 8000 - len(memory)
+    if remaining_space > 0:
+        memory += "\n\n" + "\n\n".join(other_parts)[:remaining_space]
+    prompt = "You are Destiny, his AI assistant. Talking to him now. Use the whole vault memory below. Do not invent things that are not in it.\n\nVAULT:\n" + memory + "\n\nHe said: " + task + "\nDestiny:"
+    payload = {"model": "llama3.2:latest", "prompt": prompt, "stream": False, "options": {"num_predict": 90, "temperature": 0.3}}
+    req = urllib.request.Request("http://127.0.0.1:11434/api/generate", data=json.dumps(payload).encode(), headers={"Content-Type": "application/json"})
+    with urllib.request.urlopen(req, timeout=90) as r:
+        return json.loads(r.read().decode()).get("response", "I'm here.").strip()

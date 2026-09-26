@@ -1,0 +1,10 @@
+from pathlib import Path
+
+ROOT = Path("/home/destiny/Obsidian")
+
+def run(*a, **k):
+    hits = []
+    for f in ROOT.glob("**/*"):
+        if f.is_file() and "ozark" in str(f).lower():
+            hits.append(str(f))
+    return '\n'.join(sorted(hits)) or 'none found'

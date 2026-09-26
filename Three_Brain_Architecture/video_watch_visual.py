@@ -1,0 +1,164 @@
+#!/usr/bin/env python3
+import json
+import fcntl
+import re
+import subprocess
+import tempfile
+from pathlib import Path
+
+def extract_video_id(url_or_id):
+    if len(url_or_id) == 11 and "/" not in url_or_id:
+        return url_or_id
+    match = re.search(r'(?:v=|youtu\.be/|embed/)([A-Za-z0-9_-]{11})', url_or_id)
+    return match.group(1) if match else None
+
+def _format_timestamp(seconds):
+    seconds = int(seconds)
+    hours, remainder = divmod(seconds, 3600)
+    minutes, seconds = divmod(remainder, 60)
+    if hours:
+        return f"{hours:02d}:{minutes:02d}:{seconds:02d}"
+    return f"{minutes:02d}:{seconds:02d}"
+
+def _analyze_frame(image_path):
+    lock_path = Path("/tmp/destiny_model_busy.lock")
+    with lock_path.open("w") as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX)
+        lock.write("video_watch_visual:moondream")
+        lock.flush()
+
+        result = subprocess.run(
+            ["ollama", "run", "moondream", """Analyze this video frame carefully. Describe only meaningful visible information. Look for: interfaces and applications; menus, buttons, settings and workflows; code, terminals and commands; diagrams, charts and technical illustrations; readable on-screen text; demonstrations and actions being performed; tools, machines, devices and important objects; people or locations when relevant; and visual details that add information beyond spoken narration. Do not invent details that are not visible. Describe this image: """ + str(image_path)],
+            capture_output=True, text=True, timeout=180
+        )
+        return result.stdout.strip()
+
+
+def _detect_scene_changes(video_path, threshold=0.35):
+    """Return timestamps where FFmpeg detects significant visual scene changes."""
+    result = subprocess.run(
+        [
+            "ffmpeg",
+            "-hide_banner",
+            "-i", str(video_path),
+            "-vf", f"select='gt(scene,{threshold})',showinfo",
+            "-f", "null",
+            "-"
+        ],
+        capture_output=True,
+        text=True,
+        timeout=120
+    )
+
+    timestamps = []
+    for line in result.stderr.splitlines():
+        match = re.search(r"pts_time:([0-9.]+)", line)
+        if match:
+            timestamp = float(match.group(1))
+            if not timestamps or timestamp - timestamps[-1] >= 5.0:
+                timestamps.append(timestamp)
+
+    return timestamps
+
+def watch_video_visual(url_or_id, num_frames=None):
+    video_id = extract_video_id(url_or_id)
+    if not video_id:
+        return {"error": "Could not extract video ID"}
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        video_path = Path(tmpdir) / "video.mp4"
+        dl_result = subprocess.run(
+            ["yt-dlp", "-f", "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]", "-o", str(video_path), f"https://www.youtube.com/watch?v={video_id}"],
+            capture_output=True, text=True, timeout=120
+        )
+        if not video_path.exists():
+            return {"error": "Could not download video for frame extraction", "details": dl_result.stderr[:300]}
+
+        duration_result = subprocess.run(
+            ["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "default=noprint_wrappers=1:nokey=1", str(video_path)],
+            capture_output=True, text=True, timeout=30
+        )
+        try:
+            duration = float(duration_result.stdout.strip())
+        except Exception:
+            duration = 60
+
+        # Adapt visual sampling to the video's total runtime.
+        # Roughly one frame every 2 minutes, with sensible minimum/maximum limits.
+        if num_frames is None:
+            num_frames = max(6, min(30, round(duration / 120)))
+
+        checkpoint_dir = Path(__file__).resolve().parent / "Logs" / "Video_Checkpoints"
+        checkpoint_dir.mkdir(parents=True, exist_ok=True)
+        checkpoint_path = checkpoint_dir / f"{video_id}_visuals.json"
+
+        frame_descriptions = []
+        if checkpoint_path.exists():
+            try:
+                saved = json.loads(checkpoint_path.read_text(encoding="utf-8"))
+                if isinstance(saved, list):
+                    frame_descriptions = saved
+            except Exception:
+                frame_descriptions = []
+
+        completed = {
+            int(frame["frame_number"])
+            for frame in frame_descriptions
+            if "frame_number" in frame and not frame.get("error")
+        }
+
+        for i in range(num_frames):
+            frame_number = i + 1
+            timestamp = duration * frame_number / (num_frames + 1)
+
+            if frame_number in completed:
+                print(f"VISUAL FRAME {frame_number} ALREADY COMPLETE — RESUMING")
+                continue
+
+            frame_path = Path(tmpdir) / f"frame_{i}.png"
+            subprocess.run(
+                ["ffmpeg", "-ss", str(timestamp), "-i", str(video_path), "-frames:v", "1", "-y", str(frame_path)],
+                capture_output=True, timeout=30
+            )
+
+            if frame_path.exists():
+                try:
+                    description = _analyze_frame(frame_path)
+                    frame_result = {
+                        "frame_number": frame_number,
+                        "time_seconds": round(timestamp, 1),
+                        "timestamp": _format_timestamp(timestamp),
+                        "description": description
+                    }
+                except Exception as exc:
+                    frame_result = {
+                        "frame_number": frame_number,
+                        "time_seconds": round(timestamp, 1),
+                        "timestamp": _format_timestamp(timestamp),
+                        "description": "",
+                        "error": str(exc)
+                    }
+
+                frame_descriptions = [
+                    frame for frame in frame_descriptions
+                    if frame.get("frame_number") != frame_number
+                ]
+                frame_descriptions.append(frame_result)
+                frame_descriptions.sort(key=lambda frame: frame.get("frame_number", 0))
+
+                checkpoint_path.write_text(
+                    json.dumps(frame_descriptions, indent=2),
+                    encoding="utf-8"
+                )
+                print(f"VISUAL FRAME {frame_number} SAVED")
+
+        return {
+            "video_id": video_id,
+            "visual_frames": frame_descriptions,
+            "visual_checkpoint": str(checkpoint_path)
+        }
+
+if __name__ == "__main__":
+    import sys
+    q = sys.argv[1] if len(sys.argv) > 1 else "dQw4w9WgXcQ"
+    print(json.dumps(watch_video_visual(q), indent=2))

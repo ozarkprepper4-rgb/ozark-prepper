@@ -1,0 +1,6 @@
+from pathlib import Path
+VAULT = Path("/home/destiny/Obsidian/Destiny")
+def run(title, lesson):
+    path = VAULT / ("Video_" + title.replace(" ", "_") + ".md")
+    path.write_text(f"# {title}\n\n{lesson.strip()}", encoding="utf-8")
+    return str(path)

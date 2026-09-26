@@ -1,0 +1,24 @@
+{
+  "timestamp": "2026-08-27T01:45:38.441984+00:00",
+  "test": "adaptive_behavior_change",
+  "task": "Complete a research task and report the result.",
+  "active_rules": [
+    "ml_adaptation_fail_task",
+    "ml_adaptation_controlled_test_research"
+  ],
+  "behavior_before": {
+    "completion_verification": "not established",
+    "research_caution": "not established"
+  },
+  "behavior_after": {
+    "completion_verification": "required",
+    "research_verification": "increased",
+    "research_caution": "increased"
+  },
+  "verified_behavior": {
+    "verification_before_success": true,
+    "increased_research_verification": true,
+    "caution_for_research": true
+  },
+  "result": "PASS"
+}

@@ -1,0 +1,86 @@
+# Destiny's Tools Catalog
+
+This file lists every real capability Destiny has. Check this before building anything new.
+
+## Core Skills
+- talk.py - conversational responses, reads the whole Obsidian vault
+- forge_skill.py - generates, tests, and installs new Python skills on request
+- self_run.py - self-check and cleanup routine
+- clean_knowledge_base.py - cleans up the knowledge base file
+- find_ozark.py - searches for Ozark Prepper related content
+
+## Web & Learning
+- web_search.py - searches Wikipedia for real information
+- video_watch.py - pulls YouTube transcripts and summarizes them
+- video_search.py - finds a YouTube video by title
+- self_learn_cycle.py - automated web search and Obsidian logging cycle
+
+## Business Tools
+- vault_actions.py - handles website building, note reading/writing, vault searches
+
+## Verification
+- verify.py - checks if files exist, checks syntax, runs real commands and reports real output
+
+
+## Web learn 2026-09-06 22:45
+[{'title': 'Online and offline', 'snippet': 'and telecommunications, online indicates a state of connectivity, and offline indicates a disconnected state. In modern terminology, this usually refers'}, {'title': 'Google Input Tools', 'snippet': '(software) &quot;How do I use Google Input Tools on my Windows 10 PC?&quot;. April 12, 2021. Retrieved April 21, 2021. &quot;Google Input Tools on Windows&quot;. Internet Archive'}]
+
+
+## Web learn 2026-09-07 08:45
+[{'title': 'Online and offline', 'snippet': 'and telecommunications, online indicates a state of connectivity, and offline indicates a disconnected state. In modern terminology, this usually refers'}, {'title': 'Google Input Tools', 'snippet': '(software) &quot;How do I use Google Input Tools on my Windows 10 PC?&quot;. April 12, 2021. Retrieved April 21, 2021. &quot;Google Input Tools on Windows&quot;. Internet Archive'}]
+
+
+## Web learn 2026-09-08 10:15
+[{'title': 'Online and offline', 'snippet': 'and telecommunications, online indicates a state of connectivity, and offline indicates a disconnected state. In modern terminology, this usually refers'}, {'title': 'Google Input Tools', 'snippet': '(software) &quot;How do I use Google Input Tools on my Windows 10 PC?&quot;. April 12, 2021. Retrieved April 21, 2021. &quot;Google Input Tools on Windows&quot;. Internet Archive'}]
+
+
+## Web learn 2026-09-08 18:30
+[{'title': 'Online and offline', 'snippet': 'and telecommunications, online indicates a state of connectivity, and offline indicates a disconnected state. In modern terminology, this usually refers'}, {'title': 'Google Input Tools', 'snippet': '(software) &quot;How do I use Google Input Tools on my Windows 10 PC?&quot;. April 12, 2021. Retrieved April 21, 2021. &quot;Google Input Tools on Windows&quot;. Internet Archive'}]
+
+
+## Web learn 2026-09-09 02:47
+[{'title': 'Online and offline', 'snippet': 'and telecommunications, online indicates a state of connectivity, and offline indicates a disconnected state. In modern terminology, this usually refers'}, {'title': 'Google Input Tools', 'snippet': '(software) &quot;How do I use Google Input Tools on my Windows 10 PC?&quot;. April 12, 2021. Retrieved April 21, 2021. &quot;Google Input Tools on Windows&quot;. Internet Archive'}]
+
+
+## Web learn 2026-09-09 11:03
+[{'title': 'Online and offline', 'snippet': 'and telecommunications, online indicates a state of connectivity, and offline indicates a disconnected state. In modern terminology, this usually refers'}, {'title': 'Google Input Tools', 'snippet': '(software) &quot;How do I use Google Input Tools on my Windows 10 PC?&quot;. April 12, 2021. Retrieved April 21, 2021. &quot;Google Input Tools on Windows&quot;. Internet Archive'}]
+
+
+## Web learn 2026-09-09 21:24
+[{'title': 'Online and offline', 'snippet': 'and telecommunications, online indicates a state of connectivity, and offline indicates a disconnected state. In modern terminology, this usually refers'}, {'title': 'Google Input Tools', 'snippet': '(software) &quot;How do I use Google Input Tools on my Windows 10 PC?&quot;. April 12, 2021. Retrieved April 21, 2021. &quot;Google Input Tools on Windows&quot;. Internet Archive'}]
+
+
+## Web learn 2026-09-10 05:03
+[{'title': 'Online and offline', 'snippet': 'and telecommunications, online indicates a state of connectivity, and offline indicates a disconnected state. In modern terminology, this usually refers'}, {'title': 'Google Input Tools', 'snippet': '(software) &quot;How do I use Google Input Tools on my Windows 10 PC?&quot;. April 12, 2021. Retrieved April 21, 2021. &quot;Google Input Tools on Windows&quot;. Internet Archive'}]
+
+
+## Web learn 2026-09-10 12:45
+[{'title': 'Online and offline', 'snippet': 'and telecommunications, online indicates a state of connectivity, and offline indicates a disconnected state. In modern terminology, this usually refers'}, {'title': 'Google Input Tools', 'snippet': '(software) &quot;How do I use Google Input Tools on my Windows 10 PC?&quot;. April 12, 2021. Retrieved April 21, 2021. &quot;Google Input Tools on Windows&quot;. Internet Archive'}]
+
+
+## Web learn 2026-09-10 20:37
+[{'title': 'Online and offline', 'snippet': 'and telecommunications, online indicates a state of connectivity, and offline indicates a disconnected state. In modern terminology, this usually refers'}, {'title': 'Google Input Tools', 'snippet': '(software) &quot;How do I use Google Input Tools on my Windows 10 PC?&quot;. April 12, 2021. Retrieved April 21, 2021. &quot;Google Input Tools on Windows&quot;. Internet Archive'}]
+
+
+## Web learn 2026-09-11 04:18
+[{'title': 'Online and offline', 'snippet': 'and telecommunications, online indicates a state of connectivity, and offline indicates a disconnected state. In modern terminology, this usually refers'}, {'title': 'Google Input Tools', 'snippet': '(software) &quot;How do I use Google Input Tools on my Windows 10 PC?&quot;. April 12, 2021. Retrieved April 21, 2021. &quot;Google Input Tools on Windows&quot;. Internet Archive'}]
+
+
+## Web learn 2026-09-11 11:59
+[{'title': 'Online and offline', 'snippet': 'and telecommunications, online indicates a state of connectivity, and offline indicates a disconnected state. In modern terminology, this usually refers'}, {'title': 'OfflineIMAP', 'snippet': '(2011). &quot;Drei Tools zum Archivieren von IMAP-Mails&quot; [Three tools for archiving IMAP mails]. Linux Magazine. Martin, Ben (May 6, 2008), &quot;OfflineIMAP makes'}]
+
+
+## Web learn 2026-09-11 19:45
+[{'title': 'Online and offline', 'snippet': 'and telecommunications, online indicates a state of connectivity, and offline indicates a disconnected state. In modern terminology, this usually refers'}, {'title': 'Google Input Tools', 'snippet': '(software) &quot;How do I use Google Input Tools on my Windows 10 PC?&quot;. April 12, 2021. Retrieved April 21, 2021. &quot;Google Input Tools on Windows&quot;. Internet Archive'}]
+
+
+## Web learn 2026-09-12 03:58
+[{'title': 'Online and offline', 'snippet': 'and telecommunications, online indicates a state of connectivity, and offline indicates a disconnected state. In modern terminology, this usually refers'}, {'title': 'OfflineIMAP', 'snippet': '(2011). &quot;Drei Tools zum Archivieren von IMAP-Mails&quot; [Three tools for archiving IMAP mails]. Linux Magazine. Martin, Ben (May 6, 2008), &quot;OfflineIMAP makes'}]
+
+
+## Web learn 2026-09-12 12:06
+[{'title': 'Online and offline', 'snippet': 'and telecommunications, online indicates a state of connectivity, and offline indicates a disconnected state. In modern terminology, this usually refers'}, {'title': 'Google Input Tools', 'snippet': '(software) &quot;How do I use Google Input Tools on my Windows 10 PC?&quot;. April 12, 2021. Retrieved April 21, 2021. &quot;Google Input Tools on Windows&quot;. Internet Archive'}]
+
+
+## Web learn 2026-09-12 22:13
+[{'title': 'Online and offline', 'snippet': 'and telecommunications, online indicates a state of connectivity, and offline indicates a disconnected state. In modern terminology, this usually refers'}, {'title': 'Google Input Tools', 'snippet': '(software) &quot;How do I use Google Input Tools on my Windows 10 PC?&quot;. April 12, 2021. Retrieved April 21, 2021. &quot;Google Input Tools on Windows&quot;. Internet Archive'}]

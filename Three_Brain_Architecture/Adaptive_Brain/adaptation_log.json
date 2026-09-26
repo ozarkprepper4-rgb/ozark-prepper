@@ -1,0 +1,23 @@
+[
+  {
+    "timestamp": "2026-08-27T01:23:35.781855+00:00",
+    "source": "ML_Brain/prediction_results.json",
+    "trigger": "High frequency failure: controlled_test_research (2 recent)",
+    "adaptation": "Increase verification and caution for research tasks.",
+    "status": "applied"
+  },
+  {
+    "timestamp": "2026-08-27T01:45:11.418438+00:00",
+    "source": "ML_Brain/prediction_results.json",
+    "trigger": "High frequency failure: fail_task (2 recent)",
+    "adaptation": "Increase verification of task completion before reporting success.",
+    "status": "applied"
+  },
+  {
+    "timestamp": "2026-08-27T01:45:11.418455+00:00",
+    "source": "ML_Brain/prediction_results.json",
+    "trigger": "High frequency failure: controlled_test_research (2 recent)",
+    "adaptation": "Increase verification and caution for research tasks.",
+    "status": "applied"
+  }
+][2026-08-28T18:54:29.300121] Applied rule: response_length=short

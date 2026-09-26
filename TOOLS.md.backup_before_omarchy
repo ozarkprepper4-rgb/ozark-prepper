@@ -1,0 +1,27 @@
+# Destiny's Tools Catalog
+
+This file lists every real capability Destiny has. Check this before building anything new.
+
+## Core Skills
+- talk.py - conversational responses, reads the whole Obsidian vault
+- forge_skill.py - generates, tests, and installs new Python skills on request
+- self_run.py - self-check and cleanup routine
+- clean_knowledge_base.py - cleans up the knowledge base file
+- find_ozark.py - searches for Ozark Prepper related content
+
+## Web & Learning
+- web_search.py - searches Wikipedia for real information
+- video_watch.py - pulls YouTube transcripts and summarizes them
+- video_search.py - finds a YouTube video by title
+- self_learn_cycle.py - automated web search and Obsidian logging cycle
+
+## Business Tools
+- vault_actions.py - handles website building, note reading/writing, vault searches
+
+## Verification
+- verify.py - checks if files exist, checks syntax, runs real commands and reports real output
+- registration_test_skill.py - return exactly the string TOOL REGISTRATION WORKS
+- auto_build_a_harmless_capability_that_returns.py - Build a harmless capability that returns exactly AUTONOMOUS EXECUTION WORKS
+- auto_create_unique_test_alpha_capability_that.py - Create unique test alpha capability that returns exactly FORGE EXECUTION TEST TWO
+- auto_inspect_core_architecture_directories__l.py - Inspect core architecture directories, link self-modification scripts, and verify autonomous tool-building loops.
+- auto_initialize_dynamic_tool_generation_modul.py - Initialize dynamic tool generation module and enable self-building interface scripts.

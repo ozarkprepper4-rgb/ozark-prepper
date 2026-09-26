@@ -1,0 +1,170 @@
+#!/usr/bin/env python3
+import subprocess
+import sys
+from pathlib import Path
+from flask import Flask, request, jsonify, render_template_string
+
+app = Flask(__name__)
+DESTINY_TASK = "/home/destiny/Obsidian/Destiny/Three_Brain_Architecture/destiny_task.py"
+
+PAGE = """
+<!DOCTYPE html>
+<html>
+<head>
+<title>Destiny</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  body { background:#0d1117; color:#e6edf3; font-family: system-ui, sans-serif; margin:0; padding:0; }
+  #chat { max-width:700px; margin:0 auto; padding:20px; padding-bottom:120px; }
+  .msg { padding:12px 16px; margin:10px 0; border-radius:10px; line-height:1.4; white-space:pre-wrap; }
+  .neil { background:#1f6feb; color:white; margin-left:60px; }
+  .destiny { background:#161b22; border:1px solid #30363d; margin-right:60px; }
+  .thinking { color:#8b949e; font-style:italic; }
+  #inputbar { position:fixed; bottom:0; left:0; right:0; background:#0d1117; padding:16px; border-top:1px solid #30363d; }
+  #inputrow { max-width:700px; margin:0 auto; display:flex; gap:10px; }
+  #msgbox { flex:1; padding:14px; border-radius:8px; border:1px solid #30363d; background:#161b22; color:white; font-size:16px; }
+  #sendbtn { padding:14px 24px; border-radius:8px; border:none; background:#238636; color:white; font-size:16px; cursor:pointer; }
+  #sendbtn:disabled { background:#30363d; cursor:not-allowed; }
+  h2 { text-align:center; color:#8b949e; font-weight:normal; }
+</style>
+</head>
+<body>
+<div id="chat">
+  <h2>Destiny</h2>
+  <div id="messages"></div>
+</div>
+<div id="inputbar">
+  <div id="inputrow">
+    <input id="msgbox" type="text" placeholder="Talk to Destiny..." autofocus>
+    <button id="micbtn">🎤</button>
+    <button id="stopbtn">🔇 Stop</button>
+    <button id="sendbtn">Send</button>
+  </div>
+</div>
+<script>
+const messages = document.getElementById('messages');
+const msgbox = document.getElementById('msgbox');
+const sendbtn = document.getElementById('sendbtn');
+
+function addMsg(text, who) {
+  const div = document.createElement('div');
+  div.className = 'msg ' + who;
+  div.textContent = text;
+  if (who === 'destiny') {
+    const speakBtn = document.createElement('button');
+    speakBtn.textContent = '🔊';
+    speakBtn.style.marginLeft = '10px';
+    speakBtn.style.cursor = 'pointer';
+    speakBtn.onclick = () => speechSynthesis.speak(new SpeechSynthesisUtterance(text.replace(/[*_#`]/g, '')));
+    div.appendChild(speakBtn);
+  }
+  messages.appendChild(div);
+  window.scrollTo(0, document.body.scrollHeight);
+  return div;
+}
+
+let sendingNow = false;
+async function send() {
+  const text = msgbox.value.trim();
+  if (!text || sendingNow) return;
+  sendingNow = true;
+  addMsg(text, 'neil');
+  msgbox.value = '';
+  sendbtn.disabled = true;
+  const thinking = addMsg('Destiny is thinking (this can take several minutes on this machine)...', 'thinking');
+  try {
+    const resp = await fetch('/ask', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({message: text})
+    });
+    const data = await resp.json();
+    thinking.remove();
+    addMsg(data.reply, 'destiny');
+    const utterance = new SpeechSynthesisUtterance(data.reply.replace(/[*_#`]/g, ''));
+    speechSynthesis.speak(utterance);
+  } catch (e) {
+    thinking.remove();
+    addMsg('Error reaching Destiny: ' + e, 'destiny');
+  }
+  sendbtn.disabled = false;
+  sendingNow = false;
+  msgbox.focus();
+}
+
+const micbtn = document.getElementById('micbtn');
+if ('webkitSpeechRecognition' in window) {
+  const recognition = new webkitSpeechRecognition();
+  recognition.continuous = true;
+  recognition.interimResults = true;
+  let finalTranscript = '';
+  recognition.onresult = (event) => {
+    let interim = '';
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+      if (event.results[i].isFinal) {
+        finalTranscript += event.results[i][0].transcript;
+      } else {
+        interim += event.results[i][0].transcript;
+      }
+    }
+    msgbox.value = finalTranscript + interim;
+  };
+  recognition.onend = () => {
+    if (finalTranscript.trim()) {
+      msgbox.value = finalTranscript;
+      send();
+      finalTranscript = '';
+    }
+  };
+  recognition.onstart = () => { finalTranscript = ''; msgbox.value = ''; };
+  micbtn.addEventListener('click', () => recognition.start());
+} else {
+  micbtn.style.display = 'none';
+}
+
+document.getElementById('stopbtn').addEventListener('click', () => speechSynthesis.cancel());
+
+sendbtn.addEventListener('click', send);
+msgbox.addEventListener('keydown', (e) => { if (e.key === 'Enter') send(); });
+</script>
+</body>
+</html>
+"""
+
+@app.route("/")
+def home():
+    return render_template_string(PAGE)
+
+@app.route("/ask", methods=["POST"])
+def ask():
+    data = request.get_json()
+    message = data.get("message", "").strip()
+    if not message:
+        return jsonify({"reply": "Please type something."})
+    try:
+        result = subprocess.run(
+            [sys.executable, DESTINY_TASK, message],
+            capture_output=True, text=True, timeout=1800
+        )
+        output = result.stdout
+        if "Destiny:" in output:
+            reply = output.split("Destiny:", 1)[1]
+            reply = reply.split("=== PIPELINE ===")[0].strip()
+        else:
+            reply = output.strip() or result.stderr.strip() or "No response produced."
+        try:
+            from datetime import datetime, timezone
+            log_path = Path("/home/destiny/Obsidian/Destiny/Conversation_Log.md")
+            entry = f"\n\n## {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}\n**Neil:** {message}\n**Destiny:** {reply}\n---\n"
+            with log_path.open("a", encoding="utf-8") as f:
+                f.write(entry)
+        except Exception:
+            pass
+        return jsonify({"reply": reply})
+    except subprocess.TimeoutExpired:
+        return jsonify({"reply": "This is taking longer than 30 minutes. Try asking again in a bit."})
+    except Exception as exc:
+        return jsonify({"reply": f"Error running task: {exc}"})
+
+if __name__ == "__main__":
+    app.run(host="127.0.0.1", port=8420, debug=False)

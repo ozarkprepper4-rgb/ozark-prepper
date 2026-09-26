@@ -1,0 +1,16 @@
+{
+  "timestamp": "2026-08-27T01:27:31.125778+00:00",
+  "test": "adaptive_reasoning_instruction",
+  "request": "Perform a research task.",
+  "adaptive_rule": "ml_adaptation_controlled_test_research",
+  "instruction_consumed": "Increase verification and caution for research tasks.",
+  "expected_behavior": [
+    "verification",
+    "caution"
+  ],
+  "verified_behavior": [
+    "verification",
+    "caution"
+  ],
+  "result": "PASS"
+}

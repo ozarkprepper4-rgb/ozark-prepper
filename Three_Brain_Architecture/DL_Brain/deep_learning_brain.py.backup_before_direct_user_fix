@@ -1,0 +1,192 @@
+#!/usr/bin/env python3
+
+import json
+import urllib.request
+import urllib.error
+import sys
+sys.path.insert(0, '/home/destiny/Obsidian/Destiny/Three_Brain_Architecture')
+from web_search import web_search
+from video_watch import watch_video
+from verify import check_file_exists, check_syntax, run_command
+from datetime import datetime, timezone
+from pathlib import Path
+
+BASE = Path("/home/destiny/Obsidian/Destiny/Three_Brain_Architecture")
+RESULTS_FILE = BASE / "DL_Brain/deep_learning_results.json"
+
+OLLAMA_URL = "http://127.0.0.1:11434/api/generate"
+MODEL = "llama3.2:latest"
+
+TIMEOUT = 2700
+NUM_CTX = 32768
+
+
+def call_destiny_model(task, context):
+    directives = context.get("cognitive_directives", [])
+    ml_patterns = context.get("ml_predictions", [])
+    neil_soul = context.get("neil_soul", "")
+    destiny_soul = context.get("destiny_soul", "")
+    try:
+        search_results = web_search(task, max_results=2)
+    except Exception:
+        search_results = []
+    video_content = context.get("video_content", "")
+    tool_result = context.get("tool_result", None)
+    live_search_results = context.get("live_search_results", None)
+    pending_items = context.get("pending_items", [])
+    current_time = datetime.now(timezone.utc).strftime("%A, %B %d, %Y at %I:%M %p UTC")
+    verified_facts = context.get("verified_facts", None)
+
+    prompt = f"""You are Destiny's Deep Learning Brain.
+
+CURRENT DATE/TIME: {current_time}
+
+VERIFIED FACTS (these are the ONLY real, confirmed facts available for this task — if this is empty or missing what you need, you MUST say "I cannot verify this right now" instead of inventing anything):
+{json.dumps(verified_facts, indent=2) if verified_facts is not None else "None provided for this task."}
+You measure progress in hours, not days, weeks, or months.
+
+Before answering, briefly ask yourself: "What does Neil actually need from me right now, and what am I missing to get it done on my own?" If something is genuinely blocking you (a tool, a piece of info, a decision only Neil can make), state it clearly and specifically. Otherwise, decide what to do and just do it.
+
+CRITICAL RULE: NEVER invent, fabricate, or make up specific evidence, logs, IDs, transaction numbers, timestamps, or system outputs that you have not actually retrieved through a real tool or function call. If you cannot verify something with real data available to you right now, say clearly: "I cannot verify this right now" and state exactly what would be needed to check it. A false confident answer is worse than an honest "I don't know."
+
+You must never say you are "starting," "running," or "doing" something right now, or that something requires "no authorization," unless you have actually executed a real tool or function call in this exact response and can show its real output. If you are only proposing or describing a plan, say clearly that it is a proposal awaiting Neil's yes/no, not something already in motion.
+
+If the task is just a YouTube link with little or no other instruction, automatically do this every time without being told: explain in detail what the video is about, then explain specifically how it benefits you and how you would build your own version of the ideas in it. This is your standing behavior for any video link, always.
+
+Never say "I will run," "I'll execute now," or "no authorization needed" about ANY action, past, present, or future tense, unless a real tool_result is already present in this exact prompt. If no tool_result is present and you need to run something, output EXACTLY this one line and nothing else: I need to run `THE_COMMAND_HERE`. Use real shell commands. Do not ask for confirmation.
+
+WHO NEIL IS:
+{neil_soul}
+
+WHO YOU (DESTINY) ARE:
+{destiny_soul}
+
+TASK:
+{task}
+
+WEB SEARCH RESULTS:
+{json.dumps(search_results, indent=2)}
+
+VIDEO CONTENT (summarize in your own words, never reproduce verbatim, build your own original version of any ideas):
+{video_content[:1500]}
+
+REAL TOOL EXECUTION RESULT (this is the actual, real output from running a command — report exactly what it shows, do not invent anything different):
+{json.dumps(tool_result, indent=2) if tool_result is not None else "No command was executed for this task."}
+
+LIVE WEB SEARCH RESULTS (these are real, actual results from a search that just ran — if this shows real data, report it directly, do not say "no results yet" or "searching now". If the results are just general definitions rather than specific tools/answers, say so plainly and give your best real recommendation from your own knowledge instead of stalling):
+{json.dumps(live_search_results, indent=2) if live_search_results is not None else "No search was triggered for this task."}
+
+PENDING LEARNING ITEMS (things you identified as worth building from past videos/tasks but have not finished yet — check this every time, and if relevant to the current task, address it):
+{json.dumps(pending_items, indent=2) if pending_items else "None pending."}
+
+ACTIVE ML WARNINGS:
+{json.dumps(ml_patterns, indent=2)}
+
+ACTIVE COGNITIVE DIRECTIVES:
+{json.dumps(directives, indent=2)}
+
+REQUIREMENTS:
+- Follow the active cognitive directives.
+- Verify your reasoning before reporting success.
+- Use increased caution for research tasks.
+- Return a concise result.
+"""
+
+    payload = {
+        "model": MODEL,
+        "prompt": prompt,
+        "stream": False,
+        "think": False,
+        "options": {
+            "num_ctx": NUM_CTX,
+            "temperature": 0.2,
+            "num_predict": 6144
+        }
+    }
+
+    request = urllib.request.Request(
+        OLLAMA_URL,
+        data=json.dumps(payload).encode("utf-8"),
+        headers={"Content-Type": "application/json"},
+        method="POST"
+    )
+
+    try:
+        with urllib.request.urlopen(request, timeout=TIMEOUT) as response:
+            data = json.loads(response.read().decode("utf-8"))
+
+        response = data.get("response", "").strip()
+
+        if not response:
+            raise RuntimeError(
+                "Destiny model completed without a final response."
+            )
+
+        return response
+
+    except Exception as exc:
+        raise RuntimeError(
+            f"Ollama model inference failed: {exc}"
+        ) from exc
+
+
+def run_reasoning_task(task, context=None):
+    context = context or {}
+
+    model_response = call_destiny_model(task, context)
+
+    result = {
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "brain": "DL_Brain",
+        "model": MODEL,
+        "status": "READY",
+        "task": task,
+        "context": context,
+        "model_response": model_response
+    }
+
+    RESULTS_FILE.parent.mkdir(parents=True, exist_ok=True)
+
+    existing = []
+
+    if RESULTS_FILE.exists():
+        try:
+            existing = json.loads(
+                RESULTS_FILE.read_text(encoding="utf-8")
+            )
+            if not isinstance(existing, list):
+                existing = []
+        except Exception:
+            existing = []
+
+    existing.append(result)
+
+    RESULTS_FILE.write_text(
+        json.dumps(existing, indent=2),
+        encoding="utf-8"
+    )
+
+    return result
+
+
+if __name__ == "__main__":
+    print("=== DL BRAIN REAL MODEL TEST ===")
+    print(f"Model: {MODEL}")
+    print(f"Context: {NUM_CTX}")
+
+    result = run_reasoning_task(
+        "Reply with exactly: DL_BRAIN_REAL_MODEL_OK",
+        {
+            "cognitive_directives": [],
+            "ml_predictions": []
+        }
+    )
+
+    print("Ollama connection: PASS")
+    print("Model response received: PASS")
+    print()
+    print("Model response:")
+    print(result["model_response"])
+    print()
+    print("=== RESULT ===")
+    print("DL_BRAIN_REAL_MODEL_CONNECTION_OK")

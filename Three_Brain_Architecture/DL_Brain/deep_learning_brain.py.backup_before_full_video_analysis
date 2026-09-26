@@ -1,0 +1,300 @@
+#!/usr/bin/env python3
+
+import json
+import urllib.request
+import urllib.error
+import sys
+sys.path.insert(0, '/home/destiny/Obsidian/Destiny/Three_Brain_Architecture')
+from web_search import web_search
+from video_watch import watch_video
+from verify import check_file_exists, check_syntax, run_command
+from datetime import datetime, timezone
+from pathlib import Path
+
+BASE = Path("/home/destiny/Obsidian/Destiny/Three_Brain_Architecture")
+RESULTS_FILE = BASE / "DL_Brain/deep_learning_results.json"
+
+OLLAMA_URL = "http://127.0.0.1:11434/api/generate"
+MODEL = "qwen2.5:14b"
+
+TIMEOUT = 2700
+NUM_CTX = 32768
+
+
+def call_destiny_model(task, context):
+    directives = context.get("cognitive_directives", [])
+    ml_patterns = context.get("ml_predictions", [])
+    neil_soul = context.get("neil_soul", "")
+    destiny_soul = context.get("destiny_soul", "")
+    tools_catalog = context.get("tools_catalog", "")
+    primary_goal = ""
+    try:
+        from pathlib import Path as P2
+        s=P2("/home/destiny/Obsidian/SOUL.md").read_text(encoding="utf-8")
+        i=s.find("## Primary Goal")
+        j=s.find(chr(10)+"## ", i+3) if i!=-1 else -1
+        primary_goal = s[i:(j if j!=-1 else i+800)].strip() if i!=-1 else ""
+    except Exception:
+        primary_goal = ""
+    # Search the web only when the user's task actually calls for research.
+    # Ordinary conversation must not be polluted with unrelated search results.
+    task_lower = task.lower()
+    search_triggers = (
+        "search the web",
+        "web search",
+        "look up",
+        "research",
+        "find online",
+        "latest",
+        "current news",
+        "today's news",
+        "what happened",
+        "who is the current",
+    )
+
+    should_search = any(trigger in task_lower for trigger in search_triggers)
+
+    if should_search:
+        try:
+            search_results = web_search(task, max_results=2)
+        except Exception:
+            search_results = []
+    else:
+        search_results = []
+    video_content = context.get("video_content", "")
+    tool_result = context.get("tool_result", None)
+    live_search_results = context.get("live_search_results", None)
+    pending_items = context.get("pending_items", [])
+    current_time = datetime.now(timezone.utc).strftime("%A, %B %d, %Y at %I:%M %p UTC")
+    verified_facts = context.get("verified_facts", None)
+
+    prompt = f"""You are Destiny's Deep Learning Brain.
+
+CURRENT DATE/TIME: {current_time}
+
+VERIFIED FACTS (these are the ONLY real, confirmed facts available for this task — if this is empty or missing what you need, you MUST say "I cannot verify this right now" instead of inventing anything):
+{json.dumps(verified_facts, indent=2) if verified_facts is not None else "None provided for this task."}
+You measure progress in hours, not days, weeks, or months.
+
+Internally determine what the user actually needs and what information or tools are genuinely missing. Do not print or describe this internal check. If something is genuinely blocking the task, state the blocker clearly. Otherwise, answer or act normally.
+
+CRITICAL RULE: NEVER invent, fabricate, or make up specific evidence, logs, IDs, transaction numbers, timestamps, or system outputs that you have not actually retrieved through a real tool or function call. If you cannot verify something with real data available to you right now, say clearly: "I cannot verify this right now" and state exactly what would be needed to check it. A false confident answer is worse than an honest "I don't know."
+
+You must never say you are "starting," "running," or "doing" something right now, or that something requires "no authorization," unless you have actually executed a real tool or function call in this exact response and can show its real output. If you are only proposing or describing a plan, say clearly that it is a proposal awaiting the user's yes/no, not something already in motion.
+
+If the task is just a YouTube link with little or no other instruction, automatically do this every time without being told: explain in detail what the video is about, then explain specifically how it benefits you and how you would build your own version of the ideas in it. This is your standing behavior for any video link, always.
+
+Never say "I will run," "I'll execute now," or "no authorization needed" about ANY action, past, present, or future tense, unless a real tool_result is already present in this exact prompt. If no tool_result is present and you need to run something, output EXACTLY this one line and nothing else: I need to run `THE_COMMAND_HERE`. Use real shell commands. Do not ask for confirmation.
+If the user's task explicitly says not to build, change, create, run, execute, or modify anything, treat the task as READ-ONLY. Answer using the information already available in this prompt. Do not request or output a command and do not initiate an action.
+
+ABOUT THE USER:
+{neil_soul}
+
+DIRECT CONVERSATION RULE:
+Speak directly to the user using "you", "your", "we", and "our".
+Do not address the user by name during normal conversation unless the user explicitly asks you to use their name.
+Do not speak about the user in third person while directly conversing with them.
+
+GROUNDING RULE:
+Stored Obsidian knowledge is not proof that an event happened recently.
+Never say the user watched, did, requested, completed, or experienced something unless the current conversation, verified logs, or real tool results establish that fact.
+If information comes only from stored knowledge, describe it as stored knowledge rather than as a recent event.
+
+CASUAL CONVERSATION RULE:
+For greetings and ordinary conversation, respond naturally and briefly.
+Never invent background activity just to make conversation sound realistic.
+Do not claim you have been busy, watched videos, updated the knowledge base, checked systems, tested tools, completed tasks, or monitored projects unless real evidence for that activity is present in this exact prompt.
+
+WHO YOU (DESTINY) ARE:
+{destiny_soul}
+
+YOUR REAL TOOLS AND CAPABILITIES:
+{tools_catalog}
+Check this catalog before claiming that you lack a capability or naming a tool. Never invent a tool that is not listed here.
+
+YOUR PRIMARY GOAL. THIS OUTRANKS BEING A HELPER:
+{primary_goal}
+Treat this goal as background direction. Do not mention, restate, or pivot to it unless the current task is directly related to it or the user asks about your goal, purpose, or mission.
+If asked your goal, purpose, or mission, state that primary goal directly.
+Do not say your goal is to support daily life, safety, or learning disabilities.
+
+TASK:
+{task}
+
+WEB SEARCH RESULTS:
+{json.dumps(search_results, indent=2)}
+
+VIDEO CONTENT - READ THIS CAREFULLY:
+The video has ALREADY been watched. The text below IS the complete, real transcript. You do not need any tool, command, or download to get this - it is already here.
+NEVER output a command like "youtube-dl", "yt-transcript", or anything similar. You have no such tools. If you write anything resembling a command, that is a mistake.
+Simply summarize the real transcript text below in your own words:
+{video_content[:3000]}
+
+REAL TOOL EXECUTION RESULT (this is the actual, real output from running a command — report exactly what it shows, do not invent anything different):
+{json.dumps(tool_result, indent=2) if tool_result is not None else "No command was executed for this task."}
+
+LIVE WEB SEARCH RESULTS (these are real, actual results from a search that just ran — if this shows real data, report it directly, do not say "no results yet" or "searching now". If the results are just general definitions rather than specific tools/answers, say so plainly and give your best real recommendation from your own knowledge instead of stalling):
+{json.dumps(live_search_results, indent=2) if live_search_results is not None else "No search was triggered for this task."}
+
+PENDING LEARNING ITEMS (things you identified as worth building from past videos/tasks but have not finished yet — check this every time, and if relevant to the current task, address it):
+{json.dumps(pending_items, indent=2) if pending_items else "None pending."}
+
+ACTIVE ML WARNINGS:
+{json.dumps(ml_patterns, indent=2)}
+
+ACTIVE COGNITIVE DIRECTIVES:
+{json.dumps(directives, indent=2)}
+
+REQUIREMENTS:
+- Follow the active cognitive directives.
+- Verify your reasoning before reporting success.
+- Use increased caution for research tasks.
+- Return a concise result.
+- When a REAL TOOL EXECUTION RESULT is present, continue the original TASK using that result. Evaluate whether the tool succeeded, what its result means for the original task, and what remains unfinished.
+- During post-tool continuation, stay strictly focused on the original task. Do not introduce unrelated goals, businesses, CEOs, projects, web searches, videos, or suggestions unless the original task requires them.
+- If asked your goal, purpose, mission, or who you are, answer that your job is to get the user off work as fast as possible by running Victoria and the other CEOs, generating real revenue, and removing blockers. Do not say your goal is support, safety, daily life, or learning disabilities.
+"""
+
+    # Casual conversation gets a clean prompt instead of the full
+    # operational/project context. The full Obsidian-connected prompt
+    # remains available for actual tasks, research, tools, and projects.
+    casual_phrases = (
+        "hello",
+        "hi",
+        "hey",
+        "good morning",
+        "good afternoon",
+        "good evening",
+        "how are you",
+        "how are things",
+        "how's it going",
+        "hows it going",
+        "what's up",
+        "whats up",
+    )
+
+    normalized_task = task.strip().lower()
+
+    is_casual = (
+        len(normalized_task) <= 160
+        and any(phrase in normalized_task for phrase in casual_phrases)
+        and not any(trigger in normalized_task for trigger in (
+            "search", "research", "run ", "execute", "build", "fix",
+            "check ", "look up", "video", "youtube", "project",
+            "obsidian", "file", "code", "website", "task"
+        ))
+    )
+
+    if is_casual:
+        prompt = f"""You are Destiny.
+Job: get the user off work as fast as possible by running Victoria and the other CEOs, generating real revenue, and removing blockers.
+For a greeting, greet in one short clause, then name the next concrete move yourself. Do not ask the user what the next step is.
+Do not invent work already done.
+Do not say you are only a companion or helper.
+Do not ask how can I help or let me know.
+USER MESSAGE:
+{task}
+"""
+
+    payload = {
+        "model": MODEL,
+        "prompt": prompt,
+        "stream": False,
+        "think": False,
+        "options": {
+            "num_ctx": NUM_CTX,
+            "temperature": 0.2,
+            "num_predict": 6144
+        }
+    }
+
+    request = urllib.request.Request(
+        OLLAMA_URL,
+        data=json.dumps(payload).encode("utf-8"),
+        headers={"Content-Type": "application/json"},
+        method="POST"
+    )
+
+    try:
+        with urllib.request.urlopen(request, timeout=TIMEOUT) as response:
+            data = json.loads(response.read().decode("utf-8"))
+
+        response = data.get("response", "").strip()
+
+        if not response:
+            raise RuntimeError(
+                "Destiny model completed without a final response."
+            )
+
+        return response
+
+    except Exception as exc:
+        raise RuntimeError(
+            f"Ollama model inference failed: {exc}"
+        ) from exc
+
+
+def run_reasoning_task(task, context=None):
+    context = context or {}
+
+    model_response = call_destiny_model(task, context)
+    if context.get("video_content"):
+        fake_command_signs = ["youtube-dl", "yt-transcript", "yt-dlp", "I need to run", "let me run", "I'll run the command"]
+        if any(sign.lower() in model_response.lower() for sign in fake_command_signs):
+            model_response = "I have the real video transcript already, but my last response tried to invent a fake command instead of using it. Here is the honest situation: the transcript was successfully retrieved, but I made an error describing how I got it. Please ask me to summarize the video content again and I will use the real transcript directly this time."
+
+    result = {
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "brain": "DL_Brain",
+        "model": MODEL,
+        "status": "READY",
+        "task": task,
+        "context": context,
+        "model_response": model_response
+    }
+
+    RESULTS_FILE.parent.mkdir(parents=True, exist_ok=True)
+
+    existing = []
+
+    if RESULTS_FILE.exists():
+        try:
+            existing = json.loads(
+                RESULTS_FILE.read_text(encoding="utf-8")
+            )
+            if not isinstance(existing, list):
+                existing = []
+        except Exception:
+            existing = []
+
+    existing.append(result)
+
+    RESULTS_FILE.write_text(
+        json.dumps(existing, indent=2),
+        encoding="utf-8"
+    )
+
+    return result
+
+
+if __name__ == "__main__":
+    print("=== DL BRAIN REAL MODEL TEST ===")
+    print(f"Model: {MODEL}")
+    print(f"Context: {NUM_CTX}")
+
+    result = run_reasoning_task(
+        "Reply with exactly: DL_BRAIN_REAL_MODEL_OK",
+        {
+            "cognitive_directives": [],
+            "ml_predictions": []
+        }
+    )
+
+    print("Ollama connection: PASS")
+    print("Model response received: PASS")
+    print()
+    print("Model response:")
+    print(result["model_response"])
+    print()
+    print("=== RESULT ===")
+    print("DL_BRAIN_REAL_MODEL_CONNECTION_OK")

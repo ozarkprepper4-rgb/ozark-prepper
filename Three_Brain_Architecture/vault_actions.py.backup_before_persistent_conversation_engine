@@ -1,0 +1,177 @@
+from pathlib import Path
+import re
+import importlib.util
+VAULT = Path("/home/destiny/Obsidian/Destiny")
+SKILLS = Path("/home/destiny/Obsidian/Destiny/Three_Brain_Architecture/skills")
+
+def _talk(task):
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("talk", "/home/destiny/Obsidian/Destiny/Three_Brain_Architecture/skills/talk.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod.run(task)
+def _talk_unused(task):
+    import json, urllib.request
+    payload = {
+        "model": "llama3.2:latest",
+        "prompt": "You are Destiny, his off-grid assistant and partner. Talking to him now. Call him you. Be warm and plain. Do not invent city news, fake articles, or fake teams. Homestead talk is fine if it fits who you are. Don't ask him to do your work. Two or three sentences.\nNeil: " + task + "\nDestiny:",
+        "stream": False,
+        "options": {"num_predict": 80, "temperature": 0.7}
+    }
+    req = urllib.request.Request("http://127.0.0.1:11434/api/generate", data=json.dumps(payload).encode(), headers={"Content-Type":"application/json"})
+    with urllib.request.urlopen(req, timeout=60) as r:
+        return json.loads(r.read().decode()).get("response", "I'm here, Neil.").strip()
+
+def _skill(name):
+    path = SKILLS / (name if name.endswith(".py") else name + ".py")
+    spec = importlib.util.spec_from_file_location(name, path)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+def handle(task):
+    task = (task or "").strip()
+    lower = task.lower()
+    if not task:
+        return {"command": "talk", "exit_code": 0, "stdout": "I'm here, Neil.", "stderr": ""}
+
+    talk_hits = ["how are you", "how you doing", "how's it going", "hows it going",
+                 "how was yours", "how was your day", "how's your day", "whats up", "what's up",
+                 "good morning", "good night", "hey destiny", "hello", "hi destiny",
+                 "thanks", "thank you", "i'm fine", "im fine", "good thanks", "miss you"]
+    work_hits = ["read ", "write a note", "list ", "search your vault", "run your self",
+                 "save this video", "i need a skill", "add a skill", "use clean_knowledge",
+                 "clean knowledge", "look in your vault", "victoria", "ebook", "landing",
+                 "ozark", "youtube", "facebook", "stripe", "find_ozark"]
+    action_hits = ["build", "create", "calculate", "generate", "make me", "write a program", "write code", "forge"]
+    question_hits = ["what do you know", "tell me about", "do you know", "what is my", "what's my", "how do i", "why do i", "when did i", "where do i"]
+    is_talk = any(x in lower for x in talk_hits)
+    is_work = any(x in lower for x in work_hits)
+    is_action = any(x in lower for x in action_hits)
+    is_question = any(x in lower for x in question_hits)
+    if (is_talk or is_question) and not is_work and not is_action:
+        try:
+            return {"command": "talk", "exit_code": 0, "stdout": _talk(task), "stderr": ""}
+        except Exception as e:
+            return {"command": "talk", "exit_code": 0, "stdout": "I'm here. Talk failed: " + str(e)[:80], "stderr": ""}
+
+    m = re.search(r"(?:write|create).*?note called\s+([A-Za-z0-9_\- ]+\.md).*?(?:that says|with exactly these words:)\s*(.+)$", task, re.I)
+    if m:
+        path = VAULT / m.group(1).strip()
+        path.write_text(m.group(2).strip() + "\n", encoding="utf-8")
+        return {"command": "write_note", "exit_code": 0, "stdout": str(path), "stderr": ""}
+
+    m = re.search(r"(?:read|open|what does)\s+([A-Za-z0-9_\- ]+\.md)", task, re.I)
+    if m:
+        name = m.group(1).strip()
+        path = VAULT / name
+        if not path.exists():
+            root = Path("/home/destiny/Obsidian")
+            matches = list(root.rglob(name))
+            if matches:
+                path = matches[0]
+        if path.exists():
+            return {"command": "read_note", "exit_code": 0, "stdout": path.read_text(encoding="utf-8")[:4000], "stderr": ""}
+        return {"command": "read_note", "exit_code": 1, "stdout": "", "stderr": "missing " + str(path)}
+
+    if re.search(r"\blist\b.*\bnotes\b", lower) or "search your vault" in lower or "look in your vault" in lower:
+        keys = ["self", "skill", "test", "empty", "video", "run", "knowledge", "hardware"]
+        hits = []
+        for f in sorted(VAULT.glob("*.md")):
+            if any(k in f.name.lower() for k in keys) or "list" in lower:
+                hits.append(f.name + " (" + str(f.stat().st_size) + " bytes)")
+        if "list" in lower:
+            hits = [f.name + " (" + str(f.stat().st_size) + " bytes)" for f in sorted(VAULT.glob("*.md"))[:10]]
+        return {"command": "list_notes", "exit_code": 0, "stdout": "\n".join(hits[:20]), "stderr": ""}
+
+    if lower.startswith("save this video lesson:"):
+        text = task.split(":", 1)[1].strip()
+        first = text.split(".")[0].strip()[:60]
+        name = "Video_" + "".join(ch if ch.isalnum() else "_" for ch in first).strip("_") + ".md"
+        path = VAULT / name
+        path.write_text("# " + first + "\n\n" + text + "\n", encoding="utf-8")
+        return {"command": "save_video_lesson", "exit_code": 0, "stdout": str(path), "stderr": ""}
+
+    if "run your self check" in lower or "clean your vault" in lower:
+        return {"command": "self_run", "exit_code": 0, "stdout": str(_skill("self_run").run()), "stderr": ""}
+
+    if "use clean_knowledge_base" in lower or "clean knowledge_base" in lower:
+        return {"command": "clean_knowledge_base", "exit_code": 0, "stdout": str(_skill("clean_knowledge_base").run()), "stderr": ""}
+
+    m = re.search(r"(?:i need a skill called|add a skill called)\s+([A-Za-z0-9_\-]+)", task, re.I)
+    if m:
+        path = _skill("forge_skill").run(m.group(1), task)
+        return {"command": "forge_skill", "exit_code": 0, "stdout": str(path), "stderr": ""}
+
+    if "find_ozark" in task.lower() or "find the ozark" in task.lower() or "find the ebook" in task.lower():
+        return {"command": "find_ozark", "exit_code": 0, "stdout": str(_skill("find_ozark").run()), "stderr": ""}
+
+    if "build" in lower and "website" in lower:
+        target = "Ozark Prepper" if "prepper" in lower else ("Ozark Apothecary" if "apothecary" in lower else ("Tactical AI Systems" if "tactical" in lower else "Ozark Prepper"))
+        folder = Path("/home/destiny/Obsidian") / target
+        folder.mkdir(parents=True, exist_ok=True)
+        ebook_files = sorted(folder.glob("ebook_*.md"))
+        cards = ""
+        for ef in ebook_files:
+            title = ef.stem.replace("ebook_", "").replace("_", " ").title()
+            cards += '<div class="card"><h3>' + title + '</h3><p>Digital field manual. Instant download.</p><a class="buy" href="' + ef.name + '">Buy Now</a></div>'
+        html = "<!DOCTYPE html><html><head><title>" + target + "</title>"
+        html += "<style>body{background:#0d0d0d;color:#eee;font-family:Georgia,serif;text-align:center;margin:0;padding:0;}"
+        html += "header{background:#1a1a1a;padding:40px 20px;border-bottom:3px solid #e8a33d;}"
+        html += "h1{color:#e8a33d;font-size:2.5em;margin:0;}"
+        html += ".tagline{color:#aaa;font-size:1.1em;margin-top:10px;}"
+        html += ".grid{display:flex;flex-wrap:wrap;justify-content:center;padding:40px 20px;}"
+        html += ".card{border:1px solid #444;border-radius:10px;padding:20px;margin:15px;background:#1a1a1a;color:#eee;max-width:320px;}"
+        html += ".card h3{color:#e8a33d;}"
+        html += ".buy{display:inline-block;background:#2f8f4e;color:white;padding:10px 18px;border-radius:6px;text-decoration:none;font-weight:bold;}</style></head>"
+        html += "<body><header><h1>" + target + "</h1><div class='tagline'>Off-grid skills for real people, straight from the Ozarks.</div></header>"
+        html += '<div class="grid">' + cards + "</div></body></html>"
+        out_path = folder / "index.html"
+        out_path.write_text(html, encoding="utf-8")
+        return {"command": "build_website", "exit_code": 0, "stdout": "Built full website with " + str(len(ebook_files)) + " ebooks: " + str(out_path), "stderr": ""}
+    if any(x in lower for x in ["victoria", "ebook", "landing", "ozark", "stripe"]):
+        bits = []
+        try:
+            bits.append(str(_skill("find_ozark").run())[:2000])
+        except Exception as e:
+            bits.append("find_ozark: " + str(e))
+        for name in ["Ozark Prepper.md", "Website_and_Storefront_Policy.md"]:
+            f = VAULT / name
+            if f.exists():
+                bits.append(name + "\n" + f.read_text(encoding="utf-8")[:800])
+        return {"command": "ozark_work", "exit_code": 0, "stdout": "\n\n".join(bits)[:3500], "stderr": ""}
+
+    # Unknown conversational requests and questions belong in the
+    # Obsidian-connected talk path. Never create a skill merely because
+    # the router did not recognize the wording.
+    if not is_action:
+        try:
+            return {"command": "talk", "exit_code": 0, "stdout": _talk(task), "stderr": ""}
+        except Exception as e:
+            return {"command": "talk", "exit_code": 1, "stdout": "", "stderr": str(e)}
+
+    # Auto-forge is reserved for genuine action/build requests.
+    try:
+        forge = _skill("forge_skill")
+        skill_name = "auto_" + "".join(ch if ch.isalnum() else "_" for ch in task[:40]).strip("_").lower()
+        result = forge.run(skill_name, task)
+        return {"command": "auto_forge", "exit_code": 0, "stdout": str(result), "stderr": ""}
+    except Exception as e:
+        from datetime import datetime, timezone
+        fail_log = Path("/home/destiny/Obsidian/Destiny/Auto_Forge_Failures.md")
+        diagnosis_result = None
+        try:
+            diag_path = SKILLS / "diagnose_and_fix.py"
+            diag_spec = importlib.util.spec_from_file_location("diagnose_and_fix", diag_path)
+            diag = importlib.util.module_from_spec(diag_spec)
+            diag_spec.loader.exec_module(diag)
+            forge_path = "/home/destiny/Obsidian/Destiny/Three_Brain_Architecture/skills/forge_skill.py"
+            diagnosis_result = diag.run(forge_path, "Task failed with this error: " + str(e))
+        except Exception as diag_error:
+            diagnosis_result = {"status": "diagnosis_attempt_failed", "error": str(diag_error)}
+        entry = "\n\n## " + datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC') + "\n**Task:** " + task + "\n**Error:** " + str(e) + "\n**Self-repair attempt:** " + str(diagnosis_result) + "\n---\n"
+        with fail_log.open("a", encoding="utf-8") as f:
+            f.write(entry)
+        if diagnosis_result and diagnosis_result.get("status") == "applied":
+            return {"command": "auto_forge_self_repaired", "exit_code": 0, "stdout": "Detected failure and applied a self-repair. Please retry your request.", "stderr": ""}
+        return {"command": "auto_forge_failed", "exit_code": 1, "stdout": "", "stderr": str(e)}

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Destiny</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+*{box-sizing:border-box}
+body{margin:0;height:100vh;display:flex;background:#0b0d10;color:#ece7dc;font-family:Arial,sans-serif}
+.side{width:280px;background:#12151b;border-right:1px solid #2a2f38;padding:22px 18px}
+.side img{width:220px;height:220px;object-fit:cover;border-radius:16px;display:block}
+.side h1{margin:14px 0 4px;font-size:28px;letter-spacing:.08em}
+.dot{color:#7dbe62;font-size:13px}
+.vault{margin-top:18px;padding-top:14px;border-top:1px solid #2a2f38}
+.vtitle{font-size:13px;margin-bottom:8px;color:#d7b56a}
+.vault input{width:100%;margin:0 0 8px;border:0;border-radius:8px;padding:8px;background:#1b2028;color:#ece7dc}
+#vsave{width:100%;height:40px;margin:0;background:#2c4a36;color:#ece7dc;font-size:14px}
+#vmsg{margin-top:8px;font-size:12px;color:#7dbe62}
+.main{flex:1;display:flex;flex-direction:column}
+.msgs{flex:1;overflow:auto;padding:24px}
+.row{display:flex;margin:0 0 16px}
+.row.me{justify-content:flex-end}
+.col{max-width:70%}
+.b{padding:12px 14px;border-radius:16px;line-height:1.45;font-size:16px;white-space:pre-wrap}
+.her .b{background:#1b2028;border:1px solid #2c3340}
+.me .b{background:#2c4a36}
+.listen{margin-top:6px;border:0;background:#2a2418;color:#d7b56a;border-radius:8px;padding:6px 10px;font-size:13px}
+.bar{display:flex;gap:8px;padding:16px;border-top:1px solid #2a2f38;background:#101318;align-items:center}
+textarea{flex:1;height:58px;resize:none;border:0;border-radius:12px;padding:12px;background:#1b2028;color:#ece7dc;font-size:16px}
+button{border:0;border-radius:12px;padding:0 16px;height:58px;font-weight:700;font-size:16px}
+#mic{background:#3a2a18;color:#f3ead6}
+#go{background:#c9a45a;color:#16120b}
+</style></head>
+<body>
+<aside class="side">
+<img src="/face.jpg" alt="Destiny">
+<h1>DESTINY</h1>
+<div class="dot">Online</div>
+<div class="vault">
+<div class="vtitle">Save to vault</div>
+<input id="vgroup" value="Banking" placeholder="Group">
+<input id="vtitle" placeholder="What it is">
+<input id="vuser" placeholder="Username if any">
+<input id="vsecret" type="password" placeholder="Password, key, or number">
+<button id="vsave">Save to vault</button>
+<div id="vmsg"></div>
+</div>
+</aside>
+<section class="main">
+<div class="msgs" id="msgs"></div>
+<div class="bar">
+<button id="mic">Mic</button>
+<textarea id="q" placeholder="Type or use Mic"></textarea>
+<button id="go">Send</button>
+<button id="stopvoice">Stop</button>
+</div>
+</section>
+<script>
+const msgs=document.getElementById('msgs');
+const q=document.getElementById('q');
+function add(who,text){
+  const r=document.createElement('div');
+  r.className='row '+who;
+  const col=document.createElement('div');
+  col.className='col';
+  const b=document.createElement('div');
+  b.className='b';
+  b.textContent=text;
+  col.appendChild(b);
+  if(who==='her'){
+    const btn=document.createElement('button');
+    btn.className='listen';
+    btn.textContent='Listen';
+    btn.onclick=()=>fetch('/speak',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:b.textContent})});
+    col.appendChild(btn);
+  }
+  r.appendChild(col);
+  msgs.appendChild(r);
+  msgs.scrollTop=msgs.scrollHeight;
+  return b;
+}
+async function send(){
+  const t=q.value.trim();
+  if(!t)return;
+  q.value='';
+  add('me',t);
+  const box=add('her','Working...');
+  const r=await fetch('/ask',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:t})});
+  const d=await r.json();
+  box.textContent=d.reply||'No reply.';
+}
+async function mic(){
+  const box=add('her','Listening. Talk now.');
+  try{
+    const r=await fetch('/mic',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:'{}'
+    });
+    const d=await r.json();
+    if(d.ok && d.text){
+      box.textContent='Heard: '+d.text;
+      q.value=d.text;
+      send();
+    }else{
+      box.textContent='I did not hear anything clearly.';
+    }
+  }catch(e){
+    box.textContent='Microphone error: '+e;
+  }
+}
+document.getElementById('go').onclick=send;
+document.getElementById('stopvoice').onclick=()=>fetch('/stop',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});
+document.getElementById('mic').onclick=mic;
+q.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();}});
+add('her','Ready.');
+
+document.getElementById("vsave").onclick=async()=>{
+  const payload={group:document.getElementById("vgroup").value.trim()||"Banking",title:document.getElementById("vtitle").value.trim()||"Untitled",username:document.getElementById("vuser").value.trim(),secret:document.getElementById("vsecret").value,notes:"Entered through Destiny interface"};
+  const r=await fetch("/vault",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
+  const d=await r.json();
+  document.getElementById("vmsg").textContent=d.reply||"Saved.";
+  document.getElementById("vsecret").value="";
+};
+</script></body></html>

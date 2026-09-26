@@ -1,0 +1,78 @@
+#!/usr/bin/env python3
+import json
+import re
+import subprocess
+import tempfile
+from pathlib import Path
+
+def extract_video_id(url_or_id):
+    if len(url_or_id) == 11 and "/" not in url_or_id:
+        return url_or_id
+    match = re.search(r'(?:v=|youtu\.be/|embed/)([A-Za-z0-9_-]{11})', url_or_id)
+    return match.group(1) if match else None
+
+def _format_timestamp(seconds):
+    seconds = int(seconds)
+    hours, remainder = divmod(seconds, 3600)
+    minutes, seconds = divmod(remainder, 60)
+    if hours:
+        return f"{hours:02d}:{minutes:02d}:{seconds:02d}"
+    return f"{minutes:02d}:{seconds:02d}"
+
+def _analyze_frame(image_path):
+    result = subprocess.run(
+        ["ollama", "run", "moondream", """Analyze this video frame carefully. Describe only meaningful visible information. Look for: interfaces and applications; menus, buttons, settings and workflows; code, terminals and commands; diagrams, charts and technical illustrations; readable on-screen text; demonstrations and actions being performed; tools, machines, devices and important objects; people or locations when relevant; and visual details that add information beyond spoken narration. Do not invent details that are not visible. Image: """ + str(image_path)],
+        capture_output=True, text=True, timeout=60
+    )
+    return result.stdout.strip()
+
+def watch_video_visual(url_or_id, num_frames=None):
+    video_id = extract_video_id(url_or_id)
+    if not video_id:
+        return {"error": "Could not extract video ID"}
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        video_path = Path(tmpdir) / "video.mp4"
+        dl_result = subprocess.run(
+            ["yt-dlp", "-f", "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]", "-o", str(video_path), f"https://www.youtube.com/watch?v={video_id}"],
+            capture_output=True, text=True, timeout=120
+        )
+        if not video_path.exists():
+            return {"error": "Could not download video for frame extraction", "details": dl_result.stderr[:300]}
+
+        duration_result = subprocess.run(
+            ["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "default=noprint_wrappers=1:nokey=1", str(video_path)],
+            capture_output=True, text=True, timeout=30
+        )
+        try:
+            duration = float(duration_result.stdout.strip())
+        except Exception:
+            duration = 60
+
+        # Adapt visual sampling to the video's total runtime.
+        # Roughly one frame every 2 minutes, with sensible minimum/maximum limits.
+        if num_frames is None:
+            num_frames = max(6, min(30, round(duration / 120)))
+
+        frame_descriptions = []
+        for i in range(num_frames):
+            timestamp = duration * (i + 1) / (num_frames + 1)
+            frame_path = Path(tmpdir) / f"frame_{i}.png"
+            subprocess.run(
+                ["ffmpeg", "-ss", str(timestamp), "-i", str(video_path), "-frames:v", "1", "-y", str(frame_path)],
+                capture_output=True, timeout=30
+            )
+            if frame_path.exists():
+                description = _analyze_frame(frame_path)
+                frame_descriptions.append({
+                    "time_seconds": round(timestamp, 1),
+                    "timestamp": _format_timestamp(timestamp),
+                    "description": description
+                })
+
+        return {"video_id": video_id, "visual_frames": frame_descriptions}
+
+if __name__ == "__main__":
+    import sys
+    q = sys.argv[1] if len(sys.argv) > 1 else "dQw4w9WgXcQ"
+    print(json.dumps(watch_video_visual(q), indent=2))

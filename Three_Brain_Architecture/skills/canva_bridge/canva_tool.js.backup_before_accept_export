@@ -1,0 +1,52 @@
+import { Client } from "@modelcontextprotocol/sdk/client/index.js";
+import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
+
+async function connect() {
+  const transport = new StdioClientTransport({
+    command: "bash",
+    args: [
+      "-lc",
+      'source "$HOME/.nvm/nvm.sh" && npx -y mcp-remote https://mcp.canva.com/mcp'
+    ]
+  });
+
+  const client = new Client({
+    name: "victoria-ozark-prepper-canva",
+    version: "1.0.0"
+  });
+
+  await client.connect(transport);
+  return client;
+}
+
+async function main() {
+  const [action, designType, ...words] = process.argv.slice(2);
+
+  if (action !== "generate" || !designType || !words.length) {
+    console.error("Usage: node canva_tool.js generate <design_type> <description>");
+    process.exit(1);
+  }
+
+  const description = words.join(" ");
+  const client = await connect();
+
+  try {
+    const result = await client.callTool({
+      name: "generate-design",
+      arguments: {
+        query: description,
+        design_type: designType,
+        user_intent: "Create Ozark Prepper content for Victoria and her team."
+      }
+    });
+
+    console.log(JSON.stringify(result, null, 2));
+  } finally {
+    await client.close();
+  }
+}
+
+main().catch(err => {
+  console.error("CANVA ERROR:", err.message);
+  process.exit(1);
+});

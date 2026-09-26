@@ -1,0 +1,60 @@
+from pathlib import Path
+import sys
+import time
+import fcntl
+import py_compile
+sys.path.insert(0, '/home/destiny/Obsidian/Destiny/Three_Brain_Architecture/skills')
+import diagnose_and_fix
+
+WATCH_FILES = [
+    "/home/destiny/Obsidian/Destiny/Three_Brain_Architecture/vault_actions.py",
+    "/home/destiny/Obsidian/Destiny/Three_Brain_Architecture/conversation_engine.py",
+]
+
+LOG = Path("/home/destiny/Obsidian/Destiny/Autonomous_Watch_Log.md")
+
+def check_once():
+    for f in WATCH_FILES:
+        recent_attempts = ""
+        if LOG.exists():
+            try:
+                log_content = LOG.read_text(encoding="utf-8")
+                if str(f) in log_content:
+                    sections = log_content.split("**File:** " + str(f))[1:]
+                    if sections:
+                        recent_attempts = sections[-1][:400]
+            except Exception:
+                pass
+
+        try:
+            py_compile.compile(f, doraise=True)
+            continue
+        except py_compile.PyCompileError as e:
+            problem = "Python syntax check failed. Diagnose and repair this real error: " + str(e)
+        if recent_attempts:
+            problem += "\n\nA previous check of this same file found: " + recent_attempts + "\nIf that same issue was not actually fixable, look for a DIFFERENT real problem instead, or conclude nothing is wrong."
+
+        try:
+            result = diagnose_and_fix.run(f, problem)
+        except Exception as e:
+            result = {"status": "error", "error": str(e)}
+        entry = "\n\n## " + time.strftime("%Y-%m-%d %H:%M:%S") + "\n**File:** " + f + "\n**Result:** " + str(result) + "\n---\n"
+        with LOG.open("a", encoding="utf-8") as log_f:
+            log_f.write(entry)
+
+LOCK_FILE = Path("/tmp/destiny_model_busy.lock")
+
+if __name__ == "__main__":
+    while True:
+        with LOCK_FILE.open("w") as lock:
+            try:
+                fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            except BlockingIOError:
+                time.sleep(300)
+                continue
+
+            lock.write("autonomous_watch")
+            lock.flush()
+            check_once()
+
+        time.sleep(300)

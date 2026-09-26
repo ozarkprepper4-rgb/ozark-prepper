@@ -1,0 +1,22 @@
+{
+  "timestamp": "2026-09-26T05:09:14.007459+00:00",
+  "source": "ML_Brain \u2192 Adaptive_Brain \u2192 Cognitive Integration",
+  "high_risk_patterns": [],
+  "active_adaptive_rules": [
+    {
+      "rule": "ml_adaptation_controlled_test_research",
+      "instruction": "Increase verification and caution for research tasks.",
+      "trigger": "High frequency failure: controlled_test_research (2 recent)"
+    },
+    {
+      "rule": "ml_adaptation_fail_task",
+      "instruction": "Increase verification of task completion before reporting success.",
+      "trigger": "High frequency failure: fail_task (2 recent)"
+    }
+  ],
+  "cognitive_directives": [
+    "Increase verification and caution for research tasks.",
+    "Increase verification of task completion before reporting success."
+  ],
+  "status": "READY"
+}

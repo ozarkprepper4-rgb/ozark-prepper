@@ -1,0 +1,5 @@
+def is_even_count(items):
+    count = 0
+    for i in items:
+        count += 1
+    return True if count % 2 == 0 else False

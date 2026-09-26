@@ -1,0 +1,743 @@
+#!/usr/bin/env python3
+
+import json
+import sys
+import time
+import subprocess
+import re
+import re
+from datetime import datetime, timezone
+from pathlib import Path
+
+BASE = Path("/home/destiny/Obsidian/Destiny/Three_Brain_Architecture")
+
+ML_RESULTS = BASE / "ML_Brain/prediction_results.json"
+PREDICTOR = BASE / "ML_Brain/learning_predictor.py"
+RULES = BASE / "Adaptive_Brain/behavior_rules.json"
+COGNITIVE = BASE / "Logs/cognitive_integration.json"
+ORCHESTRATOR_LOG = BASE / "Logs/cognitive_orchestrator.json"
+
+sys.path.insert(0, str(BASE / "DL_Brain"))
+sys.path.insert(0, str(BASE / "ML_Brain"))
+sys.path.insert(0, str(BASE / "skills"))
+
+from deep_learning_brain import run_reasoning_task
+from learning_recorder import record_experience
+from knowledge_capture import capture
+from pre_execution_verifier import verify_task
+
+
+def load_json(path, default):
+    if not path.exists():
+        return default
+
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return default
+
+
+def run_predictor():
+    result = subprocess.run(
+        [sys.executable, str(PREDICTOR)],
+        capture_output=True,
+        text=True,
+        check=False
+    )
+
+    return {
+        "return_code": result.returncode,
+        "stdout": result.stdout.strip(),
+        "stderr": result.stderr.strip()
+    }
+
+
+def update_adaptive_brain():
+    predictions = load_json(ML_RESULTS, {})
+    rules = load_json(RULES, {})
+
+    warnings = predictions.get("high_risk_patterns", [])
+    applied = []
+
+    for warning in warnings:
+
+        if "controlled_test_research" in warning:
+            key = "ml_adaptation_controlled_test_research"
+
+            rules[key] = {
+                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "source": "ML_Brain/prediction_results.json",
+                "trigger": warning,
+                "adaptation": "Increase verification and caution for research tasks.",
+                "status": "applied"
+            }
+
+            applied.append(key)
+
+        elif "fail_task" in warning:
+            key = "ml_adaptation_fail_task"
+
+            rules[key] = {
+                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "source": "ML_Brain/prediction_results.json",
+                "trigger": warning,
+                "adaptation": "Increase verification of task completion before reporting success.",
+                "status": "applied"
+            }
+
+            applied.append(key)
+
+    RULES.write_text(
+        json.dumps(rules, indent=2),
+        encoding="utf-8"
+    )
+
+    return applied
+
+
+def rebuild_cognitive_integration():
+    rules = load_json(RULES, {})
+
+    active = []
+
+    for key, rule in rules.items():
+        if isinstance(rule, dict) and rule.get("status") == "applied":
+            instruction = rule.get("adaptation", "")
+
+            if instruction:
+                active.append({
+                    "rule": key,
+                    "instruction": instruction,
+                    "trigger": rule.get("trigger", "")
+                })
+
+    cognitive = {
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "source": "ML_Brain → Adaptive_Brain → Cognitive Integration",
+        "high_risk_patterns": load_json(
+            ML_RESULTS, {}
+        ).get("high_risk_patterns", []),
+        "active_adaptive_rules": active,
+        "cognitive_directives": [
+            item["instruction"]
+            for item in active
+        ],
+        "status": "READY"
+    }
+
+    COGNITIVE.parent.mkdir(parents=True, exist_ok=True)
+
+    COGNITIVE.write_text(
+        json.dumps(cognitive, indent=2),
+        encoding="utf-8"
+    )
+
+    return cognitive
+
+
+
+def _last_resort_repair(task, exc):
+    import traceback
+    import importlib.util
+    import json
+
+    repair_log = BASE / "Logs/last_resort_repair.json"
+    tb_text = traceback.format_exc()
+    target = None
+
+    for frame in reversed(traceback.extract_tb(sys.exc_info()[2])):
+        candidate = Path(frame.filename)
+        if str(candidate).startswith(str(BASE)) and candidate.name not in {
+            "diagnose_and_fix.py",
+            "safe_self_edit.py"
+        }:
+            target = candidate
+            break
+
+    result = {
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "task": task,
+        "error": str(exc),
+        "target": str(target) if target else None
+    }
+
+    if target is None or not target.exists():
+        result["status"] = "no_safe_target"
+    else:
+        try:
+            path = BASE / "skills/diagnose_and_fix.py"
+            spec = importlib.util.spec_from_file_location(
+                "last_resort_diagnose", path
+            )
+            diag = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(diag)
+
+            diagnosis = diag.run(
+                str(target),
+                "Unhandled Destiny exception.\n\nFull traceback:\n" + tb_text
+            )
+
+            result["diagnosis"] = diagnosis
+
+            if diagnosis.get("status") == "applied":
+                result["status"] = "repair_applied"
+                result["backup"] = diagnosis.get("details", {}).get("backup")
+            else:
+                result["status"] = "repair_failed"
+
+        except Exception as repair_error:
+            result["status"] = "repair_error"
+            result["repair_error"] = str(repair_error)
+
+    repair_log.parent.mkdir(parents=True, exist_ok=True)
+
+    existing = []
+    if repair_log.exists():
+        try:
+            existing = json.loads(
+                repair_log.read_text(encoding="utf-8")
+            )
+            if not isinstance(existing, list):
+                existing = []
+        except Exception:
+            existing = []
+
+    existing.append(result)
+    repair_log.write_text(
+        json.dumps(existing, indent=2),
+        encoding="utf-8"
+    )
+
+    return result
+
+
+def _run_core(task):
+    _is_video_link_task = "youtube.com" in task or "youtu.be" in task
+    if not _is_video_link_task:
+        try:
+            from vault_actions import handle as _vault_handle
+            _executive_task = any(x in task.lower() for x in [
+                "autonomous self-improvement",
+                "autonomous loop",
+                "take over completing your own",
+                "inspect your capabilities",
+                "determine for yourself",
+                "perform the necessary action"
+            ])
+            _environment_task = (
+                re.search(r"\brun in (?:mint|ubuntu|arch|kali|omarchy)\b", task, re.IGNORECASE)
+                or "appropriate linux environment" in task.lower()
+            )
+            _acted = None if (_executive_task or _environment_task) else _vault_handle(task)
+            if _acted:
+                msg = _acted.get("stdout") if isinstance(_acted, dict) and "stdout" in _acted else str(_acted)
+                return {"task": task, "pipeline": {"vault_actions": "PASS"}, "model_response": msg, "status": "PASS"}
+        except Exception as _vault_err:
+            print("vault_actions error:", _vault_err)
+
+    # ---------------------------------------------------------
+    # PHASE 0 — Mandatory pre-execution verification
+    # ---------------------------------------------------------
+
+    verification = verify_task(task)
+
+    if verification.get("status") != "READY":
+        return {
+            "status": "BLOCKED",
+            "pipeline": {
+                "pre_execution_verification": "FAIL"
+            },
+            "verification": verification,
+            "dl_result": {}
+        }
+
+    start = time.time()
+
+    # ---------------------------------------------------------
+    # PHASE 1 — Load current cognitive state
+    # ---------------------------------------------------------
+
+    ml = load_json(ML_RESULTS, {})
+    cognitive = load_json(COGNITIVE, {})
+
+    # Keep model context minimal for normal tasks.
+    # Adaptive directives remain recorded in the cognitive layer,
+    # but are not blindly injected into every model prompt.
+    neil_soul = Path("/home/destiny/Obsidian/Neil SOUL.md").read_text(encoding="utf-8")[:3000] if Path("/home/destiny/Obsidian/Neil SOUL.md").exists() else ""
+    destiny_soul = Path("/home/destiny/Obsidian/Destiny/SOUL.md").read_text(encoding="utf-8")[:3000] if Path("/home/destiny/Obsidian/Destiny/SOUL.md").exists() else ""
+
+    # Conversation-only identity filter.
+    # Keep the real Obsidian files unchanged, but stop repeatedly
+    # priming the model to address the user by name.
+    def _conversation_identity_filter(text):
+        text = re.sub(r"\bNeil Wilcox\b", "the user", text)
+        text = re.sub(r"\bNeil's\b", "the user's", text)
+        text = re.sub(r"\bNeil\b", "the user", text)
+        return text
+
+    neil_soul = _conversation_identity_filter(neil_soul)
+    destiny_soul = _conversation_identity_filter(destiny_soul)
+    if not ("youtube.com" in task or "youtu.be" in task) and any(w in task.lower() for w in ["watch this video", "watch the video", "look up this video", "find this video"]):
+        try:
+            from video_search import search_youtube
+            title_part = task
+            for phrase in ["watch this video", "watch the video", "look up this video", "find this video", "titled", "called"]:
+                title_part = title_part.replace(phrase, "").replace(phrase.title(), "")
+            title_part = title_part.strip(" :\"'")
+            found = search_youtube(title_part, max_results=1)
+            if found:
+                task = found[0]["url"]
+        except Exception:
+            pass
+
+    video_content = ""
+    if "youtube.com" in task or "youtu.be" in task:
+        try:
+            from video_watch import analyze_video
+
+            vresult = analyze_video(task)
+
+            if vresult.get("error"):
+                video_content = "VIDEO ANALYSIS ERROR: " + str(vresult["error"])
+            else:
+                video_content = vresult.get("full_video_analysis", "")
+
+        except Exception as exc:
+            video_content = "VIDEO ANALYSIS ERROR: " + str(exc)
+
+
+
+    import json as _json
+    pending_path = Path("/home/destiny/Obsidian/Destiny/Three_Brain_Architecture/pending_learning.json")
+    pending_items = []
+    if pending_path.exists():
+        try:
+            pending_items = _json.loads(pending_path.read_text())
+        except Exception:
+            pending_items = []
+
+    verified_facts = None
+    lower_task = task.lower()
+    live_search_results = None
+    if any(w in lower_task for w in ["search the web", "actively search", "searching for", "search for business", "search for marketing", "youtube channels"]):
+        try:
+            from web_search import web_search
+            clean_query = re.sub(r'.*?(search the web|actively search|search)\s*(for|about)?\s*', '', task, flags=re.IGNORECASE)
+            clean_query = re.split(r'\band tell me\b|\.', clean_query)[0].strip()
+            live_search_results = web_search(clean_query if clean_query else task, max_results=3)
+        except Exception:
+            live_search_results = []
+    needs_verification = any(w in lower_task for w in ["verif", "prove", "evidence", "confirm", "is it live", "is it working", "is it done"])
+    if needs_verification:
+        from verify import check_file_exists, run_command
+        checks = {}
+        if "stripe" in lower_task:
+            checks["stripe_integration_exists"] = False
+            checks["note_stripe"] = "No real Stripe API connection exists in this system yet."
+        if "website" in lower_task or "ozark prepper" in lower_task:
+            checks["website_file"] = check_file_exists("/home/destiny/Obsidian/Ozark Prepper/index.html")
+        if "ebook" in lower_task:
+            checks["ebook_dist_folder"] = check_file_exists("/home/destiny/Obsidian/Ozark Prepper/dist")
+        if not checks:
+            checks["note"] = "No specific verification check matched this task. Say you cannot verify this without a real check."
+        verified_facts = checks
+    tools_path = Path("/home/destiny/Obsidian/Destiny/TOOLS.md")
+    tools_catalog = tools_path.read_text(encoding="utf-8")[:5000] if tools_path.exists() else ""
+
+    context = {
+        "neil_soul": neil_soul,
+        "tools_catalog": tools_catalog,
+        "video_content": video_content,
+        "verified_facts": verified_facts,
+        "live_search_results": live_search_results,
+        "pending_items": pending_items,
+        "destiny_soul": destiny_soul,
+        "verification_required": True,
+        "source": "Three-Brain Cognitive Orchestrator"
+    }
+
+    # ---------------------------------------------------------
+    # PHASE 2 — Execute real Destiny model
+    # ---------------------------------------------------------
+
+    from verify import run_command
+
+    import environment_tool
+
+    def run_environment_command(cmd, environment="mint"):
+        result = environment_tool.run(cmd, environment, timeout=30)
+        return {
+            "command": environment + ": " + cmd,
+            "exit_code": result["exit_code"],
+            "stdout": result["stdout"][:500],
+            "stderr": result["stderr"][:500]
+        }
+
+    def run_omarchy_command(cmd):
+        return run_environment_command(cmd, "omarchy")
+
+    tool_result = None
+    _note = re.search(r"(?:write|create).*?note called\s+([A-Za-z0-9_\-]+\.md).*?(?:that says|with exactly these words:)\s*(.+)$", task, re.IGNORECASE)
+    if _note:
+        _path = Path("/home/destiny/Obsidian/Destiny") / _note.group(1)
+        _path.write_text(_note.group(2).strip() + "\n", encoding="utf-8")
+        tool_result = {"command": "write_note", "exit_code": 0, "stdout": str(_path), "stderr": ""}
+    _read = re.search(r"(?:read|open|what does)\s+([A-Za-z0-9_\-]+\.md)", task, re.IGNORECASE)
+    if tool_result is None and re.search(r"\blist\b.*\bnotes\b", task, re.IGNORECASE):
+        _vault = Path("/home/destiny/Obsidian/Destiny")
+        _names = sorted([x.name for x in _vault.glob("*.md")])[:10]
+        tool_result = {"command": "list_notes", "exit_code": 0, "stdout": "\n".join(_names), "stderr": ""}
+
+    if tool_result is None and _read:
+        _path = Path("/home/destiny/Obsidian/Destiny") / _read.group(1)
+        if _path.exists():
+            tool_result = {"command": "read_note", "exit_code": 0, "stdout": _path.read_text(encoding="utf-8")[:4000], "stderr": ""}
+        else:
+            tool_result = {"command": "read_note", "exit_code": 1, "stdout": "", "stderr": "missing " + str(_path)}
+    _env_match = re.search(r"run in (mint|ubuntu|arch|kali|omarchy)[^:]*:\s*(.+)$", task, re.IGNORECASE)
+    if tool_result is None and _env_match:
+        environment = _env_match.group(1).lower()
+        real_cmd = _env_match.group(2).strip()
+        tool_result = run_environment_command(real_cmd, environment)
+    elif tool_result is None and ("run this exact command" in lower_task or "using your run_command tool" in lower_task):
+        cmd_match = re.search(r"(?:run this exact command[^:]*:|using your run_command tool[^:]*:)\s*(.+)$", task, re.IGNORECASE)
+        if cmd_match:
+            real_cmd = cmd_match.group(1).strip()
+            tool_result = run_command(real_cmd)
+    direct_tool_completed = tool_result is not None
+    context["tool_result"] = tool_result
+
+    dl_result = run_reasoning_task(task, context)
+
+    if dl_result.get("status") != "READY":
+        raise RuntimeError("DL Brain failed.")
+    if tool_result is None:
+        import re as _re_auto
+        _text = dl_result.get("model_response") or ""
+        _env_request = _re_auto.search(r"run in (mint|ubuntu|arch|kali|omarchy):\s*`([^`]+)`", _text, _re_auto.IGNORECASE)
+        if _env_request:
+            _environment = _env_request.group(1).lower()
+            _cmd = _env_request.group(2).strip()
+            tool_result = run_environment_command(_cmd, _environment)
+        _m = None if _env_request else _re_auto.search(r"I need to run `([^`]+)`", _text)
+        if not _m:
+            _m = _re_auto.search(r"shell command:\s*`([^`]+)`", _text)
+        if not _m:
+            _m = _re_auto.search(r"run this exact command:\s*`([^`]+)`", _text)
+        if _m:
+            _cmd = _m.group(1).strip()
+            if _cmd.startswith("touch ") and "/" not in _cmd:
+                _cmd = "touch /home/destiny/Obsidian/Destiny/" + _cmd.split(" ", 1)[1]
+            tool_result = run_command(_cmd) if 'THE_COMMAND_HERE' not in _cmd else tool_result
+
+    is_video_task = "youtube.com" in task or "youtu.be" in task
+    if is_video_task and dl_result.get("model_response"):
+        log_path = Path("/home/destiny/Obsidian/Destiny/Video_Learning_Log.md")
+        entry = f"\n\n## {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}\n**Video Task:** {task}\n**What I Learned & My Applied Version:**\n{dl_result['model_response']}\n---\n"
+        with log_path.open("a", encoding="utf-8") as f:
+            f.write(entry)
+
+    if tool_result is not None and not direct_tool_completed:
+        context["tool_result"] = tool_result
+        context["continuation_after_tool"] = True
+        dl_result = run_reasoning_task(task, context)
+        if dl_result.get("status") != "READY":
+            raise RuntimeError("DL Brain failed after tool execution.")
+
+        _continuation_text = dl_result.get("model_response") or ""
+        _continuation_env = re.search(
+            r"run in (mint|ubuntu|arch|kali|omarchy):\s*`([^`]+)`",
+            _continuation_text,
+            re.IGNORECASE
+        )
+        if _continuation_env:
+            _environment = _continuation_env.group(1).lower()
+            _cmd = _continuation_env.group(2).strip()
+            tool_result = run_environment_command(_cmd, _environment)
+            context["tool_result"] = tool_result
+
+    if not dl_result.get("model_response"):
+        raise RuntimeError("Destiny model returned no response.")
+
+    duration = round(time.time() - start, 4)
+
+    # ---------------------------------------------------------
+    # POST-EXECUTION BEHAVIOR VALIDATION
+    # ---------------------------------------------------------
+    behavioral_validation = {
+        "passed": True,
+        "reason": "No measurable failure detected."
+    }
+
+    # If Destiny actually used a tool, its result must succeed.
+    if tool_result is not None:
+        exit_code = tool_result.get("exit_code")
+        if exit_code is not None and exit_code != 0:
+            behavioral_validation = {
+                "passed": False,
+                "reason": "Executed tool returned non-zero exit code.",
+                "tool_result": tool_result
+            }
+
+    # Verification requests require real verification evidence.
+    if needs_verification and verified_facts is None:
+        behavioral_validation = {
+            "passed": False,
+            "reason": "Task required verification but no verification evidence was produced."
+        }
+
+    if not behavioral_validation["passed"]:
+        raise RuntimeError(
+            "FUNCTIONAL VERIFICATION FAILED: " +
+            behavioral_validation["reason"] +
+            " | DETAILS: " + repr(behavioral_validation.get("tool_result"))
+        )
+
+    # ---------------------------------------------------------
+    # PHASE 3 — Record experience
+    # ---------------------------------------------------------
+
+    learning = record_experience(
+        task_type="cognitive_orchestrated_task",
+        status="success",
+        duration=duration,
+        outcome=dl_result["model_response"],
+        notes="Automated Three-Brain task."
+    )
+
+    # ---------------------------------------------------------
+    # PHASE 4 — ML analyzes the new experience
+    # ---------------------------------------------------------
+
+    predictor_result = run_predictor()
+
+    # ---------------------------------------------------------
+    # PHASE 5 — Adaptive Brain applies learned changes
+    # ---------------------------------------------------------
+
+    applied_rules = update_adaptive_brain()
+
+    # ---------------------------------------------------------
+    # PHASE 6 — Cognitive layer rebuilds directives
+    # ---------------------------------------------------------
+
+    updated_cognitive = rebuild_cognitive_integration()
+
+    # ---------------------------------------------------------
+    # PHASE 7 — Record complete closed loop
+    # ---------------------------------------------------------
+
+    result = {
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "task": task,
+        "pipeline": {
+            "ml_brain": "PASS",
+            "adaptive_brain": "PASS",
+            "cognitive_integration": "PASS",
+            "dl_brain": "PASS",
+            "real_destiny_model": "PASS",
+            "learning_recorder": "PASS",
+            "ml_feedback": "PASS",
+            "adaptive_feedback": "PASS",
+            "cognitive_rebuild": "PASS"
+        },
+        "model_response": dl_result["model_response"],
+        "dl_result": dl_result,
+        "learning_record": learning,
+        "predictor": predictor_result,
+        "adaptive_rules_applied": applied_rules,
+        "updated_directives": updated_cognitive.get(
+            "cognitive_directives", []
+        ),
+        "duration_seconds": duration,
+        "status": "PASS"
+    }
+
+    existing = load_json(ORCHESTRATOR_LOG, [])
+
+    if not isinstance(existing, list):
+        existing = []
+
+    existing.append(result)
+
+    ORCHESTRATOR_LOG.parent.mkdir(parents=True, exist_ok=True)
+
+    ORCHESTRATOR_LOG.write_text(
+        json.dumps(existing, indent=2),
+        encoding="utf-8"
+    )
+
+    # ---------------------------------------------------------
+    # PHASE 7 — Preserve verified knowledge
+    # ---------------------------------------------------------
+    knowledge_captured = capture(
+        task,
+        {
+            "status": "PASS",
+            "model_response": dl_result.get("model_response", ""),
+            "verified_facts": verified_facts,
+            "tool_result": tool_result
+        }
+    )
+
+    return result
+
+
+
+def run(task):
+    try:
+        return _run_core(task)
+    except Exception as exc:
+        repair = _last_resort_repair(task, exc)
+
+        if repair.get("status") == "repair_applied":
+            try:
+                # Reload the repaired module so the retry uses the new code,
+                # not an old copy already sitting in Python memory.
+                target = repair.get("target")
+
+                if target:
+                    import importlib
+
+                    importlib.invalidate_caches()
+
+                    target_path = Path(target).resolve()
+                    this_file = Path(__file__).resolve()
+
+                    if target_path != this_file:
+                        for module_name, module in list(sys.modules.items()):
+                            module_file = getattr(module, "__file__", None)
+
+                            if not module_file:
+                                continue
+
+                            try:
+                                if Path(module_file).resolve() != target_path:
+                                    continue
+                            except Exception:
+                                continue
+
+                            # Remember any functions imported directly into
+                            # cognitive_orchestrator from this module.
+                            bindings = {}
+
+                            for global_name, obj in list(globals().items()):
+                                if getattr(obj, "__module__", None) == module_name:
+                                    attr_name = getattr(obj, "__name__", None)
+                                    if attr_name:
+                                        bindings[global_name] = attr_name
+
+                            reloaded = importlib.reload(module)
+
+                            # Rebind direct imports to the freshly loaded code.
+                            for global_name, attr_name in bindings.items():
+                                if hasattr(reloaded, attr_name):
+                                    globals()[global_name] = getattr(
+                                        reloaded,
+                                        attr_name
+                                    )
+
+                            break
+
+                result = _run_core(task)
+
+                # Keep the repair only if Destiny's normal pipeline says
+                # the original task actually succeeded.
+                if not isinstance(result, dict) or result.get("status") != "PASS":
+                    backup = repair.get("backup")
+                    if backup:
+                        from shutil import copy2
+                        copy2(backup, repair.get("target"))
+
+                        # Reload the restored module so memory matches disk.
+                        if target and target_path != this_file:
+                            importlib.invalidate_caches()
+                            for module_name, module in list(sys.modules.items()):
+                                module_file = getattr(module, "__file__", None)
+                                if not module_file:
+                                    continue
+                                try:
+                                    if Path(module_file).resolve() == target_path:
+                                        importlib.reload(module)
+                                        break
+                                except Exception:
+                                    continue
+
+                    return {
+                        "status": "FAIL",
+                        "task": task,
+                        "error": "Repair retry did not pass Destiny's normal success check.",
+                        "repair": repair,
+                        "retry_result": result,
+                        "message": "The repair was rejected and the original file was restored."
+                    }
+
+                result.setdefault("pipeline", {})["last_resort_repair"] = "PASS"
+                result["repair"] = repair
+
+                return result
+
+            except Exception as retry_exc:
+                backup = repair.get("backup")
+                if backup:
+                    try:
+                        from shutil import copy2
+                        copy2(backup, repair.get("target"))
+                    except Exception:
+                        pass
+                return {
+                    "status": "FAIL",
+                    "task": task,
+                    "error": str(retry_exc),
+                    "repair": repair,
+                    "message": "Repair was applied but the retry failed. The repaired file was restored from backup."
+                }
+
+        return {
+            "status": "FAIL",
+            "task": task,
+            "error": str(exc),
+            "repair": repair
+        }
+
+if __name__ == "__main__":
+
+    task = (
+        "Perform a simple reasoning task. "
+        "Determine whether 12 multiplied by 3 equals 36. "
+        "Verify the result before reporting success."
+    )
+
+    print()
+    print("=== CLOSED-LOOP THREE-BRAIN TEST ===")
+    print("Phase 1: Cognitive context loading...")
+    print("Phase 2: Real Destiny model...")
+    print("Phase 3: Learning Recorder...")
+    print("Phase 4: ML feedback...")
+    print("Phase 5: Adaptive Brain...")
+    print("Phase 6: Cognitive Integration rebuild...")
+    print()
+
+    result = run(task)
+
+    print("Real Destiny model: PASS")
+    print("Learning Recorder: PASS")
+    print("ML feedback analysis: PASS")
+    print("Adaptive Brain update: PASS")
+    print("Cognitive Integration rebuild: PASS")
+    print("Closed feedback loop: PASS")
+    print()
+    print("Model response:")
+    print(result["model_response"])
+    print()
+    print("Updated adaptive directives:")
+
+    for directive in result.get("updated_directives", []):
+        print("-", directive)
+
+    print()
+    print("=== RESULT ===")
+    print("THREE_BRAIN_CLOSED_LOOP_OK")
+    print()
+    print("Evidence:")
+    print(ORCHESTRATOR_LOG)

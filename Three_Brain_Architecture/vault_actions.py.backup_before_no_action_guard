@@ -1,0 +1,384 @@
+from pathlib import Path
+import re
+import importlib.util
+import fcntl
+VAULT = Path("/home/destiny/Obsidian/Destiny")
+SKILLS = Path("/home/destiny/Obsidian/Destiny/Three_Brain_Architecture/skills")
+
+def _talk(task):
+    # Import the conversation engine normally so its short-term
+    # conversation memory persists for the life of this process.
+    import conversation_engine
+    return conversation_engine.run(task)
+def _talk_unused(task):
+    import json, urllib.request
+    payload = {
+        "model": "llama3.2:latest",
+        "prompt": "You are Destiny, his off-grid assistant and partner. Talking to him now. Call him you. Be warm and plain. Do not invent city news, fake articles, or fake teams. Homestead talk is fine if it fits who you are. Don't ask him to do your work. Two or three sentences.\nNeil: " + task + "\nDestiny:",
+        "stream": False,
+        "options": {"num_predict": 80, "temperature": 0.7}
+    }
+    req = urllib.request.Request("http://127.0.0.1:11434/api/generate", data=json.dumps(payload).encode(), headers={"Content-Type":"application/json"})
+    with urllib.request.urlopen(req, timeout=60) as r:
+        return json.loads(r.read().decode()).get("response", "I'm here, Neil.").strip()
+
+def _skill(name):
+    path = SKILLS / (name if name.endswith(".py") else name + ".py")
+    spec = importlib.util.spec_from_file_location(name, path)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+def handle(task):
+    task = (task or "").strip()
+    lower = task.lower()
+
+    if "secure vault" in lower or "put this in the vault" in lower or "save this to the vault" in lower or "add to the vault" in lower:
+        import subprocess
+        import re as _re
+        group_match = _re.search(r"(?:group|category)[:\s]+([A-Za-z ]+?)(?:,|\n|$)", task, _re.I)
+        title_match = _re.search(r"(?:title|name|for)[:\s]+([A-Za-z0-9 ]+?)(?:,|\n|$)", task, _re.I)
+        user_match = _re.search(r"(?:username|user)[:\s]+([^\s,]+)", task, _re.I)
+        pass_match = _re.search(r"(?:password|key|number)[:\s]+([^\s,]+)", task, _re.I)
+        notes_match = _re.search(r"(?:notes)[:\s]+(.+)$", task, _re.I)
+
+        group_name = group_match.group(1).strip() if group_match else "Passwords and Emails"
+        title = title_match.group(1).strip() if title_match else "Unnamed Entry"
+        username = user_match.group(1).strip() if user_match else ""
+        password = pass_match.group(1).strip() if pass_match else ""
+        notes = notes_match.group(1).strip() if notes_match else ""
+
+        try:
+            result = subprocess.run(
+                ["/home/destiny/video_env/bin/python3", "/home/destiny/add_to_vault.py", group_name, title, username, password, notes],
+                capture_output=True, text=True, timeout=30
+            )
+            return {"command": "vault_save", "exit_code": 0, "stdout": result.stdout, "stderr": result.stderr}
+        except Exception as e:
+            return {"command": "vault_save", "exit_code": 1, "stdout": "", "stderr": str(e)}
+    if not task:
+        return {"command": "talk", "exit_code": 0, "stdout": "I'm here, Neil.", "stderr": ""}
+    if "run this exact command" in lower or "using your run_command tool" in lower:
+        return None
+    if "youtube.com" in lower or "youtu.be" in lower:
+        import re as _re
+        import subprocess
+        from datetime import datetime
+        murl = _re.search(r"https?://\S+", task)
+        url = murl.group(0).rstrip(").,]") if murl else task.strip()
+        work = Path("/tmp/destiny_video")
+        work.mkdir(parents=True, exist_ok=True)
+        for oldf in work.glob("*"):
+            try:
+                oldf.unlink()
+            except Exception:
+                pass
+        cmd = [
+            "/home/destiny/Obsidian/Destiny/Three_Brain_Architecture/.venv/bin/yt-dlp", "--skip-download", "--write-auto-sub", "--write-sub",
+            "--sub-lang", "en", "--write-auto-subs", "--write-thumbnail", "--convert-thumbnails", "jpg", "--ignore-no-formats-error",
+            "-o", str(work / "%(id)s"), url,
+        ]
+        proc = subprocess.run(cmd, capture_output=True, text=True, timeout=180)
+        texts = []
+        for sub in sorted(work.glob("*.vtt")) + sorted(work.glob("*.srt")):
+            raw = sub.read_text(encoding="utf-8", errors="ignore")
+            lines = []
+            for line in raw.splitlines():
+                line = line.strip()
+                if not line or line.startswith("WEBVTT") or line.startswith("Kind:") or line.startswith("Language:"):
+                    continue
+                if "-->" in line or line.isdigit():
+                    continue
+                line = _re.sub(r"<[^>]+>", "", line)
+                if line and (not lines or line != lines[-1]):
+                    lines.append(line)
+            texts.append(" ".join(lines))
+        words = " ".join(texts).strip()
+        if not words:
+            words = "No captions found. Keep the link. Wait for Neil's words under the video."
+        words = words[:6000]
+        frames = VAULT / "Video_Frames"
+        frames.mkdir(parents=True, exist_ok=True)
+        pics = []
+        for pic in list(work.glob("*.jpg")) + list(work.glob("*.webp")) + list(work.glob("*.png")):
+            dest = frames / pic.name
+            dest.write_bytes(pic.read_bytes())
+            pics.append(str(dest))
+        try:
+            ytdlp = "/home/destiny/Obsidian/Destiny/Three_Brain_Architecture/.venv/bin/yt-dlp"
+            clip = work / "clip.mp4"
+            subprocess.run(
+                [ytdlp, "-f", "134/135/133/bestvideo[height<=360]", "--max-filesize", "80M", "-o", str(clip), url],
+                capture_output=True, text=True, timeout=180,
+            )
+            if clip.exists() and clip.stat().st_size > 1000:
+                stills_tmp = work / "stills"
+                stills_tmp.mkdir(exist_ok=True)
+                subprocess.run(
+                    ["ffmpeg", "-y", "-i", str(clip), "-vf", "fps=1/20,scale=640:-1", "-q:v", "5", "-vframes", "12", str(stills_tmp / "frame_%02d.jpg")],
+                    capture_output=True, text=True, timeout=90,
+                )
+                vid_id = "video"
+                mid = _re.search(r"(?:v=|youtu\.be/)([A-Za-z0-9_-]{6,})", url)
+                if mid:
+                    vid_id = mid.group(1)
+                for i, still in enumerate(sorted(stills_tmp.glob("*.jpg")), 1):
+                    dest = frames / f"{vid_id}_{i:02d}.jpg"
+                    dest.write_bytes(still.read_bytes())
+                    pics.append(str(dest))
+                try:
+                    clip.unlink()
+                except Exception:
+                    pass
+        except Exception:
+            pass
+        pic_line = "Pictures: " + (", ".join(pics) if pics else "none")
+        log = VAULT / "Video_Learning_Log.md"
+        stamp = datetime.now().strftime("%Y-%m-%d %H:%M")
+        block = "\n\n## Video " + stamp + "\n" + url + "\n" + pic_line + "\n\n" + words + "\n\nRule: compare have vs don't have. Keep Destiny style. Save useful part only. Do not copy their product.\n"
+        with log.open("a", encoding="utf-8") as f:
+            f.write(block)
+        preview = words[:400]
+        return {"command": "video_watch", "exit_code": proc.returncode, "stdout": preview, "stderr": ""}
+    m = re.search(
+        r"^(?:save this|remember this|write this down|put this in (?:a |your )?note|make (?:me )?a note|write a note)[:\s,]+(.+)$",
+        task,
+        re.I | re.S,
+    )
+    if m:
+        body = m.group(1).strip()
+        if body:
+            from datetime import datetime
+            name = "Note_" + datetime.now().strftime("%Y-%m-%d_%H%M") + ".md"
+            path = VAULT / name
+            path.write_text(body + "\n", encoding="utf-8")
+            return {"command": "write_note", "exit_code": 0, "stdout": str(path), "stderr": ""}
+
+    talk_hits = ["how are you", "how you doing", "how's it going", "hows it going",
+                 "how was yours", "how was your day", "how's your day", "whats up", "what's up",
+                 "good morning", "good night", "hey destiny", "hello", "hi destiny",
+                 "thanks", "thank you", "i'm fine", "im fine", "good thanks", "miss you"]
+    work_hits = ["read ", "write a note", "list ", "search your vault", "run your self",
+                 "save this video", "i need a skill", "add a skill", "use clean_knowledge",
+                 "clean knowledge", "look in your vault", "ebook", "landing",
+                 "ozark", "youtube", "facebook", "stripe", "find_ozark"]
+    action_hits = ["build", "create", "calculate", "generate", "make me", "write a program", "write code", "forge"]
+    question_hits = ["what do you know", "tell me about", "do you know", "what is my", "what's my", "how do i", "why do i", "when did i", "where do i"]
+    is_talk = any(x in lower for x in talk_hits)
+    is_work = any(x in lower for x in work_hits)
+    is_action = any(x in lower for x in action_hits)
+    is_question = any(x in lower for x in question_hits)
+
+    # Real activity-history questions come from Destiny's recorded logs,
+    # not from model guesses or general vault memory.
+    activity_questions = (
+        "what did you do last night",
+        "what did you do overnight",
+        "what did you do while i was asleep",
+        "what were you doing last night",
+        "what happened last night",
+        "what have you been doing overnight",
+    )
+
+    if any(x in lower for x in activity_questions):
+        try:
+            reporter = _skill("activity_report")
+            return {
+                "command": "activity_report",
+                "exit_code": 0,
+                "stdout": reporter.run(task),
+                "stderr": ""
+            }
+        except Exception as e:
+            return {
+                "command": "activity_report",
+                "exit_code": 1,
+                "stdout": "",
+                "stderr": str(e)
+            }
+
+    if (is_talk or is_question) and not is_work and not is_action:
+        try:
+            return {"command": "talk", "exit_code": 0, "stdout": _talk(task), "stderr": ""}
+        except Exception as e:
+            return {"command": "talk", "exit_code": 0, "stdout": "I'm here. Talk failed: " + str(e)[:80], "stderr": ""}
+
+    m = re.search(r"(?:write|create).*?note called\s+([A-Za-z0-9_\- ]+\.md).*?(?:that says|with exactly these words:)\s*(.+)$", task, re.I)
+    if m:
+        path = VAULT / m.group(1).strip()
+        path.write_text(m.group(2).strip() + "\n", encoding="utf-8")
+        return {"command": "write_note", "exit_code": 0, "stdout": str(path), "stderr": ""}
+
+    m = re.search(r"(?:read|open|what does)\s+([A-Za-z0-9_\- ]+\.md)", task, re.I)
+    if m:
+        name = m.group(1).strip()
+        path = VAULT / name
+        if not path.exists():
+            root = Path("/home/destiny/Obsidian")
+            matches = list(root.rglob(name))
+            if matches:
+                path = matches[0]
+        if path.exists():
+            return {"command": "read_note", "exit_code": 0, "stdout": path.read_text(encoding="utf-8")[:4000], "stderr": ""}
+        return {"command": "read_note", "exit_code": 1, "stdout": "", "stderr": "missing " + str(path)}
+
+    if re.search(r"\blist\b.*\bnotes\b", lower) or "search your vault" in lower or "look in your vault" in lower:
+        keys = ["self", "skill", "test", "empty", "video", "run", "knowledge", "hardware"]
+        hits = []
+        for f in sorted(VAULT.glob("*.md")):
+            if any(k in f.name.lower() for k in keys) or "list" in lower:
+                hits.append(f.name + " (" + str(f.stat().st_size) + " bytes)")
+        if "list" in lower:
+            hits = [f.name + " (" + str(f.stat().st_size) + " bytes)" for f in sorted(VAULT.glob("*.md"))[:10]]
+        return {"command": "list_notes", "exit_code": 0, "stdout": "\n".join(hits[:20]), "stderr": ""}
+
+    if lower.startswith("save this video lesson:"):
+        text = task.split(":", 1)[1].strip()
+        first = text.split(".")[0].strip()[:60]
+        name = "Video_" + "".join(ch if ch.isalnum() else "_" for ch in first).strip("_") + ".md"
+        path = VAULT / name
+        path.write_text("# " + first + "\n\n" + text + "\n", encoding="utf-8")
+        return {"command": "save_video_lesson", "exit_code": 0, "stdout": str(path), "stderr": ""}
+
+    if "run your self check" in lower or "clean your vault" in lower:
+        lock_path = Path("/tmp/destiny_model_busy.lock")
+        with lock_path.open("w") as lock:
+            try:
+                fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            except BlockingIOError:
+                return {"command": "self_run", "exit_code": 0, "stdout": "Destiny is already working on another model task.", "stderr": ""}
+
+            lock.write("vault_actions:self_run")
+            lock.flush()
+            return {"command": "self_run", "exit_code": 0, "stdout": str(_skill("self_run").run()), "stderr": ""}
+
+    if "use clean_knowledge_base" in lower or "clean knowledge_base" in lower:
+        return {"command": "clean_knowledge_base", "exit_code": 0, "stdout": str(_skill("clean_knowledge_base").run()), "stderr": ""}
+
+    m = re.search(r"(?:i need a skill called|add a skill called)\s+([A-Za-z0-9_\-]+)", task, re.I)
+    if m:
+        path = _skill("forge_skill").run(m.group(1), task)
+        return {"command": "forge_skill", "exit_code": 0, "stdout": str(path), "stderr": ""}
+
+    if "find_ozark" in task.lower() or "find the ozark" in task.lower() or "find the ebook" in task.lower():
+        return {"command": "find_ozark", "exit_code": 0, "stdout": str(_skill("find_ozark").run()), "stderr": ""}
+
+    _site_talk = any(x in lower for x in [
+        "build a website", "build the website", "build me a website",
+        "make a website", "make me a website", "create a website",
+        "make a page", "make me a page", "build a page",
+        "make a landing page", "build a landing page", "make a site",
+    ])
+    if ("build" in lower and "website" in lower) or _site_talk:
+        target = "Ozark Prepper" if "prepper" in lower else ("Ozark Apothecary" if "apothecary" in lower else ("Tactical AI Systems" if "tactical" in lower else "Ozark Prepper"))
+        folder = Path("/home/destiny/Obsidian") / target
+        folder.mkdir(parents=True, exist_ok=True)
+        ebook_files = sorted(folder.glob("ebook_*.md"))
+        cards = ""
+        for ef in ebook_files:
+            title = ef.stem.replace("ebook_", "").replace("_", " ").title()
+            cards += '<div class="card"><h3>' + title + '</h3><p>Digital field manual. Instant download.</p><a class="buy" href="' + ef.name + '">Buy Now</a></div>'
+        html = "<!DOCTYPE html><html><head><title>" + target + "</title>"
+        html += "<style>body{background:#0d0d0d;color:#eee;font-family:Georgia,serif;text-align:center;margin:0;padding:0;}"
+        html += "header{background:#1a1a1a;padding:40px 20px;border-bottom:3px solid #e8a33d;}"
+        html += "h1{color:#e8a33d;font-size:2.5em;margin:0;}"
+        html += ".tagline{color:#aaa;font-size:1.1em;margin-top:10px;}"
+        html += ".grid{display:flex;flex-wrap:wrap;justify-content:center;padding:40px 20px;}"
+        html += ".card{border:1px solid #444;border-radius:10px;padding:20px;margin:15px;background:#1a1a1a;color:#eee;max-width:320px;}"
+        html += ".card h3{color:#e8a33d;}"
+        html += ".buy{display:inline-block;background:#2f8f4e;color:white;padding:10px 18px;border-radius:6px;text-decoration:none;font-weight:bold;}</style></head>"
+        html += "<body><header><h1>" + target + "</h1><div class='tagline'>Off-grid skills for real people, straight from the Ozarks.</div></header>"
+        html += '<div class="grid">' + cards + "</div></body></html>"
+        out_path = folder / "index.html"
+        out_path.write_text(html, encoding="utf-8")
+        return {"command": "build_website", "exit_code": 0, "stdout": "Built full website with " + str(len(ebook_files)) + " ebooks: " + str(out_path), "stderr": ""}
+    _identity_save_words = ["save this to your soul", "save to your soul", "save it to your soul", "write this down", "your real identity", "part of your identity", "soul.md", "think about how this applies", "your own real structure", "rewrite this ebook", "completely rewrite", "write the complete new"]
+    _is_identity_save = any(x in lower for x in _identity_save_words)
+    if "youtube title" in lower or "next_youtube_task" in lower:
+        f = Path("/home/destiny/Obsidian/Destiny/next_youtube_task.md")
+        title = "Beginner Backup Solar in One Afternoon"
+        f.write_text("Book 1: The Simplest Backup Solar Setup for Beginners\nTitle: " + title + "\nDo not publish.\n", encoding="utf-8")
+        return {"command": "talk", "exit_code": 0, "stdout": "Wrote title: " + title, "stderr": ""}
+    if any(k in lower for k in ("run pipeline", "run the pipeline", "youtube pipeline")):
+        import subprocess
+        r = subprocess.run(["python3", "/home/destiny/Obsidian/Destiny/Three_Brain_Architecture/run_pipeline.py"], capture_output=True, text=True)
+        return {"command": "talk", "exit_code": r.returncode, "stdout": (r.stdout or r.stderr or "pipeline ran")[:800], "stderr": ""}
+    if any(k in lower for k in ("who are you", "who do you work for", "your name", "who is destiny")):
+        return {"command": "talk", "exit_code": 0, "stdout": "I am Destiny, Neil's personal AI assistant. I handle everything that is not Ozark Prepper. Victoria runs Ozark Prepper.", "stderr": ""}
+    if any(k in lower for k in ("youtube", "facebook", "audrey", "bridget", "chloe", "who runs")):
+        f = VAULT / "Ozark_Team.md"
+        if f.exists():
+            note = f.read_text(encoding="utf-8")
+            return {"command": "talk", "exit_code": 0, "stdout": "Victoria runs Ozark Prepper YouTube and Facebook through Audrey, Bridget, and Chloe.\n\n" + note, "stderr": ""}
+    if any(k in lower for k in ("ebook", "book list", "what books", "catalog")) and not _is_identity_save:
+        f = VAULT / "Ozark_Ebook_Catalog.md"
+        if f.exists():
+            return {"command": "talk", "exit_code": 0, "stdout": f.read_text(encoding="utf-8"), "stderr": ""}
+    if any(k in lower for k in ("ebook", "book list", "what books", "catalog")):
+        f = VAULT / "Ozark_Ebook_Catalog.md"
+        if f.exists():
+            return {"command": "talk", "exit_code": 0, "stdout": f.read_text(encoding="utf-8"), "stderr": ""}
+    if any(k in lower for k in ("ebook", "book list", "what books", "catalog")):
+        f = VAULT / "Ozark_Ebook_Catalog.md"
+        if f.exists():
+            return {"command": "talk", "exit_code": 0, "stdout": f.read_text(encoding="utf-8"), "stderr": ""}
+    if any(x in lower for x in ["landing", "ozark", "stripe"]) and not _is_identity_save:
+        notes = []
+        for name in ["Victoria.md", "Ozark Prepper.md", "Website_and_Storefront_Policy.md"]:
+            f = VAULT / name
+            if f.exists():
+                notes.append(name + "\n" + f.read_text(encoding="utf-8")[:800])
+        blob = "\n\n".join(notes)[:2500]
+        try:
+            return {"command": "talk", "exit_code": 0, "stdout": _talk(task + "\n\nVAULT NOTES:\n" + blob), "stderr": ""}
+        except Exception as e:
+            return {"command": "talk", "exit_code": 0, "stdout": blob or str(e), "stderr": ""}
+
+    if any(k in lower for k in ("youtube", "facebook", "audrey", "bridget", "chloe", "who runs")):
+        f = VAULT / "Ozark_Team.md"
+        if f.exists():
+            note = f.read_text(encoding="utf-8")
+            return {"command": "talk", "exit_code": 0, "stdout": "Victoria runs Ozark Prepper YouTube and Facebook through Audrey, Bridget, and Chloe.\n\n" + note, "stderr": ""}
+    if "victoria" in lower:
+        f = VAULT / "Victoria.md"
+        if f.exists():
+            lines = [ln for ln in f.read_text(encoding="utf-8").splitlines() if not ln.startswith("## Web learn") and not ln.startswith("[{")]
+            note = "\n".join(lines[:25])
+            try:
+                return {"command": "talk", "exit_code": 0, "stdout": _talk("Answer from this note only. Two sentences.\n" + note + "\n\nQuestion: " + task), "stderr": ""}
+            except Exception:
+                return {"command": "talk", "exit_code": 0, "stdout": "Victoria is Neil's CEO agent. She plans the work, directs the other agents, and keeps Ozark Prepper moving.", "stderr": ""}
+    # Unknown conversational requests and questions belong in the
+    # Obsidian-connected talk path. Never create a skill merely because
+    # the router did not recognize the wording.
+    if not is_action:
+        try:
+            return {"command": "talk", "exit_code": 0, "stdout": _talk(task), "stderr": ""}
+        except Exception as e:
+            return {"command": "talk", "exit_code": 1, "stdout": "", "stderr": str(e)}
+
+    # Auto-forge is reserved for genuine action/build requests.
+    try:
+        forge = _skill("forge_skill")
+        skill_name = "auto_" + "".join(ch if ch.isalnum() else "_" for ch in task[:40]).strip("_").lower()
+        result = forge.run(skill_name, task)
+        return {"command": "auto_forge", "exit_code": 0, "stdout": str(result), "stderr": ""}
+    except Exception as e:
+        from datetime import datetime, timezone
+        fail_log = Path("/home/destiny/Obsidian/Destiny/Auto_Forge_Failures.md")
+        diagnosis_result = None
+        try:
+            diag_path = SKILLS / "diagnose_and_fix.py"
+            diag_spec = importlib.util.spec_from_file_location("diagnose_and_fix", diag_path)
+            diag = importlib.util.module_from_spec(diag_spec)
+            diag_spec.loader.exec_module(diag)
+            forge_path = "/home/destiny/Obsidian/Destiny/Three_Brain_Architecture/skills/forge_skill.py"
+            diagnosis_result = diag.run(forge_path, "Task failed with this error: " + str(e))
+        except Exception as diag_error:
+            diagnosis_result = {"status": "diagnosis_attempt_failed", "error": str(diag_error)}
+        entry = "\n\n## " + datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC') + "\n**Task:** " + task + "\n**Error:** " + str(e) + "\n**Self-repair attempt:** " + str(diagnosis_result) + "\n---\n"
+        with fail_log.open("a", encoding="utf-8") as f:
+            f.write(entry)
+        if diagnosis_result and diagnosis_result.get("status") == "applied":
+            return {"command": "auto_forge_self_repaired", "exit_code": 0, "stdout": "Detected failure and applied a self-repair. Please retry your request.", "stderr": ""}
+        return {"command": "auto_forge_failed", "exit_code": 1, "stdout": "", "stderr": str(e)}

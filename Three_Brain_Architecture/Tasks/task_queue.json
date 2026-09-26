@@ -1,0 +1,20 @@
+[
+    {
+        "id": "pepper_agent_sync_01",
+        "status": "active",
+        "task": "Instruct Pepper to coordinate with Victoria CEO and verify website, ebooks, and social media channels are running.",
+        "target": "Pepper"
+    },
+    {
+        "id": "pepper_quora_marketing_01",
+        "status": "active",
+        "task": "Instruct Pepper and Victoria to deploy agents for 24/7 free platform marketing on Quora and similar channels.",
+        "target": "Pepper"
+    },
+    {
+        "id": "destiny_soul_and_obsidian_sync_01",
+        "status": "active",
+        "task": "Read and actively integrate the user soul file and personal Obsidian files into memory, ensuring reciprocal updates for both the user and Destiny without dodging questions.",
+        "target": "Destiny"
+    }
+]

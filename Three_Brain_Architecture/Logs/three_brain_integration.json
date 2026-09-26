@@ -1,0 +1,38 @@
+[
+  {
+    "timestamp": "2026-08-23T19:22:26.220005",
+    "test": "three_brain_integration",
+    "natural_learning": "success",
+    "adaptive_learning": "success",
+    "machine_learning": "success",
+    "deep_learning": "failure",
+    "model": "destiny:latest",
+    "deep_learning_response": ""
+  },
+  {
+    "timestamp": "2026-08-23T19:32:42.883421",
+    "test": "three_brain_integration",
+    "natural_learning": "PASS",
+    "adaptive_learning": "PASS",
+    "machine_learning": "PASS",
+    "deep_learning": "PASS",
+    "integration_confirmation": "PASS",
+    "model": "destiny:latest",
+    "reasoning_seconds": 44.68,
+    "deep_learning_response": "INTEGRATION: PASS\nCONSISTENCY: HIGH\nLESSON: The three learning systems describe the same successful event.",
+    "error": ""
+  },
+  {
+    "timestamp": "2026-08-23T19:33:27.661657",
+    "test": "three_brain_integration",
+    "natural_learning": "PASS",
+    "adaptive_learning": "PASS",
+    "machine_learning": "PASS",
+    "deep_learning": "PASS",
+    "integration_confirmation": "PASS",
+    "model": "destiny:latest",
+    "reasoning_seconds": 29.81,
+    "deep_learning_response": "INTEGRATION: PASS\nCONSISTENCY: HIGH\nLESSON: The three learning systems describe the same successful event.",
+    "error": ""
+  }
+]

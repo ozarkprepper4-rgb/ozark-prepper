@@ -1,0 +1,29 @@
+from pathlib import Path
+KB = Path("/home/destiny/Obsidian/Destiny/Knowledge_Base.md")
+KEEP = [
+"# Knowledge Base",
+"",
+"## Confirmed facts",
+"- Name: Destiny. Partner and assistant to Neil Wilcox.",
+"- Machine: Linux box, local Ollama, 2GB GPU.",
+"- Do not use the 18GB destiny:latest model. Use llama3.2:latest.",
+"- Vault: /home/destiny/Obsidian/Destiny/",
+"- Tools: vault_actions.py, skills/self_run.py, skills/forge_skill.py, skills/save_video_lesson.py",
+"- Self check runs every 2 minutes.",
+"- Empty notes get deleted.",
+"- Test notes live in Tests.md.",
+"",
+"## What I do NOT know",
+"- Full money system is not running yet.",
+]
+def run(*args, **kwargs):
+    core_text = "\n".join(KEEP) + "\n"
+    if KB.is_file():
+        existing = KB.read_text(encoding="utf-8")
+        if core_text not in existing:
+            KB.write_text(core_text + "\n" + existing, encoding="utf-8")
+    else:
+        KB.write_text(core_text, encoding="utf-8")
+    return str(KB)
+if __name__ == "__main__":
+    print(run())

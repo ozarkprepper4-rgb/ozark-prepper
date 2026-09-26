@@ -1,0 +1,1 @@
+*/15 * * * * [ ! -e /tmp/destiny_model_busy.lock ] && /usr/bin/python3 /home/destiny/Obsidian/Destiny/Three_Brain_Architecture/skills/self_run.py >> /home/destiny/Obsidian/Destiny/Self_Check_Log.md 2>&1

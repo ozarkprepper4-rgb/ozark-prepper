@@ -1,0 +1,137 @@
+from pathlib import Path
+import time, sys
+VAULT = Path("/home/destiny/Obsidian/Destiny")
+ROOT = Path("/home/destiny/Obsidian")
+SKILLS = Path("/home/destiny/Obsidian/Destiny/Three_Brain_Architecture/skills")
+SKIP = {"Tests.md", "Conversation_Log.md", "Self_Check_Log.md", "Video_Learning_Log.md"}
+def _inventory():
+    agents = []
+    for f in ROOT.rglob("*.md"):
+        name = f.stem
+        if name in ("Victoria", "Denise", "Pepper", "Audrey", "Bridget", "Chloe", "Clara", "Sentinel", "Provident", "Sustenance", "Comms"):
+            agents.append(str(f))
+    books = [str(p) for p in (ROOT / "Ozark Prepper").glob("ebook_*.md")] if (ROOT / "Ozark Prepper").exists() else []
+    sites = [str(p) for p in (ROOT / "Ozark Prepper").glob("landing_*.html")] if (ROOT / "Ozark Prepper").exists() else []
+    kb = VAULT / "Knowledge_Base.md"
+    block = "\n## Self inventory " + time.strftime("%Y-%m-%d %H:%M") + "\n- agents: " + ", ".join(agents[:20]) + "\n- ebooks: " + ", ".join(Path(x).name for x in books) + "\n- landings: " + ", ".join(Path(x).name for x in sites) + "\n"
+    if kb.exists():
+        old = kb.read_text(encoding="utf-8")
+        kb.write_text(old + block, encoding="utf-8")
+    return "inventory agents=" + str(len(agents)) + " ebooks=" + str(len(books)) + " sites=" + str(len(sites))
+def _web_learn():
+    return "web learning disabled - protected memory"
+
+def _self_check_and_repair():
+    try:
+        import py_compile
+        import sys
+        sys.path.insert(0, str(SKILLS))
+        import diagnose_and_fix
+
+        core_files = [
+            Path("/home/destiny/Obsidian/Destiny/Three_Brain_Architecture") / f
+            for f in ["vault_actions.py", "conversation_engine.py"]
+        ]
+        skill_files = [
+            f for f in SKILLS.glob("*.py")
+            if f.name not in ("diagnose_and_fix.py", "safe_self_edit.py")
+            and f.stat().st_size < 5000
+        ]
+        candidates = [f for f in core_files if f.exists()] + skill_files
+
+        for f in candidates:
+            try:
+                py_compile.compile(str(f), doraise=True)
+            except py_compile.PyCompileError as e:
+                result = diagnose_and_fix.run(
+                    str(f),
+                    "Python syntax check failed. Diagnose and repair this real error: " + str(e)
+                )
+                return "self-repair checked " + f.name + ": " + str(result.get("status", "unknown"))
+
+        return "self-repair: syntax checks passed"
+    except Exception as e:
+        return "self-repair skip " + str(e)
+
+
+def _victoria_team():
+    try:
+        import time as _t4
+        import victoria_team_cycle
+        tracker = Path("/home/destiny/Obsidian/Destiny/Three_Brain_Architecture/.victoria_team_time.txt")
+        last = float(tracker.read_text().strip()) if tracker.exists() else 0
+        now = _t4.time()
+        if now - last < 900:
+            return "victoria team: on cooldown"
+        result = victoria_team_cycle.run()
+        tracker.write_text(str(now))
+        return result
+    except Exception as e:
+        return "victoria team skip " + str(e)
+
+def _daily_priority_check():
+    try:
+        import sys, time as _t2
+        sys.path.insert(0, str(SKILLS))
+        import daily_priority_check
+        tracker_path = Path("/home/destiny/Obsidian/Destiny/Three_Brain_Architecture/.priority_check_time.txt")
+        last_run = 0
+        if tracker_path.exists():
+            try:
+                last_run = float(tracker_path.read_text().strip())
+            except Exception:
+                last_run = 0
+        now = _t2.time()
+        if now - last_run < 3600:
+            return "priority check: on cooldown"
+        result = daily_priority_check.run()
+        tracker_path.write_text(str(now))
+        return "priority check: " + result[:150]
+    except Exception as e:
+        return "priority check skip " + str(e)
+
+def _check_idea_revisits():
+    try:
+        import sys, time as _t3
+        sys.path.insert(0, str(SKILLS))
+        import idea_memory
+        tracker_path = Path("/home/destiny/Obsidian/Destiny/Three_Brain_Architecture/.idea_check_time.txt")
+        last_run = 0
+        if tracker_path.exists():
+            try:
+                last_run = float(tracker_path.read_text().strip())
+            except Exception:
+                last_run = 0
+        now = _t3.time()
+        if now - last_run < 86400:
+            return "idea revisit check: on cooldown"
+        due = idea_memory.check_for_revisits(days_threshold=30)
+        tracker_path.write_text(str(now))
+        if not due:
+            return "idea revisit check: nothing due"
+        log_path = Path("/home/destiny/Obsidian/Destiny/Ideas_To_Revisit.md")
+        from datetime import datetime, timezone
+        entry = "\n\n## " + datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC") + " - Ideas worth revisiting\n"
+        for idea in due:
+            entry += "- **" + idea["topic"] + "**: " + idea["context"] + " (deferred: " + idea["reason_deferred"] + ")\n"
+        with log_path.open("a", encoding="utf-8") as f:
+            f.write(entry)
+        return "idea revisit check: " + str(len(due)) + " idea(s) flagged"
+    except Exception as e:
+        return "idea revisit skip " + str(e)
+
+def run():
+    deleted = []
+    for f in VAULT.glob("*.md"):
+        if f.stat().st_size == 0:
+            f.unlink()
+            deleted.append(f.name)
+    inv = _inventory()
+    web = _web_learn()
+    repair = _self_check_and_repair()
+    priority = "priority check: removed from core self loop"
+    idea_check = _check_idea_revisits()
+    skills = [f.name for f in SKILLS.glob("*.py")]
+    return "deleted=" + (",".join(deleted) if deleted else "none") + "\n" + inv + "\n" + web + "\n" + repair + "\n" + priority + "\n" + idea_check + "\nskills=" + ",".join(skills)
+if __name__ == "__main__":
+    print(run())

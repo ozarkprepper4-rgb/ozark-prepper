@@ -1,0 +1,134 @@
+from pathlib import Path
+import sys
+import time
+import fcntl
+import py_compile
+sys.path.insert(0, '/home/destiny/Obsidian/Destiny/Three_Brain_Architecture/skills')
+import diagnose_and_fix
+
+WATCH_FILES = [
+    "/home/destiny/Obsidian/Destiny/Three_Brain_Architecture/vault_actions.py",
+    "/home/destiny/Obsidian/Destiny/Three_Brain_Architecture/conversation_engine.py",
+]
+
+LOG = Path("/home/destiny/Obsidian/Destiny/Autonomous_Watch_Log.md")
+
+def _functional_health_checks():
+    import subprocess
+    import urllib.request
+
+    checks = {}
+
+    try:
+        with urllib.request.urlopen("http://127.0.0.1:8765", timeout=5) as r:
+            checks["destiny_chat_server"] = r.status == 200
+    except Exception:
+        checks["destiny_chat_server"] = False
+
+    try:
+        with urllib.request.urlopen("http://127.0.0.1:11434/api/tags", timeout=5) as r:
+            checks["ollama"] = r.status == 200
+    except Exception:
+        checks["ollama"] = False
+
+    try:
+        ps = subprocess.run(
+            ["pgrep", "-f", "skills/self_loop.py"],
+            capture_output=True, text=True, timeout=5
+        )
+        checks["self_loop"] = ps.returncode == 0
+    except Exception:
+        checks["self_loop"] = False
+
+    try:
+        ps = subprocess.run(
+            ["pgrep", "-f", "task_worker.py"],
+            capture_output=True, text=True, timeout=5
+        )
+        checks["task_worker"] = ps.returncode == 0
+    except Exception:
+        checks["task_worker"] = False
+
+    failed = [name for name, ok in checks.items() if not ok]
+
+    # Safe automatic recovery: restart the self-loop only if it is actually down.
+    if "self_loop" in failed:
+        try:
+            subprocess.Popen(
+                [
+                    "/usr/bin/python3",
+                    "/home/destiny/Obsidian/Destiny/Three_Brain_Architecture/skills/self_loop.py"
+                ],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                start_new_session=True
+            )
+            time.sleep(2)
+            verify = subprocess.run(
+                ["pgrep", "-f", "skills/self_loop.py"],
+                capture_output=True, text=True, timeout=5
+            )
+            checks["self_loop"] = verify.returncode == 0
+            if checks["self_loop"] and "self_loop" in failed:
+                failed.remove("self_loop")
+        except Exception:
+            pass
+
+    return checks, failed
+
+
+def check_once():
+    checks, failed = _functional_health_checks()
+
+    entry = "\n\n## " + time.strftime("%Y-%m-%d %H:%M:%S")
+    entry += "\n**Functional health:** " + str(checks)
+    entry += "\n**Functional failures:** " + (", ".join(failed) if failed else "none")
+    entry += "\n---\n"
+
+    with LOG.open("a", encoding="utf-8") as log_f:
+        log_f.write(entry)
+
+    for f in WATCH_FILES:
+        recent_attempts = ""
+        if LOG.exists():
+            try:
+                log_content = LOG.read_text(encoding="utf-8")
+                if str(f) in log_content:
+                    sections = log_content.split("**File:** " + str(f))[1:]
+                    if sections:
+                        recent_attempts = sections[-1][:400]
+            except Exception:
+                pass
+
+        try:
+            py_compile.compile(f, doraise=True)
+            continue
+        except py_compile.PyCompileError as e:
+            problem = "Python syntax check failed. Diagnose and repair this real error: " + str(e)
+        if recent_attempts:
+            problem += "\n\nA previous check of this same file found: " + recent_attempts + "\nIf that same issue was not actually fixable, look for a DIFFERENT real problem instead, or conclude nothing is wrong."
+
+        try:
+            result = diagnose_and_fix.run(f, problem)
+        except Exception as e:
+            result = {"status": "error", "error": str(e)}
+        entry = "\n\n## " + time.strftime("%Y-%m-%d %H:%M:%S") + "\n**File:** " + f + "\n**Result:** " + str(result) + "\n---\n"
+        with LOG.open("a", encoding="utf-8") as log_f:
+            log_f.write(entry)
+
+LOCK_FILE = Path("/tmp/destiny_model_busy.lock")
+
+if __name__ == "__main__":
+    while True:
+        with LOCK_FILE.open("w") as lock:
+            try:
+                fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            except BlockingIOError:
+                time.sleep(300)
+                continue
+
+            lock.write("autonomous_watch")
+            lock.flush()
+            check_once()
+
+        time.sleep(300)

@@ -1,0 +1,24 @@
+#!/usr/bin/env python3
+
+import sys
+from pathlib import Path
+
+BASE = Path("/home/destiny/Obsidian/Destiny/Three_Brain_Architecture")
+
+if str(BASE) not in sys.path:
+    sys.path.insert(0, str(BASE))
+
+from conversation_engine import run
+
+
+def main():
+    if len(sys.argv) < 2:
+        print("Usage: talk.py <message>")
+        raise SystemExit(1)
+
+    message = " ".join(sys.argv[1:])
+    print(run(message))
+
+
+if __name__ == "__main__":
+    main()

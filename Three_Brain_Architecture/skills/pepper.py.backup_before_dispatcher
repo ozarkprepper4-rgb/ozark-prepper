@@ -1,0 +1,11 @@
+# Pepper - Backend Management Agent
+import os
+from pathlib import Path
+
+def run():
+    print("Pepper backend agent active: Managing vault and system processes.")
+    # Backend maintenance and cleanup logic
+    return {"status": "success", "agent": "pepper"}
+
+if __name__ == "__main__":
+    run()

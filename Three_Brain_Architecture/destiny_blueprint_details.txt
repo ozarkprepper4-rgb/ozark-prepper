@@ -1,0 +1,18 @@
+=== DESTINY AUTONOMOUS SYSTEM BLUEPRINT ===
+
+1. TERMINAL INTEGRATION & SELF-EXECUTION
+- The core engine runs a continuous background loop that scans an input file or queue for active tasks.
+- When a task appears, the script automatically executes the command directly in the local shell environment (using subprocess/bash execution).
+- Output and error logs are captured into text files automatically without requiring manual copy-pasting.
+
+2. VOICE / TEXT-TO-SPEECH (TTS) INTEGRATION
+- Audio output is tied directly to system-level speech synthesis tools (like espeak or local Python TTS libraries).
+- Whenever the model generates a response or result, the text is cleaned of special quote characters and piped straight into the system audio command, making her speak out loud instantly.
+
+3. GRAPHICAL USER INTERFACE (GUI) & CLIPBOARD
+- Built on a lightweight desktop window framework (Tkinter/Webview) matching professional layout standards.
+- Fully bound keyboard shortcuts (Control-c, Control-v, Control-x) and right-click context menus are explicitly mapped to the text boxes so highlighting, copying, and pasting work natively without restriction.
+- A persistent desktop launcher (.desktop file) with execution permissions and trusted metadata allows instant one-click access from the desktop.
+
+4. 24/7 AUTONOMOUS OPERATION
+- The architecture operates independently in the background, updating its tools, running its own terminal logic, and cycling through tasks continuously.

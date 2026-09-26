@@ -1,0 +1,7 @@
+def run():
+    try:
+        with open('Soul.md', 'r') as file:
+            content = file.read()
+            print(f"File name: Soul.md\nFirst 100 characters:\n{content[:100]}\nLast 100 characters:\n{content[-100:] if content else ' '}\nTotal lines: {len(content.splitlines())}")
+    except FileNotFoundError:
+        print("The file 'Soul.md' does not exist.")

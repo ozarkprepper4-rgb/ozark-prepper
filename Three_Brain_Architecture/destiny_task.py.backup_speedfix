@@ -1,0 +1,62 @@
+#!/usr/bin/env python3
+
+import sys
+import json
+from pathlib import Path
+
+BASE = Path("/home/destiny/Obsidian/Destiny/Three_Brain_Architecture")
+
+sys.path.insert(0, str(BASE))
+
+from cognitive_orchestrator import run
+from pre_execution_verifier import verify_task
+
+
+def main():
+    if len(sys.argv) < 2:
+        print('Usage: destiny-task "task to perform"')
+        sys.exit(1)
+
+    task = " ".join(sys.argv[1:])
+
+    print()
+    print("=== DESTINY TASK ENGINE ===")
+    print("Task:", task)
+    print()
+    print("Pre-execution verification: READY")
+    verification = verify_task(task)
+
+    if verification.get("status") != "READY":
+        print("PRE-EXECUTION VERIFICATION: FAILED")
+        for name, status in verification.get("checks", {}).items():
+            print(f"{name}: {status}")
+        sys.exit(1)
+
+    print("Pre-execution verification: PASS")
+    print("Processing through Three-Brain architecture...")
+    print()
+
+    result = run(task)
+
+    print("=== RESULT ===")
+    print("Status:", result.get("status", "UNKNOWN"))
+
+    dl = result.get("dl_result", {})
+
+    if dl.get("model_response"):
+        print()
+        print("Destiny:")
+        print(dl["model_response"])
+
+    print()
+    print("=== PIPELINE ===")
+
+    for name, status in result.get("pipeline", {}).items():
+        print(f"{name}: {status}")
+
+    print()
+    print("DESTINY_TASK_COMPLETE")
+
+
+if __name__ == "__main__":
+    main()

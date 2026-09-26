@@ -1,0 +1,10 @@
+{
+  "timestamp": "2026-08-27T01:26:38.310419+00:00",
+  "test": "adaptive_cognitive_integration",
+  "source": "Adaptive_Brain/behavior_rules.json",
+  "rule": "ml_adaptation_controlled_test_research",
+  "instruction": "Increase verification and caution for research tasks.",
+  "adaptive_rule_status": "PASS",
+  "cognitive_instruction_loaded": "PASS",
+  "integration": "PASS"
+}

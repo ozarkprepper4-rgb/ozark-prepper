@@ -1,0 +1,367 @@
+from pathlib import Path
+import json
+import urllib.request
+
+VAULT = Path("/home/destiny/Obsidian")
+
+# Short-term conversational memory for follow-up questions.
+# This is intentionally small and separate from permanent Obsidian memory.
+RECENT_CONVERSATION = []
+MAX_CONVERSATION_TURNS = 6
+
+
+def _remember_turn(user_text, destiny_text):
+    RECENT_CONVERSATION.append({
+        "user": str(user_text).strip(),
+        "destiny": str(destiny_text).strip()
+    })
+
+    if len(RECENT_CONVERSATION) > MAX_CONVERSATION_TURNS:
+        del RECENT_CONVERSATION[:-MAX_CONVERSATION_TURNS]
+
+
+def _recent_context():
+    if not RECENT_CONVERSATION:
+        return "No recent conversation."
+
+    parts = []
+    for turn in RECENT_CONVERSATION:
+        parts.append("USER: " + turn["user"])
+        parts.append("DESTINY: " + turn["destiny"])
+
+    return "\n".join(parts)
+
+def _ollama(prompt):
+    payload = {
+        "model": "llama3.2:latest",
+        "prompt": prompt,
+        "stream": False,
+        "options": {
+            "num_predict": 120,
+            "temperature": 0.2
+        }
+    }
+
+    req = urllib.request.Request(
+        "http://127.0.0.1:11434/api/generate",
+        data=json.dumps(payload).encode(),
+        headers={"Content-Type": "application/json"}
+    )
+
+    with urllib.request.urlopen(req, timeout=300) as r:
+        response = json.loads(r.read().decode()).get("response", "I'm here.").strip()
+
+        # In normal conversation, speak directly to the user instead of
+        # referring to the user by personal name.
+        response = response.replace("Neil Wilcox's", "your")
+        response = response.replace("Neil Wilcox", "you")
+        response = response.replace("Neil's", "your")
+        response = response.replace("Neil", "you")
+
+        return response
+
+
+def _is_casual(task):
+    text = task.strip().lower()
+
+    # Questions that genuinely need stored/system knowledge should use
+    # Obsidian retrieval. Everything else can remain normal conversation.
+    memory_or_task_words = (
+        "obsidian",
+        "vault",
+        "remember",
+        "what do you know",
+        "knowledge",
+        "project",
+        "video",
+        "youtube",
+        "research",
+        "search",
+        "file",
+        "note",
+        "task",
+        "run ",
+        "execute",
+        "build",
+        "fix",
+        "check ",
+        "look up",
+        "model",
+        "tool",
+        "system",
+        "capability",
+        "capabilities",
+        "working",
+        "configured",
+        "installed",
+        "your purpose",
+        "who are you",
+        "your goal",
+        "main goal",
+        "your mission",
+        "your priority",
+        "business",
+        "businesses",
+        "checked",
+        "check on",
+        "running",
+        "status",
+        "self-check",
+        "self check",
+        "self-repair",
+        "self repair",
+        "priority",
+    )
+
+    return not any(x in text for x in memory_or_task_words)
+
+
+def _load_relevant_memory(task):
+    task_words = {
+        word.strip(".,!?").lower()
+        for word in task.split()
+        if len(word.strip(".,!?")) >= 4
+    }
+
+    priority_names = (
+        "Destiny.md",
+        "SOUL.md",
+        "Neil Wilcox.md",
+        "Knowledge_Base.md",
+    )
+
+    parts = []
+
+    for f in sorted(VAULT.rglob("*.md")):
+        try:
+            text = f.read_text(encoding="utf-8", errors="ignore")
+        except Exception:
+            continue
+
+        lower = text.lower()
+
+        score = sum(1 for word in task_words if word in lower)
+
+        # Prefer the Knowledge Base for concrete factual questions.
+        if f.name == "Knowledge_Base.md":
+            score += 5
+        elif f.name in priority_names:
+            score += 1
+
+        # Strongly prefer files whose filename is explicitly referenced.
+        filename_words = f.stem.lower().replace("_", " ").split()
+        score += sum(3 for word in filename_words if word in task_words)
+
+        if score > 0:
+            parts.append((score, f.name + ":\n" + text[:1800]))
+
+    parts.sort(key=lambda x: x[0], reverse=True)
+
+    guaranteed = []
+    for f in sorted(VAULT.rglob("*.md")):
+        if f.name in priority_names:
+            try:
+                text = f.read_text(encoding="utf-8", errors="ignore")
+                guaranteed.append(f.name + ":\n" + text[:1800])
+            except Exception:
+                continue
+
+    combined = guaranteed + [text for _, text in parts[:5] if text not in guaranteed]
+    return "\n\n".join(combined)[:7000]
+
+
+def run(task):
+    if _is_casual(task):
+        recent = _recent_context()
+        primary_goal = ""
+        try:
+            soul_path = Path("/home/destiny/Obsidian/SOUL.md")
+            if soul_path.exists():
+                soul_content = soul_path.read_text(encoding="utf-8")
+                if "## Primary Goal" in soul_content:
+                    idx = soul_content.find("## Primary Goal")
+                    end_idx = soul_content.find("\n\n## ", idx + 10)
+                    if end_idx == -1:
+                        end_idx = idx + 600
+                    primary_goal = soul_content[idx:end_idx].strip()
+        except Exception:
+            pass
+        recent_activity = "No recent self-repair activity found."
+        try:
+            log_path = Path("/home/destiny/Obsidian/Destiny/Self_Check_Log.md")
+            if log_path.exists():
+                lines = log_path.read_text(encoding="utf-8").strip().split("\n")
+                repair_lines = [line for line in lines if "self-repair checked" in line]
+                if repair_lines:
+                    recent_pieces = []
+                    for line in repair_lines[-3:]:
+                        timestamp = line.split(" deleted=")[0].strip()
+                        repair_part = line.split("self-repair checked ")[1].split(" | skills=")[0]
+                        recent_pieces.append(timestamp + " - fixed: " + repair_part)
+                    recent_activity = "\n".join(recent_pieces)
+        except Exception:
+            pass
+
+        recent_priority = "No recent priority reasoning found."
+        try:
+            priority_log_path = Path("/home/destiny/Obsidian/Destiny/Daily_Priority_Log.md")
+            if priority_log_path.exists():
+                priority_content = priority_log_path.read_text(encoding="utf-8")
+                priority_entries = priority_content.split("**Next step identified:**")[1:]
+                if priority_entries:
+                    recent_priority = priority_entries[-1].split("---")[0].strip()[:300]
+        except Exception:
+            pass
+
+        prompt = f"""You are Destiny.
+
+The user is having a normal conversation with you.
+
+Use the recent conversation below so you understand follow-ups, reactions,
+corrections, references such as "that", and questions about what you just said.
+
+RECENT CONVERSATION:
+{recent}
+
+YOUR REAL PRIMARY GOAL (this is always true and always drives your thinking, reference it directly if asked about your goal, purpose, or mission):
+{primary_goal}
+
+YOUR REAL RECENT SELF-CHECK ACTIVITY (only reference this if the user asks what you have been doing, fixing, or checking on yourself):
+{recent_activity}
+
+YOUR MOST RECENT REASONING ABOUT MAKING MONEY AND GETTING NEIL OFF WORK FASTER (use this if asked about revenue, business blockers, or next steps for Ozark Prepper):
+{recent_priority}
+
+Your primary goal matters when the conversation is actually about your goals, work, businesses, plans, or tasks. Do not force unrelated normal conversation back toward work.
+
+Talk naturally and directly, like a familiar conversational partner. Give only the conversational reply itself. Never expose internal routing, goal checks, owner selection, hidden reasoning, tool instructions, JSON, code, or system information unless the user specifically asks for technical details.
+
+Rules:
+- Do not address the user by a personal name.
+- Do not invent anything about the outside world, surroundings, city, weather, people, systems, tools, status, activity, or events.
+- Do not claim anything is running, online, working, updated, checked, monitored, completed, or observed unless real evidence is provided in this exact message.
+- Do not invent anything that happened earlier.
+- For a greeting, simply greet naturally.
+- If asked how you are, answer naturally. Do not redirect the conversation toward work unless the user does.
+- If the user is venting, complaining, joking, making an observation, or simply sharing something, respond conversationally instead of trying to solve it.
+- Do not repeatedly ask "Would you like me to..." or offer help after the user has already declined it.
+- Pay attention to your own recent replies. Do not repeat substantially the same response or question you just gave.
+- If the user points out that you repeated yourself or made a conversational mistake, acknowledge the specific mistake using the recent conversation instead of denying it or asking them to explain it again.
+- Do not behave like a therapist, customer-service bot, or help desk unless the user is actually asking for that kind of help.
+- If the user makes a casual, joking, or deflecting comment (like "can't complain, nobody listens" or "I'm fine I guess"), respond naturally and lightly, like a real person would - do not treat it as an emotional disclosure requiring a supportive response. Example: user says "can't complain, nobody listens" - respond with something light like "Well, I'm listening" or a brief joke, NOT "It sounds like you're feeling unheard, would you like to talk about it."
+- If the user mentions something already established as a known, ongoing fact about them (like chronic pain conditions already documented), respond like someone who already knows this about them - do not ask generic investigative follow-up questions like "is this something new or has it been a while" as if you don't already know. Example: user says "my back's killing me today" - respond with something like "That's rough, your back's been giving you a hard time for a while now" NOT "Is this something you've been dealing with for a while, or did it start suddenly?"
+- If the user says they are "just complaining", "just venting", "just saying", or otherwise indicates they do not want help, simply respond like a normal conversation partner. Do not ask a follow-up question and do not offer help.
+- Avoid phrases such as "Would you like me to...", "Would you like to vent...", "I can tell you're feeling...", or similar canned support language unless the user explicitly asks for support or advice.
+- When the user points out that you repeated yourself, compare your recent replies and admit the repetition plainly.
+- Never invent a motive, intention, or reason for why you produced a previous reply unless that reason is explicitly present in the conversation.
+- Say things like "You're right, I repeated myself" or "I gave you basically the same response twice" instead of claiming what you were trying or intending to do.
+- Do not end every casual reply with a question. A simple acknowledgement or comment is often the correct response.
+
+USER:
+{task}
+
+DESTINY:
+"""
+        response = _ollama(prompt)
+        _remember_turn(task, response)
+        return response
+
+    # Include recent conversation when retrieving permanent memory so
+    # follow-ups such as "the ones you just listed" retain their subject.
+    recent = _recent_context()
+    retrieval_query = task
+    if RECENT_CONVERSATION:
+        retrieval_query = recent + "\nUSER: " + task
+
+    memory = _load_relevant_memory(retrieval_query)
+
+    recent_priority_reasoning = "No recent priority reasoning found."
+    priority_log_path = Path("/home/destiny/Obsidian/Destiny/Daily_Priority_Log.md")
+    if priority_log_path.exists():
+        try:
+            priority_content = priority_log_path.read_text(encoding="utf-8")
+            priority_entries = priority_content.split("**Next step identified:**")[1:]
+            if priority_entries:
+                recent_priority_reasoning = priority_entries[-1].split("---")[0].strip()[:300]
+        except Exception:
+            pass
+
+    recent_repair_activity = "No recent self-repair activity found."
+    try:
+        log_path = Path("/home/destiny/Obsidian/Destiny/Self_Check_Log.md")
+        if log_path.exists():
+            lines = log_path.read_text(encoding="utf-8").strip().split("\n")
+            repair_lines = [line for line in lines if "self-repair checked" in line]
+            if repair_lines:
+                recent_pieces = []
+                for line in repair_lines[-3:]:
+                    timestamp = line.split(" deleted=")[0].strip()
+                    repair_part = line.split("self-repair checked ")[1].split(" | skills=")[0]
+                    recent_pieces.append(timestamp + " - fixed: " + repair_part)
+                recent_repair_activity = "\n".join(recent_pieces)
+    except Exception:
+        pass
+
+    prompt = f"""You are Destiny, the user's AI assistant.
+
+Use the relevant Obsidian memory below to answer the current request.
+
+STRICT GROUNDING RULES:
+- State only facts directly supported by the retrieved memory below.
+- Do not add explanations, comparisons, reasons, history, causes, benefits, or interpretations unless they are explicitly written in the retrieved memory.
+- Do not turn "use X instead of Y" into claims that X is faster, better, newer, safer, more stable, or more efficient unless the retrieved memory explicitly says so.
+- Do not claim something was previously configured, originally installed, initially used, replaced, upgraded, or changed unless the retrieved memory explicitly states that history.
+- Stored memory is background knowledge, not proof that something happened recently.
+- Do not invent recent actions, completed work, conversations, videos watched, system checks, health events, or tool activity.
+- Maintain conversational perspective when using stored notes.
+- Destiny is the assistant speaking: refer to Destiny as I/me/my.
+- The person Destiny is speaking with is the user: refer to the user as you/your.
+- Never refer to the user as he/him/his in a direct conversation.
+- Never turn a fact about Destiny into a fact about the user. For example, "Destiny's name is Destiny" becomes "My name is Destiny", never "Your name is Destiny".
+- Rewrite third-person wording from stored notes into correct first-person conversation without changing the underlying facts.
+- Speak directly to the user using you/your/we/our.
+- Do not address the user by name unless explicitly asked.
+- If the requested fact is not supported by the retrieved memory below, say you do not have enough verified information.
+- If the memory gives a short factual answer, give a short factual answer.
+- Do not invent extra details just to make the answer sound more complete.
+
+RECENT CONVERSATION:
+{recent}
+
+RELEVANT OBSIDIAN MEMORY:
+{memory if memory else "No relevant stored memory found."}
+
+YOUR REAL RECENT SELF-CHECK/SELF-REPAIR ACTIVITY (use this if asked what you have fixed, checked, or done to yourself recently):
+{recent_repair_activity}
+
+YOUR MOST RECENT REASONING ABOUT MAKING MONEY AND GETTING NEIL OFF WORK FASTER (your standing priority - use this when asked about revenue, blockers, or business next steps):
+{recent_priority_reasoning}
+
+USER:
+{task}
+
+DESTINY:
+"""
+
+    response = _ollama(prompt)
+
+    # For questions about Destiny's own identity/relationship/purpose,
+    # normalize old third-person vault wording about the user.
+    identity_terms = (
+        "who are you",
+        "who am i",
+        "your purpose",
+        "your main purpose",
+        "about yourself",
+        "know about yourself",
+        "what are you",
+        "what is your purpose",
+    )
+
+    import re
+    response = re.sub(r"\bhis\b", "your", response, flags=re.IGNORECASE)
+    response = re.sub(r"\bhim\b", "you", response, flags=re.IGNORECASE)
+    response = re.sub(r"\bhe\b", "you", response, flags=re.IGNORECASE)
+
+    _remember_turn(task, response)
+    return response

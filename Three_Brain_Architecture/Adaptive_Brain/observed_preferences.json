@@ -1,0 +1,9 @@
+[
+  {
+    "timestamp": "2026-08-28T18:54:29.299426",
+    "source": "User asked 'Keep it short, please'",
+    "preference_type": "response_length",
+    "value": "short",
+    "verified": false
+  }
+]
