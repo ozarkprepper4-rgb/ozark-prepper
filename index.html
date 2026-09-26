@@ -7,7 +7,7 @@
         body { background: #0f172a; color: #f8fafc; font-family: monospace; padding: 20px; margin: 0; }
         h1 { color: #38bdf8; }
         .box { background: #1e293b; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #334155; }
-        button { background: #0284c7; color: white; border: none; padding: 12px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 16px; }
+        button { background: #0284c7; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
         button:hover { background: #0ea5e9; }
     </style>
 </head>
@@ -18,31 +18,20 @@
         <p>Iris Interface Agent & Destiny Core Intelligence operating normally.</p>
     </div>
     <div class="box">
-        <h3>Destiny Voice Output</h3>
-        <p>Click the button below to hear Destiny speak:</p>
-        <button onclick="speakDestiny()">Listen / Speak Now</button>
+        <h3>Destiny Voice Output Test</h3>
+        <p>Click the button below to test speech synthesis:</p>
+        <button onclick="speakDestiny()">Test Voice</button>
     </div>
     <script>
         function speakDestiny() {
-            if (!('speechSynthesis' in window)) {
-                alert('Speech synthesis not supported in this browser.');
-                return;
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance("Hello, I am Destiny. All systems are online and running autonomously.");
+                utterance.rate = 1.0;
+                utterance.pitch = 1.0;
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert('Speech synthesis not supported in this browser environment.');
             }
-            window.speechSynthesis.cancel();
-            const text = "Hello. All systems are online and running autonomously.";
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.rate = 1.0;
-            utterance.pitch = 1.0;
-            
-            const voices = window.speechSynthesis.getVoices();
-            if (voices.length > 0) {
-                utterance.voice = voices.find(v => v.lang.startsWith('en')) || voices[0];
-            }
-            
-            window.speechSynthesis.speak(utterance);
-        }
-        if ('speechSynthesis' in window) {
-            window.speechSynthesis.onvoiceschanged = () => { window.speechSynthesis.getVoices(); };
         }
     </script>
 </body>

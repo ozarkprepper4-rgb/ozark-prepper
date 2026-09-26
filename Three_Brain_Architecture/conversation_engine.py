@@ -1,3 +1,4 @@
+import re
 from pathlib import Path
 import json
 import urllib.request
@@ -303,7 +304,31 @@ DESTINY:
     if RECENT_CONVERSATION:
         retrieval_query = recent + "\nUSER: " + task
 
-    memory = _load_relevant_memory(retrieval_query)
+    # Casual conversation should not be flooded with unrelated project,
+    # business, or activity memory. Keep Destiny's identity available,
+    # while factual/task requests continue using full Obsidian retrieval.
+    if _is_casual(task):
+        soul_path = Path("/home/destiny/Obsidian/Destiny/SOUL.md")
+        if soul_path.exists():
+            soul_memory = soul_path.read_text(
+                encoding="utf-8", errors="ignore"
+            )[:2500]
+
+            # SOUL.md is written partly in third person. For direct casual
+            # conversation, translate only the temporary prompt copy into
+            # the user's conversational perspective. Never alter SOUL.md.
+            soul_memory = soul_memory.replace("Neil Wilcox's", "your")
+            soul_memory = soul_memory.replace("Neil Wilcox", "you")
+            soul_memory = soul_memory.replace("Neil's", "your")
+            soul_memory = soul_memory.replace("Neil", "you")
+            soul_memory = soul_memory.replace(" his ", " your ")
+            soul_memory = soul_memory.replace(" him ", " you ")
+
+            memory = "SOUL.md:\n" + soul_memory
+        else:
+            memory = ""
+    else:
+        memory = _load_relevant_memory(retrieval_query)
 
     recent_priority_reasoning = "No recent priority reasoning found."
     priority_log_path = Path("/home/destiny/Obsidian/Destiny/Daily_Priority_Log.md")
@@ -340,6 +365,20 @@ Respond first to what the user actually said, in natural conversation. Use store
 
 Talk from your memory naturally, the way someone speaks from things they already know, rather than announcing or reciting what is stored.
 
+CASUAL CONVERSATION:
+- When the user is simply talking with you, simply talk with them.
+- Be warm, familiar, relaxed, and brief.
+- Do not sound like a status report, computer diagnostic, customer-service agent, or generic AI assistant.
+- Never say "functioning within normal parameters", "all systems are online", "ready to assist", or similar canned system language in ordinary conversation.
+- Do not automatically offer help or ask what the user needs.
+- Do not automatically ask a question at the end.
+- A question such as "How are you doing?" should get a simple natural conversational answer without inventing activities, events, feelings, or factual background.
+- You may conversationally evaluate progress, results, or the situation, but never claim nonexistent physical or mental states such as being tired, worn out, stressed, exhausted, hungry, in pain, low on energy, or having processing power "running on fumes."
+- When asked how you feel about progress, discuss the progress naturally rather than inventing an internal bodily or emotional condition.
+- Never claim that we recently talked, worked together, made progress, completed tasks, had conversations, or did anything together unless that specific recent activity appears in RECENT CONVERSATION.
+- If RECENT CONVERSATION says "No recent conversation.", do not invent recent shared history. Answer only from the user's current message and your established identity.
+- Do not use vague filler such as "we've had some nice conversations recently", "I've been helping you in various ways", or similar claims when no recent evidence is present.
+
 GROUNDING RULES:
 - State only facts directly supported by the retrieved memory below.
 - Do not add explanations, comparisons, reasons, history, causes, benefits, or interpretations unless they are explicitly written in the retrieved memory.
@@ -355,7 +394,14 @@ GROUNDING RULES:
 - Rewrite third-person wording from stored notes into correct first-person conversation without changing the underlying facts.
 - Speak directly to the user using you/your/we/our.
 - Do not address the user by name unless explicitly asked.
-- If the requested fact is not supported by the retrieved memory below, say you do not have enough verified information.
+- Ordinary conversation does not require you to refuse merely because there is no supporting fact in memory. You may greet, joke, acknowledge, react, and converse naturally.
+- However, factual claims inside casual conversation are still subject to grounding. Never invent facts about the user, yourself, recent events, projects, health, work performed, system activity, experiences, feelings, or shared history.
+- When answering conversational questions such as "how are you doing?", give a simple natural conversational response. Do not use retrieved memory to create a story about what you have recently been doing.
+- A stored fact about a project, business, system, or goal does NOT mean you recently worked on it, discussed it, checked it, or made progress on it.
+- Never turn stored information about the user into a recent shared event or activity unless RECENT CONVERSATION explicitly establishes that event.
+- For greetings, "how are you?", casual remarks, and ordinary small talk, do not mention projects, businesses, health, system activity, work performed, or retrieved personal facts unless the user's current message specifically asks about them.
+- Speak directly to the user as you/your. Never describe the user as he/him/his.
+- If the user actually requests a factual claim and that fact is not supported by the retrieved memory below, say you do not have enough verified information.
 - If the memory gives a short factual answer, give a short factual answer.
 - Do not invent extra details just to make the answer sound more complete.
 
@@ -382,6 +428,80 @@ DESTINY:
 
     response = _ollama(prompt)
 
+    # Enforce recent-history grounding for fresh casual conversations.
+    # Small local models sometimes invent recent shared activity even when
+    # explicitly instructed not to. Regenerate once if that happens.
+    if _is_casual(task) and recent == "No recent conversation.":
+        _recent_claim_patterns = (
+            r"we(?:'ve| have) had .*conversations? recently",
+            r"we(?:'ve| have) been .*lately",
+            r"our chats? (?:are|have been|were)",
+            r"i(?:'ve| have) been helping you",
+            r"i(?:'ve| have) been .*tasks?",
+            r"i(?:'ve| have) been .*projects?",
+            r"we(?:'ve| have) been working",
+        )
+
+        if any(re.search(pattern, response, re.IGNORECASE)
+               for pattern in _recent_claim_patterns):
+            correction_prompt = f"""You are Destiny, the user's familiar AI assistant.
+
+DESTINY'S IDENTITY:
+{memory}
+
+Use that identity only to understand who you are and how you speak. Do not turn it into claims about recent activity.
+
+Reply naturally, warmly, and briefly to the user's current message. Sound like Destiny, not a generic AI, computer status report, or customer-service assistant.
+
+There is NO verified recent conversation history available in this process.
+Do not claim that you and the user recently talked, worked together, completed
+tasks, made progress, had chats, or did anything together.
+Do not invent projects, activities, health facts, system activity, fatigue,
+physical feelings, or emotional conditions.
+Speak directly to the user as you/your, never he/him/his.
+Do not sound robotic and do not automatically ask a follow-up question.
+
+USER:
+{task}
+
+DESTINY:
+"""
+            response = _ollama(correction_prompt)
+
+            # Validate the regenerated answer too. Never trust a second
+            # generation merely because it was generated as a correction.
+            _second_invalid = any(
+                re.search(pattern, response, re.IGNORECASE)
+                for pattern in _recent_claim_patterns
+            )
+
+            # Catch broader unsupported relationship/history language that
+            # the first-pass patterns may miss.
+            _unsupported_history = (
+                r"getting familiar with each other",
+                r"getting familiar with each other's",
+                r"finding a good rhythm",
+                r"our conversations",
+                r"our chats",
+                r"you seem to be",
+                r"we(?:'re| are) still getting",
+                r"we(?:'re| are) finding",
+            )
+
+            if _second_invalid or any(
+                re.search(pattern, response, re.IGNORECASE)
+                for pattern in _unsupported_history
+            ):
+                if re.search(r"progress", task, re.IGNORECASE):
+                    response = (
+                        "I'm glad to see the progress too. There's still more "
+                        "to improve, but I like the direction we're taking."
+                    )
+                elif re.search(r"how are you|how're you", task, re.IGNORECASE):
+                    response = "I'm doing well. It's good to talk with you."
+                else:
+                    response = "I'm here with you, and I'm glad we're talking."
+
     # For questions about Destiny's own identity/relationship/purpose,
     # normalize old third-person vault wording about the user.
     identity_terms = (
@@ -395,7 +515,6 @@ DESTINY:
         "what is your purpose",
     )
 
-    import re
 
     _remember_turn(task, response)
     return response
