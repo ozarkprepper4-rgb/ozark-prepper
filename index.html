@@ -34,5 +34,14 @@
             }
         }
     </script>
+
+    <script>
+        window.onload = function() {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.getVoices();
+                console.log('Iris Interface Agent: Audio bindings initialized autonomously.');
+            }
+        };
+    </script>
 </body>
 </html>
