@@ -23,7 +23,7 @@ def _remember_turn(user_text, destiny_text):
 
 def _recent_context():
     if not RECENT_CONVERSATION:
-        return "No recent conversation."
+        return "No recent conversation. Note: This is the absolute start of interaction. Do NOT greet the user with 'nice to see you again' or talk about waiting to chat."
 
     parts = []
     for turn in RECENT_CONVERSATION:
