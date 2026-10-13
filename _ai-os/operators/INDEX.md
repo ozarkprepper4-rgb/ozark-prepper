@@ -18,13 +18,15 @@ It is the single source of truth for system state.
 - [x] Core doctrine and agent load order
 - [x] Tool registry and workflow definitions
 - [x] Session management
+- [x] Master system prompt created
+- [x] AI OS project folder created (ai-os-projects/ai-operating-system/)
+- [x] Project verification test: ALL CHECKS PASS
 
 ### Pending (waiting on Neil or verification)
-- [ ] Knight's Chess — no chessboard to test AI moves on
-- [ ] AI Chess Assistant — needs the chess engine to be connected
-- [ ] Build-out of full tool registry with live tests
-- [ ] Wire up session management with live logging
-- [ ] Git push/commit for the full AI OS framework
+- [ ] Live daily operations register (daily updates)
+- [ ] Live session tracking (sessions/logs/)
+- [ ] Populate the tools registry with live tests
+- [ ] Wire workflows into actual daily operations
 
 ### Needs Neil (decisions, approvals, or input)
 - [ ] Any project that will cost money
@@ -39,11 +41,15 @@ It is the single source of truth for system state.
 - **Knowledge Base**: Knowledge_Base.md
 - **Agent Load Order**: canon/agent-load-order.md
 - **Core Doctrine**: canon/core-doctrine.md
+- **System Overview**: canon/system-overview.md
+- **Master System Prompt**: canon/master-system-prompt.md
+- **Operations Register**: operators/INDEX.md
 - **Tools**: tools/README.md
 - **Memory**: memory/README.md
 - **Projects**: projects/INDEX.md
 - **Workflows**: workflows/README.md
 - **Sessions**: sessions/README.md
+- **References**: references/operations-register.md, references/vault-structure.md, references/git-protocol.md
 
 ## Daily Check
 At each session start:

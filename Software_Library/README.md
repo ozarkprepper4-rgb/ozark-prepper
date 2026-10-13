@@ -10,5 +10,6 @@ Each project folder contains:
 
 ## Index
 
-- [AI Operating System](._ai-os/canon/system-overview.md) — the full framework built from the video (Infinity OS / infinite-brain-os)
-- (none yet)
+- [AI Operating System — Framework](._ai-os/canon/system-overview.md) — the full AI operating system framework built from the video
+- [AI Operating System — Project](ai-os-projects/ai-operating-system/) — the live project folder with plan, notes, and test
+- [Software Library — Project](Software_Library/) — the code library itself (README with index)
