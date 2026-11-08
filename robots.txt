@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /thank-you.html
+
+Sitemap: https://ozarkprepper4-rgb.github.io/ozark-prepper/sitemap.xml
