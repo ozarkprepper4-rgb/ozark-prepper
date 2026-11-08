@@ -1,0 +1,24 @@
+{
+  "business_name": "A-1 Heating & Air Conditioning",
+  "location": "906 Hwy 25B North, Heber Springs, AR 72543",
+  "service_area": "Heber Springs and Central Arkansas",
+  "experience": "Over 20 years of trusted local service",
+  "hours": "Office hours vary; 24/7 emergency repair service",
+  "contact": "Phone (501) 362-2889, or the contact form at a1heatandairhebersprings.com",
+  "products": [
+    {"name": "free estimate on a new system", "free_slots": ["Mon am", "Mon pm", "Tue am", "Tue pm", "Wed am", "Wed pm", "Thu am", "Thu pm", "Fri am", "Fri pm", "Sat am"]},
+    {"name": "maintenance visit", "free_slots": ["Mon am", "Mon pm", "Tue am", "Tue pm", "Wed am", "Wed pm", "Thu am", "Thu pm", "Fri am", "Fri pm"]},
+    {"name": "air duct cleaning", "free_slots": ["Tue am", "Tue pm", "Thu am", "Thu pm"]}
+  ],
+  "services": [
+    {"name": "24/7 emergency AC or heater repair", "description": "Emergency repair calls, answered any hour", "price": "quoted on the call"},
+    {"name": "AC installation, repair, and maintenance (residential and commercial)", "description": "All major brands", "price": "free estimates"},
+    {"name": "Heating: furnace repairs and new system installations", "description": "Furnace and heating systems", "price": "free estimates"},
+    {"name": "Air duct cleaning", "description": "Residential duct cleaning", "price": "quoted on visit"},
+    {"name": "TRANE products dealer", "description": "Energy-efficient TRANE systems", "price": "free estimates"},
+    {"name": "Flexible financing", "description": "Financing plans for new systems", "price": "plans vary"}
+  ],
+  "source": "Public website a1heatandairhebersprings.com, checked 2026-11-08",
+  "model": "destiny:latest",
+  "ollama_base": "http://localhost:11435"
+}
