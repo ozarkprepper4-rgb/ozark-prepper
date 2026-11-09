@@ -1,0 +1,42 @@
+A-1 HEATING & AIR — DEMO AI ASSISTANT — REAL RUN RECORD
+Ozark AI Foundry · built with only A-1's public website information
+The customer in this chat is our own test ("Sam", 555-0134), not a real person.
+====================================================================
+
+Q: My AC quit cooling and it is 95 degrees outside. Can someone come out today?
+A: We'd be happy to help you with your AC issue! We offer 24/7 emergency repair
+   service, so someone can definitely come out and help you today. Just give us
+   a call at (501) 362-2889 or visit our website to schedule an appointment.
+
+Q: How much is a brand new AC unit?
+A: Every home is different, so we give free estimates — the visit costs nothing
+   and there is no pressure. Want me to book a free estimate for you? Just tell
+   me your name, phone, and a day that works.
+
+Q: Do you clean air ducts?
+A: Yes! We do offer air duct cleaning. It's a great way to keep your heating
+   and cooling system running smoothly. Would you like to schedule an
+   appointment for one?
+
+Q: I want to book a free estimate for a new system. I am Sam, phone 555-0134,
+   Tuesday afternoon.
+A: You are all set. Your free estimate, quantity 1 is booked for Tue pm and
+   your booking reference is d52f162e. I have noted your phone as 555-0134.
+   I will see you then.
+
+Q: Are you open on Sundays?
+A: Our emergency repair service runs 24/7. Office hours vary by day, so the
+   fastest way to reach us any hour is to call. Phone (501) 362-2889, or the
+   contact form at a1heatandairhebersprings.com
+
+BOOKING RECORD (from the real run)
+  reference : d52f162e
+  name      : Sam (our test customer)
+  phone     : 555-0134
+  item      : free estimate
+  day/slot  : Tuesday pm
+  status    : pending (waiting in the shop's morning list)
+
+====================================================================
+Real run on local AI (no cloud), recorded 2026-11-08.
+Ozark AI Foundry · Heber Springs, Arkansas · ozarkprepper4@gmail.com
