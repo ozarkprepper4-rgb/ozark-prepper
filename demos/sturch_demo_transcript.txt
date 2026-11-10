@@ -1,0 +1,38 @@
+STURCH HEAT AND AIR - DEMO AI ASSISTANT - REAL RUN
+Model: destiny:latest on http://localhost:11435 (local, free)
+====================================================
+
+Q: My AC is making a strange noise and it is 100 degrees outside. Can someone come out today?
+A: Here is what Sturch's own troubleshooting guide suggests first: Check whether the air filter is dirty and change it if it is visibly dirty. If that does not fix it, turn the system off and call for service. If that does not fix it, I can book a repair visit - service runs 24/7. Want me to book one? Just give me your name, phone, and a day.
+
+Q: My furnace won't kick on and it is supposed to freeze tonight.
+A: Here is what Sturch's own troubleshooting guide suggests first: Check the thermostat settings and the furnace switch first; if the system still will not run, turn it off and call for service. If that does not fix it, I can book a repair visit - service runs 24/7. Want me to book one? Just give me your name, phone, and a day.
+
+Q: How much is a brand new AC system?
+A: Every home is different, so new-system quotes are free - the visit costs nothing and there is no pressure. Want me to book a free quote for you? Just tell me your name, phone, and a day that works.
+
+Q: I want to book a free quote on a new system. My name is Sam, phone 555-0134, Wednesday morning.
+A: You are all set. Your free quote on a new system is booked for Wed am and your booking reference is ca44b991. I have noted your phone as 555-0134. A real person from the shop will confirm.
+
+Q: Are you open on weekends?
+A: Yes - Sturch runs 24/7, so weekends included. Fastest way any hour: Phone 501-362-6734, or the schedule-service / contact form at sturchheatandair.com.
+
+Q: Do you serve Searcy?
+A: We serve Heber Springs, Searcy, Judsonia, Beebe, Vilonia, Rose Bud, Quitman, Greers Ferry, Fairfield Bay, with the shop in Heber Springs, AR.
+
+BOOKS PATH: sturch_bookings.json
+BOOKINGS: [
+  {
+    "id": "ca44b991",
+    "name": "Sam",
+    "phone": "555-0134",
+    "item": "free quote on a new system",
+    "quantity": "1",
+    "day": "Wed",
+    "slot": "am",
+    "status": "pending",
+    "date": "2026-11-08T16:48:27.364874"
+  }
+]
+
+DEMO COMPLETE (exit 0)
