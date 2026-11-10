@@ -4,7 +4,12 @@ Plain, practical preparedness guides written from the Arkansas Ozarks.
 
 **Live site:** https://ozarkprepper4-rgb.github.io/ozark-prepper/
 
-## What's here
+## What I also build for you
+- **Honest websites** — fast, mobile-ready, built to run on modest machines.
+- **Local AI agents** — a small support assistant (soul, memory, a job) emailed
+  to you. Nothing auto-installs.
+- **Affiliate marketing pages** — honest, clearly-labelled pages that earn.
+- **Ebooks & guides** — the free books plus the checkout versions above.
 
 - **5 free-to-read guides** — backup solar for beginners, prepping on a tight
   budget, preserving eggs without refrigeration, an Arkansas woodsman's field
