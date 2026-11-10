@@ -1,0 +1,35 @@
+KOOL AIR & HEAT - DEMO AI ASSISTANT - REAL RUN
+Model: destiny:latest on http://localhost:11435 (local, free)
+====================================================
+
+Q: My heat pump quit and it is 20 degrees tonight. Can someone come out?
+A: Kool runs 24/7 emergency support, so yes - someone can come out. I can book it right now: just your name, phone, and a day (same-day service is available). Or call Phone (501) 206-7512, or sales@koolairandheatstore.com any hour.
+
+Q: Do you deliver a 3-ton heat pump to Springfield, Missouri?
+A: Yes - Kool ships equipment across the lower 48 states (per their website). Tell me what you need and I will pass it to the shop, or reach them at Phone (501) 206-7512, or sales@koolairandheatstore.com.
+
+Q: Do you carry Ruud?
+A: Yes - Kool is an authorized RUUD & Frigidaire dealer (per their website). Want a free estimate on a new system? Just your name, phone, and a day.
+
+Q: I want to book a free estimate for a new system. My name is Sam, phone 555-0134, Saturday morning.
+A: You are all set. Your free estimate is booked for Sat am and your booking reference is f554419e. I have noted your phone as 555-0134. A real person from the shop will confirm.
+
+Q: Are you open on weekends?
+A: Kool offers 24/7 emergency support, free estimates, and same-day service (per their website). Fastest way any hour: Phone (501) 206-7512, or sales@koolairandheatstore.com.
+
+BOOKS PATH: kool_bookings.json
+BOOKINGS: [
+  {
+    "id": "f554419e",
+    "name": "Sam",
+    "phone": "555-0134",
+    "item": "free estimate",
+    "quantity": "1",
+    "day": "Sat",
+    "slot": "am",
+    "status": "pending",
+    "date": "2026-11-08T19:40:10.024091"
+  }
+]
+
+DEMO COMPLETE (exit 0)
