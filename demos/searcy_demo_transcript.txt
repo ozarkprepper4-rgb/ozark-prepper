@@ -1,0 +1,34 @@
+SEARCY HEAT & AIR - DEMO AI ASSISTANT - REAL RUN
+Model: destiny:latest on http://localhost:11435 (local, free)
+====================================================
+
+Q: My furnace quit and it is freezing out. It is Sunday night - can someone come look at it?
+A: Straight answer: the office is open Mon-Fri 5 AM - 5 PM and closed on weekends. You can call or text their line any time at (501) 827-1995 - they say call or text anytime. What I can do right now is take your details and put you first in line for the next open day - it takes 20 seconds and the shop sees it first thing.
+
+Q: How much does a new AC system cost?
+A: New systems and replacements come with a free estimate on their website - the visit costs nothing and there is no pressure. Repair prices are quoted by the shop, and I will not guess at numbers. Want me to book your free estimate? Just your name, phone, and a weekday.
+
+Q: Do you work on furnaces or just air conditioners?
+A: They handle: Heating Repair (quoted by the shop); Cooling Repair (quoted by the shop); Heating System Installation (free estimate); Cooling System Installation (free estimate); Furnace Installation (free estimate); HVAC Installation for New Construction (free estimate); Heating System Replacement (free estimate); Cooling System Replacement (free estimate). All from their website. Want a free estimate on any of those? Just say the day.
+
+Q: I want to book a free estimate for a new system. My name is Sam, phone 555-0134, Monday morning.
+A: You are all set. Your free estimate is booked for Mon am and your booking reference is c870b578. I have noted your phone as 555-0134. A real person from the shop will confirm.
+
+Q: Can you come Saturday instead?
+A: Straight answer: the office is open Mon-Fri 5 AM - 5 PM and closed on weekends. You can call or text their line any time at (501) 827-1995 - they say call or text anytime. What I can do right now is take your details and put you first in line for the next open day - it takes 20 seconds and the shop sees it first thing.
+
+BOOKS PATH: searcy_bookings.json
+BOOKINGS: [
+  {
+    "id": "c870b578",
+    "name": "Sam",
+    "phone": "555-0134",
+    "item": "free estimate",
+    "day": "Mon",
+    "slot": "am",
+    "status": "pending",
+    "date": "2026-11-10T18:22:45.911717"
+  }
+]
+
+DEMO COMPLETE (exit 0)
