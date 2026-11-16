@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Energy Needs Calculator — Backup Solar Setup</title>
+<style>
+  :root {
+    --bg: #121212;
+    --card: #1a1a1a;
+    --accent: #e8a33d;
+    --green: #2d6a4f;
+    --text: #eee;
+    --muted: #aaa;
+    --border: #444;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Georgia, serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    padding: 24px;
+  }
+  header { text-align: center; padding: 20px 0 10px; }
+  header h1 { color: var(--accent); font-size: 1.8em; }
+  header p { color: var(--muted); margin-top: 4px; }
+  .container { max-width: 820px; margin: 0 auto; }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    margin: 16px 0;
+  }
+  h2 { color: var(--green); margin-bottom: 12px; font-size: 1.3em; }
+  .appliance-form { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+  .appliance-form input {
+    flex: 1; min-width: 140px;
+    padding: 10px; font-family: inherit; font-size: 1em;
+    background: #0d0d0d; color: var(--text);
+    border: 1px solid var(--border); border-radius: 6px;
+  }
+  .appliance-form input:focus { outline: none; border-color: var(--accent); }
+  .btn {
+    padding: 10px 18px; font-size: 1em; font-weight: bold;
+    background: var(--green); color: #fff; border: none;
+    border-radius: 6px; cursor: pointer; text-decoration: none;
+    display: inline-block;
+  }
+  .btn:hover { background: #3d8a6b; }
+  .btn.secondary { background: #555; }
+  .btn.secondary:hover { background: #777; }
+  .appliance-table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+  .appliance-table th, .appliance-table td { border: 1px solid var(--border); padding: 8px; text-align: left; }
+  .appliance-table th { background: #2a2a2a; color: var(--accent); }
+  .appliance-table td.num { text-align: right; }
+  .row-total { font-weight: bold; color: var(--green); }
+  .totals {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0;
+  }
+  .total-box {
+    background: #0d0d0d; border: 1px solid var(--border);
+    border-radius: 8px; padding: 12px;
+  }
+  .total-box .label { color: var(--muted); font-size: 0.9em; }
+  .total-box .value { font-size: 1.4em; color: var(--accent); font-weight: bold; }
+  .recommendation { background: #0d0d0d; border: 1px solid #3d8a6b; border-radius: 8px; padding: 12px; margin: 12px 0; }
+  .recommendation h3 { color: #3d8a6b; margin-bottom: 8px; }
+  .recommendation ul { list-style: none; }
+  .recommendation li { padding: 4px 0; padding-left: 20px; position: relative; }
+  .recommendation li::before { content: "▸"; position: absolute; left: 4px; color: #3d8a6b; }
+  .print-btn { margin-top: 16px; }
+  footer { text-align: center; color: var(--muted); margin-top: 24px; font-size: 0.85em; }
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Energy Needs Calculator</h1>
+  <p>Size your backup solar system — one appliance at a time.</p>
+</header>
+
+<div class="container">
+  <div class="card">
+    <p style="color:#aaa;font-size:0.95em;">Add every appliance you want to power during an outage. The tool totals your daily energy use and recommends a panel, battery, and inverter.</p>
+
+    <div class="appliance-form">
+      <input type="text" id="applianceName" placeholder="Appliance (e.g. LED lamp)">
+      <input type="number" id="applianceWatts" placeholder="Watts" min="1" step="1">
+      <input type="number" id="applianceHours" placeholder="Hours/day" min="0" step="0.5">
+      <button class="btn" id="addBtn">Add</button>
+    </div>
+
+    <table class="appliance-table" id="appTable">
+      <thead>
+        <tr>
+          <th>Appliance</th>
+          <th style="text-align:right;">Watts</th>
+          <th style="text-align:right;">Hours/day</th>
+          <th style="text-align:right;">Daily Wh</th>
+          <th style="width:32px;"></th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <div class="totals">
+      <div class="total-box">
+        <div class="label">Total daily energy need</div>
+        <div class="value" id="totalWh">0 Wh</div>
+      </div>
+      <div class="total-box">
+        <div class="label">Peak simultaneous watts</div>
+        <div class="value" id="peakW">0 W</div>
+      </div>
+    </div>
+
+    <div class="recommendation" id="recommendationBox">
+      <h3>What this means for your system</h3>
+      <ul id="recommendationList">
+        <li>Your daily energy need drives the panel and battery size.</li>
+        <li>The peak simultaneous wattage sets the minimum inverter size.</li>
+      </ul>
+    </div>
+
+    <button class="btn secondary print-btn" id="printBtn">Print Worksheet</button>
+    <button class="btn" id="resetBtn">Clear All</button>
+  </div>
+
+  <div class="card" style="background:#0d0d0d;border-color:#444;">
+    <h2 style="color:#e8a33d;">NEC 690 Reference Charts</h2>
+    <p style="color:#aaa;"><small>Solar panel circuits follow NEC Article 690, not Article 210. These charts are reference only. A licensed electrician must verify all wiring and overcurrent protection before power is turned on.</small></p>
+
+    <h3>NEC 690.8 — Panel Current Sizing</h3>
+    <p style="color:#aaa;"><small>Panel current is multiplied by 1.25 twice (1.25 × 1.25 = 1.56x) for conductor and overcurrent protection sizing. Use DC-rated devices.</small></p>
+    <table style="width:100%;border-collapse:collapse;margin:8px 0;">
+      <tr><th>Panel Current (A)</th><th>Continuous (×1.25)</th><th>Double-Count (×1.56)</th><th>Wire Ampacity (min)</th><th>Fuse/Breaker Rating</th></tr>
+      <tr><td>10</td><td>12.5</td><td>15.6</td><td>18 AWG (16A)</td><td>20A DC-rated</td></tr>
+      <tr><td>20</td><td>25</td><td>31.2</td><td>14 AWG (25A)</td><td>35A DC-rated</td></tr>
+      <tr><td>30</td><td>37.5</td><td>46.8</td><td>12 AWG (30A)</td><td>50A DC-rated</td></tr>
+      <tr><td>40</td><td>50</td><td>62.4</td><td>10 AWG (40A)</td><td>70A DC-rated</td></tr>
+      <tr><td>60</td><td>75</td><td>93.6</td><td>8 AWG (50A)</td><td>100A DC-rated</td></tr>
+    </table>
+
+    <h3>NEC 690.14 — Overcurrent Protection</h3>
+    <p style="color:#aaa;"><small>Fuses and breakers must be rated for DC circuits and listed for photovoltaic systems. Standard copper wire ampacity per NEC Table 310.16 (75°C column) applies to the *wire*, but the *fuse/breaker* must be DC-rated.</small></p>
+    <table style="width:100%;border-collapse:collapse;margin:8px 0;">
+      <tr><th>Wire Size (AWG)</th><th>Copper Ampacity (75°C)</th><th>Max Continuous Load (÷1.56)</th><th>Fusion/Breaker</th></tr>
+      <tr><td>14 AWG</td><td>25A</td><td>16A</td><td>20A DC-rated</td></tr>
+      <tr><td>12 AWG</td><td>30A</td><td>19A</td><td>25A DC-rated</td></tr>
+      <tr><td>10 AWG</td><td>35A</td><td>22A</td><td>30A DC-rated</td></tr>
+      <tr><td>8 AWG</td><td>50A</td><td>32A</td><td>40A DC-rated</td></tr>
+      <tr><td>6 AWG</td><td>65A</td><td>42A</td><td>50A DC-rated</td></tr>
+    </table>
+  </div>
+</div>
+
+  <div class="card" style="background:#0d0d0d;border-color:#444;">
+    <h2 style="color:#e8a33d;">How to use</h2>
+    <ol style="color:#aaa;">
+      <li>Type an appliance's name, its wattage, and how many hours you use it each day.</li>
+      <li>Click <strong>Add</strong> to log it.</li>
+      <li>The table totals your daily watt-hours and shows system recommendations.</li>
+      <li>Use <strong>Print Worksheet</strong> to keep a copy for your build.</li>
+    </ol>
+    <p style="color:#aaa;margin-top:12px;"><small>This is a planning tool only. Verify all wattage labels and local electrical codes before wiring.</small></p>
+  </div>
+</div>
+
+<footer>
+  <p>Ozark Prepper · Backup Solar Setup · Energy Needs Calculator</p>
+</footer>
+
+<script>
+  let appliances = JSON.parse(localStorage.getItem('appliances') || '[]');
+
+  function save() { localStorage.setItem('appliances', JSON.stringify(appliances)); }
+  function load() { appliances = JSON.parse(localStorage.getItem('appliances') || '[]'); }
+
+  function fmtWh(w) {
+    if (w >= 1000) return (w/1000).toFixed(2) + ' kWh';
+    return Math.round(w) + ' Wh';
+  }
+
+  function fmtW(w) { return Math.round(w) + ' W'; }
+
+  function update() {
+    const tbody = document.querySelector('#appTable tbody');
+    tbody.innerHTML = '';
+    let totalWh = 0;
+    let peakW = 0;
+
+    appliances.forEach((a, i) => {
+      const wh = a.watts * a.hours;
+      totalWh += wh;
+      if (a.watts > peakW) peakW = a.watts;
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${escapeHtml(a.name)}</td>
+        <td class="num">${a.watts}</td>
+        <td class="num">${a.hours}</td>
+        <td class="num">${fmtWh(wh)}</td>
+        <td><button class="btn secondary" data-i="${i}" onclick="removeApp(${i})">×</button></td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    const totalBox = document.getElementById('totalWh');
+    totalBox.textContent = fmtWh(totalWh);
+    const peakBox = document.getElementById('peakW');
+    peakBox.textContent = fmtW(peakW);
+
+    // Recommendations
+    const box = document.getElementById('recommendationBox');
+    const list = document.getElementById('recommendationList');
+    const panelWh = totalWh; // daily need in watt-hours
+    const sunHours = 4.5; // average peak sun hours
+    const panelWatts = Math.ceil(panelWh / sunHours * 1.2); // 20% margin
+    const batteryAh = (panelWh * 2) / 12; // 2 days of autonomy at 12V
+    const inverterW = Math.ceil(peakW * 1.5);
+
+    list.innerHTML = `
+      <li><strong>Daily need:</strong> ${fmtWh(totalWh)} of energy per day.</li>
+      <li><strong>Panel:</strong> a ${panelWatts}W panel sized for ~${sunHours} sun hours plus a 20% margin.</li>
+      <li><strong>Battery:</strong> about ${(batteryAh).toFixed(0)}Ah at 12V for 2 days of autonomy (~${(batteryAh*150/1000).toFixed(0)}–1,000 in lithium for the first bank).</li>
+      <li><strong>Inverter:</strong> at least ${fmtW(inverterW)} to cover peak draw plus margin.</li>
+      <li><strong>Fusion & wire sizing:</strong> solar panel circuits follow NEC Article 690. The panel current is multiplied by 1.25 twice — once for wire sizing and once for the fuse/breaker — giving a total of about 1.56x before any other factors. Use DC-rated fuses and breakers listed for photovoltaic systems. See the NEC 690 chart below.</li>
+      <li><strong>Wire gauge:</strong> choose wire by amp rating and run length. Longer runs need thicker (lower AWG number) wire. Use the chart below.</li>
+      <li><strong>Battery safety and ventilation:</strong> lead-acid and lithium-ion batteries give off gas when charging. Store them in a well-ventilated area, away from direct heat and open flames. Do not seal them in a closed box.</li>
+      <li><strong>Electrician check:</strong> a licensed electrician must check the system before power is turned on.</li>
+      <li><strong>Free guide:</strong> This calculator is free. For the full tutorial with step-by-step assembly, tool list, and maintenance log, get The Simplest Backup Solar Setup For Beginners at ozarkprepper.com/guide.</li>
+    `;
+  }
+
+  function addApp() {
+    const name = document.getElementById('applianceName').value.trim();
+    const watts = parseFloat(document.getElementById('applianceWatts').value) || 0;
+    const hours = parseFloat(document.getElementById('applianceHours').value) || 0;
+    if (!name && watts === 0 && hours === 0) { alert('Enter a name or wattage to add.'); return; }
+    appliances.push({ name, watts, hours });
+    save();
+    document.getElementById('applianceName').value = '';
+    document.getElementById('applianceWatts').focus();
+    update();
+  }
+
+  function removeApp(i) {
+    appliances.splice(i, 1);
+    save();
+    update();
+  }
+
+  function resetAll() {
+    if (appliances.length === 0) return;
+    if (confirm('Clear all appliances?')) {
+      appliances = [];
+      save();
+      update();
+    }
+  }
+
+  function printWorksheet() {
+    window.print();
+  }
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  document.getElementById('addBtn').addEventListener('click', addApp);
+  document.getElementById('resetBtn').addEventListener('click', resetAll);
+  document.getElementById('printBtn').addEventListener('click', printWorksheet);
+  document.getElementById('applianceName').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') addApp();
+  });
+
+  load();
+  update();
+</script>
+</body>
+</html>

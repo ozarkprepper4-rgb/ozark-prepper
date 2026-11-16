@@ -13,6 +13,7 @@
     --text: #eee;
     --muted: #aaa;
     --border: #444;
+    --danger: #b3261e;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -55,7 +56,6 @@
   .appliance-table th, .appliance-table td { border: 1px solid var(--border); padding: 8px; text-align: left; }
   .appliance-table th { background: #2a2a2a; color: var(--accent); }
   .appliance-table td.num { text-align: right; }
-  .row-total { font-weight: bold; color: var(--green); }
   .totals {
     display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0;
   }
@@ -65,6 +65,14 @@
   }
   .total-box .label { color: var(--muted); font-size: 0.9em; }
   .total-box .value { font-size: 1.4em; color: var(--accent); font-weight: bold; }
+  .safety-box {
+    background: #0d0d0d; border: 1px solid #b3261e; border-radius: 8px; padding: 14px; margin: 16px 0;
+    color: #fff;
+  }
+  .safety-box h3 { color: #b3261e; margin-top: 0; }
+  .safety-box ul { color: #eee; padding-left: 20px; }
+  .safety-box li { padding: 4px 0; }
+  .safety-box .warn { color: #ffcccc; font-weight: bold; }
   .recommendation { background: #0d0d0d; border: 1px solid #3d8a6b; border-radius: 8px; padding: 12px; margin: 12px 0; }
   .recommendation h3 { color: #3d8a6b; margin-bottom: 8px; }
   .recommendation ul { list-style: none; }
@@ -73,6 +81,14 @@
   .print-btn { margin-top: 16px; }
   footer { text-align: center; color: var(--muted); margin-top: 24px; font-size: 0.85em; }
   .hidden { display: none; }
+  .warning-banner {
+    background: #b3261e; color: #fff; border-radius: 8px; padding: 14px 18px; margin-bottom: 20px;
+    font-size: 0.95em; line-height: 1.5;
+  }
+  .warning-banner strong { color: #fff; }
+  .steps { counter-reset: step; padding-left: 20px; }
+  .steps li { counter-increment: step; margin-bottom: 10px; padding-left: 30px; position: relative; }
+  .steps li::before { content: counter(step); position: absolute; left: 0; top: 0; width: 20px; height: 20px; background: #e8a33d; color: #0d0d0d; border-radius: 50%; text-align: center; font-size: 0.8em; font-weight: bold; line-height: 20px; }
 </style>
 </head>
 <body>
@@ -80,6 +96,11 @@
   <h1>Energy Needs Calculator</h1>
   <p>Size your backup solar system — one appliance at a time.</p>
 </header>
+
+<div class="warning-banner">
+  <p><strong>⚠️ SAFETY:</strong> This is a planning tool only. A licensed electrician must check your system before power is turned on.</p>
+  <p><strong>Safety checks included:</strong> fuse/breaker sizing at 125% of continuous load, wire gauge by distance and amp rating, battery safety and ventilation, and grounding.</p>
+</div>
 
 <div class="container">
   <div class="card">
@@ -124,19 +145,30 @@
       </ul>
     </div>
 
+    <div class="safety-box">
+      <h3>🔌 Safety Notes</h3>
+      <ul>
+        <li><strong>Fuse/breaker:</strong> Size every fuse or breaker at 125% of the continuous load, then round up. This follows standard electrical code and prevents overheating.</li>
+        <li><strong>Wire gauge:</strong> Use the wire gauge table based on your wire run length (in feet) and amp rating. Longer runs need larger wire.</li>
+        <li><strong>Battery safety:</strong> Lithium-ion and lead-acid batteries need ventilation. Never store them in a sealed box. Keep them away from direct heat.</li>
+        <li><strong>Grounding:</strong> All metal parts and the battery must be grounded to prevent shock.</li>
+        <li><strong>Panel mounts:</strong> Mount panels where they will not be struck by vehicles or trampled.</li>
+      </ul>
+    </div>
+
     <button class="btn secondary print-btn" id="printBtn">Print Worksheet</button>
     <button class="btn" id="resetBtn">Clear All</button>
   </div>
 
   <div class="card" style="background:#0d0d0d;border-color:#444;">
     <h2 style="color:#e8a33d;">How to use</h2>
-    <ol style="color:#aaa;">
+    <ol class="steps">
       <li>Type an appliance's name, its wattage, and how many hours you use it each day.</li>
       <li>Click <strong>Add</strong> to log it.</li>
       <li>The table totals your daily watt-hours and shows system recommendations.</li>
       <li>Use <strong>Print Worksheet</strong> to keep a copy for your build.</li>
     </ol>
-    <p style="color:#aaa;margin-top:12px;"><small>This is a planning tool only. Verify all wattage labels and local electrical codes before wiring.</small></p>
+    <p style="color:#aaa;margin-top:12px;"><small>This is a planning tool only. Verify all wattage labels and local electrical codes before wiring. A licensed electrician must check your system before power is turned on.</small></p>
   </div>
 </div>
 
@@ -183,13 +215,12 @@
     const peakBox = document.getElementById('peakW');
     peakBox.textContent = fmtW(peakW);
 
-    // Recommendations
     const box = document.getElementById('recommendationBox');
     const list = document.getElementById('recommendationList');
-    const panelWh = totalWh; // daily need in watt-hours
-    const sunHours = 4.5; // average peak sun hours
-    const panelWatts = Math.ceil(panelWh / sunHours * 1.2); // 20% margin
-    const batteryAh = (panelWh * 2) / 12; // 2 days of autonomy at 12V
+    const panelWh = totalWh;
+    const sunHours = 4.5;
+    const panelWatts = Math.ceil(panelWh / sunHours * 1.2);
+    const batteryAh = (panelWh * 2) / 12;
     const inverterW = Math.ceil(peakW * 1.5);
 
     list.innerHTML = `
