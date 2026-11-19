@@ -1,90 +1,200 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta name="description" content="Ozark Prepper — homesteading, off-grid water, solar backup, and self-reliance guides written for families who want to be ready without buying gear they do not need.">
-<meta name="robots" content="index, follow">
-<link rel="canonical" href="https://ozarkprepper4.com/index.html">
-
-<title>Ozark Prepper</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Free-to-read preparedness guides from the Arkansas Ozarks: backup solar, budget prepping, food preservation, woodsman skills, and water filtration. Read them free, or buy the ebook versions with secure Stripe checkout.">
+<meta property="og:title" content="Ozark Prepper — Self-Reliance For Everyone">
+<meta property="og:description" content="Plain, practical preparedness guides from the Arkansas Ozarks. Read free, or buy the ebooks with secure checkout.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ozarkprepper4-rgb.github.io/ozark-prepper/">
+<title>Ozark Prepper — Self-Reliance For Everyone</title>
 <style>
-  body { background:#0d0d0d; color:#eee; font-family:Georgia,serif; text-align:center; margin:0; padding:0; }
-  header { background:#1a1a1a; padding:40px 20px; border-bottom:3px solid #e8a33d; }
-  h1 { color:#e8a33d; font-size:2.5em; margin:0; }
-  .tagline { color:#aaa; font-size:1.1em; margin-top:8px; }
-  .grid { display:flex; flex-wrap:wrap; justify-content:center; padding:40px 20px; gap:20px; }
-  .card {
-    border:1px solid #444; border-radius:10px; padding:20px;
-    background:#1a1a1a; color:#eee; max-width:320px; margin:15px;
+  :root {
+    --bg: #f5f3ef; --card: #ffffff; --accent: #2e6b34; --accent2: #8b5a2b;
+    --text: #2b2b2b; --muted: #6b6b6b;
   }
-  .card h3 { color:#e8a33d; }
-  .card .price { color:#2f8f4e; font-size:1.2em; margin:6px 0; }
-  .buy {
-    display:inline-block; background:#2f8f4e; color:#fff; padding:12px 22px;
-    border-radius:6px; text-decoration:none; font-weight:bold; font-size:1em;
-  }
-  .buy:hover { background:#3d8a6b; }
-  .card.affiliate { background:#16211b; }
-  .card.affiliate h3 { color:#4a9a6b; }
-  .card.affiliate .buy { background:#4a9a6b; }
-  footer { padding:30px; color:#666; font-size:0.85em; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+  .container { max-width: 960px; margin: 0 auto; padding: 0 20px; }
+  header { background: var(--accent); color: #fff; padding: 40px 20px; text-align: center; }
+  header h1 { font-size: 2rem; margin-bottom: 8px; }
+  header p { font-size: 1.1rem; opacity: 0.95; }
+  nav { background: #fff; padding: 12px 0; border-bottom: 2px solid var(--accent); }
+  nav .container { display: flex; flex-wrap: wrap; justify-content: space-around; }
+  nav a { color: var(--accent); text-decoration: none; font-weight: 600; }
+  nav a:hover { text-decoration: underline; }
+  .card { background: var(--card); border: 1px solid #e3e0da; border-radius: 8px; padding: 20px; margin: 20px 0; }
+  .card h2 { color: var(--accent); margin-bottom: 10px; }
+  .book-item { border: 1px solid #e3e0da; border-radius: 6px; padding: 16px; margin: 12px 0; background: #faf9f7; }
+  .book-item h3 { color: var(--accent2); margin-bottom: 6px; }
+  .book-item p { margin: 6px 0; }
+  .price { font-size: 1.3rem; font-weight: 700; color: var(--accent2); }
+  .btn { display: inline-block; background: var(--accent); color: #fff; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: 600; margin: 8px 4px; }
+  .btn:hover { background: #255a2b; text-decoration: none; }
+  .affiliate-note { background: #fff8e1; border-left: 4px solid var(--accent2); padding: 12px; font-size: 0.95rem; }
+  footer { text-align: center; padding: 30px 20px; color: var(--muted); font-size: 0.9rem; }
+  .disclosure { font-size: 0.85rem; color: var(--muted); margin-top: 16px; max-width: 800px; }
 </style>
 </head>
 <body>
 <header>
   <h1>Ozark Prepper</h1>
-  <div class="tagline">Off-grid skills for real people, straight from the Ozarks.</div>
+  <p>Self-Reliance For Everyone — Free, honest, practical guides for real life.</p>
 </header>
-
-<div class="grid">
-  <div class="card">
-    <h3>The Simplest Backup Solar Setup For Beginners</h3>
-    <div class="price">$4.99</div>
-    <p>Digital field manual: complete guide to sizing and building your own backup solar system.</p>
-    <a class="buy" href="https://buy.stripe.com/fZu7sL0JDelf89PcHneUU0b">Buy Now</a>
+<nav>
+  <div class="container">
+    <a href="#books">The Books</a>
+    <a href="#travel">Travel Guide</a>
+    <a href="#buy">Buy the Books</a>
+    <a href="burn-ban-status.html">Arkansas Burn Bans</a>
+    <a href="#about">About</a>
   </div>
-
-  <div class="card">
-    <h3>Energy Needs Calculator</h3>
-    <p>Free tool — no signup, no payment. Get daily watt-hour totals and a panel, battery, and inverter recommendation.</p>
-    <a class="btn" href="https://ozarkprepper4-rgb.github.io/ozark-prepper/calculator_energy_needs.html">Use Free Calculator →</a>
+</nav>
+<section id="about">
+  <div class="container">
+    <div class="card">
+      <h2>About Ozark Prepper</h2>
+      <p>Ozark Prepper helps people become more self-reliant with honest, practical guides. Every guide is free to read, and every link is clearly labeled. No fake claims, no fake reviews — just real information to help you prepare and save money.</p>
+    </div>
   </div>
+</section>
 
-  <div class="card">
-    <h3>Diy 5-Gallon Water Filter</h3>
-    <div class="price">$14.99</div>
-    <p>Digital field manual. Instant download.</p>
-    <a class="buy" href="https://buy.stripe.com/4gM28rdwp3GB89P7n3eUU0f">Buy Now</a>
-  </div>
+<section id="books">
+  <div class="container">
+    <div class="card">
+      <h2>The Ozark Prepper Library — 5 Books</h2>
+      <p>All 5 books are free to read here. You can also buy an ebook version (real payment link) — a portion supports this project.</p>
 
-  <div class="card">
-    <h3>How To Preserve Eggs For A Year Without Refrigeration</h3>
-    <div class="price">$9.99</div>
-    <p>Digital field manual. Instant download.</p>
-    <a class="buy" href="https://buy.stripe.com/6oU5kD63Xcd72Pv5eVeUU0d">Buy Now</a>
-  </div>
+      <div class="book-item">
+        <h3>1. The Simplest Backup Solar Setup for Beginners</h3>
+        <p>Learn how to build a backup solar system that keeps your lights on when the grid goes down.</p>
+        <div class="price">$4.99</div>
+        <a class="btn" href="https://buy.stripe.com/fZu7sL0JDelf89PcHneUU0b">Buy Now (Stripe)</a>
+      </div>
 
-  <div class="card">
-    <h3>Starting Preps On A Tight Budget</h3>
-    <p>Digital field manual. Instant download.</p>
-    <a class="buy" href="https://buy.stripe.com/eVq9ATakdelfbm15eVeUU0g">Get Free Copy (All 5) →</a>
-  </div>
+      <div class="book-item">
+        <h3>2. Starting Preps on a Tight Budget</h3>
+        <p>50+ budget-friendly survival tips to build your emergency kit for under $100.</p>
+        <div class="price">$9.99</div>
+        <a class="btn" href="https://buy.stripe.com/cNibJ1akdelfahXazfeUU0c">Buy Now (Stripe)</a>
+      </div>
 
-  <div class="card">
-    <h3>The Arkansas Woodsmans Field Manual</h3>
-    <div class="price">$14.99</div>
-    <p>Digital field manual. Instant download.</p>
-    <a class="buy" href="https://buy.stripe.com/aFa9AT8c50up89P6iZeUU0e">Buy Now</a>
-  </div>
+      <div class="book-item">
+        <h3>3. Preserve Eggs for a Year</h3>
+        <p>Keep eggs fresh for a year without refrigeration — two safe, tested methods.</p>
+        <div class="price">$9.99</div>
+        <a class="btn" href="https://buy.stripe.com/6oU5kD63Xcd72Pv5eVeUU0d">Buy Now (Stripe)</a>
+      </div>
 
-  <div class="card affiliate">
-    <h3>Recommended Solar Gear (Affiliate Link)</h3>
-    <p>EG4 inverters, lithium batteries, solar panels. We earn a commission on these.</p>
-    <a class="buy" href="https://signaturesolar.com/?ref=ozarkprepper" target="_blank" rel="noopener">View Solar Store</a>
+      <div class="book-item">
+        <h3>4. Arkansas Woodsmans Field Manual</h3>
+        <p>Shelter, fire, foraging, water treatment, and first aid for modern life.</p>
+        <div class="price">$14.99</div>
+        <a class="btn" href="https://buy.stripe.com/aFa9AT8c50up89P6iZeUU0e">Buy Now (Stripe)</a>
+      </div>
+
+      <div class="book-item">
+        <h3>5. DIY 5-Gallon Water Filter</h3>
+        <p>A functional water filter you can build in an afternoon from hardware-store parts.</p>
+        <div class="price">$14.99</div>
+        <a class="btn" href="https://buy.stripe.com/4gM28rdwp3GB89P7n3eUU0f">Buy Now (Stripe)</a>
+      </div>
+
+      <div class="book-item">
+        <h3>Bundle — All 5 Books</h3>
+        <p>All five ebooks together — save 33% off the $54.95 individual total.</p>
+        <div class="price">$36.99</div>
+        <a class="btn" href="https://buy.stripe.com/eVq9ATakdelfbm15eVeUU0g">Get the Bundle (Stripe)</a>
+      </div>
+
+      <div class="book-item">
+        <h3>Ozark Prepper Emergency Checklist</h3>
+        <p>A printable quick-reference: what to do before, during, and after a power outage. $4.99.</p>
+        <div class="price">$4.99</div>
+        <a class="btn" href="https://buy.stripe.com/bJe28r9g93GBfCh4aReUU0u">Buy Now (Stripe)</a>
+      </div>
+    </div>
   </div>
-</div>
+</section>
+
+<section id="what">
+  <div class="container">
+    <div class="card">
+      <h2>What this machine runs — and what it cannot</h2>
+      <p>If you are buying a website, an app, or an AI agent built here, this is the honest spec.</p>
+      <ul>
+        <li><strong>Machine:</strong> Dell OptiPlex 7020, Intel i7-4790 CPU @ 3.60GHz (4 cores / 8 threads), 31 GB RAM, 2 × 931 GB drives (one SSD, one HDD).</li>
+        <li><strong>Floor:</strong> this machine runs, and it is slow. You will feel the wait.</li>
+        <li><strong>What it can do today:</strong> honest, plain-English websites; real ebook and guide sales (working Stripe checkout); local AI customer-support agents (small, local models); affiliate marketing pages.</li>
+        <li><strong>What it cannot do alone:</strong> multi-GB local model runs, heavy 3D, or large training. A faster machine — 12 GB GPU or better for local models, a faster network — is where those really shine.</li>
+        <li><strong>Paid cloud models:</strong> a choice, not a requirement. Build with what this machine allows, and only buy what earns its keep.</li>
+        <li><strong>Hours, not days:</strong> everything here is built to run and improve on its own, even if it is slow.</li>
+      </ul>
+      <p>For a local agent you can install yourself, all files are emailed to you — a soul file, a memory file, and the job. Nothing auto-installs.</p>
+    </div>
+  </div>
+</section>
+
+<section id="build">
+  <div class="container">
+    <div class="card">
+      <h2>What I can build for you</h2>
+      <p>Websites, apps, and your own AI agents. Learn what you need, then build that. It plugs in and grows.</p>
+      <div class="book-item">
+        <h3>Websites — $750</h3>
+        <p>A fast, honest, mobile-ready website for a shop or project, built to run and improve on this machine.</p>
+        <div class="price">$750</div>
+        <a class="btn" href="mailto:ozarkprepper4@gmail.com">Start your website →</a>
+      </div>
+      <div class="book-item">
+        <h3>Local AI agent — BookWizard</h3>
+        <p>A plain-English customer-support assistant you install on your own machine. All files emailed: a soul file, a memory file, and the job. Nothing auto-installs.</p>
+        <div class="price">$199</div>
+        <a class="btn" href="mailto:ozarkprepper4@gmail.com">Get BookWizard →</a>
+      </div>
+      <div class="book-item">
+        <h3>Affiliate marketing pages</h3>
+        <p>Honest, clearly-labelled affiliate marketing pages that earn without requiring you to buy anything first.</p>
+        <div class="price">From $150</div>
+        <a class="btn" href="mailto:ozarkprepper4@gmail.com">See your marketing pages →</a>
+      </div>
+
+      <div class="note">
+        <h2>How we reply</h2>
+        <p>Every question is read by a person — not an automated agent, and there is no auto-reply. You will hear back within 24 hours. If you don't hear back within 24 hours, please reply again; the earlier note may have been missed.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="travel">
+  <div class="container">
+    <div class="card">
+      <h2>Travel Guide</h2>
+      <p>A free, honest travel guide. No money to start — just value and clear links.</p>
+      <a class="btn travel-link-new" href="https://ozarkprepper4-rgb.github.io/ozark-prepper/travel/">Go to Travel Site →</a>
+    </div>
+  </div>
+</section>
+
+<section id="buy">
+  <div class="container">
+    <div class="card">
+      <h2>Buy the Books</h2>
+      <div class="affiliate-note">
+        <strong>Payment and delivery:</strong>
+        <p>Click a book's "Buy Now" to pay securely on Stripe. Your ebook is emailed to you automatically (PDF and EPUB) after checkout — it works in Apple Books, Google Play Books, Kindle and Kobo. Full refund within 14 days if it doesn't work for you.</p>
+        <p><strong>Where the money goes:</strong> Book sales keep this site free and fund new guides.</p>
+      </div>
+      <a class="btn" href="#books">Back to Books</a>
+    </div>
+  </div>
+</section>
 
 <footer>
-  <p>Ozark Prepper &middot; Off-grid skills for real people &middot; Instant download</p>
+  <p>&copy; 2026 Ozark Prepper. A free, honest preparedness resource.</p>
+  <p><a href="refund.html">Refund Policy</a> &middot; <a href="terms.html">Terms of Service</a> &middot; <a href="privacy.html">Privacy Policy</a> &middot; <a href="mailto:ozarkprepper4@gmail.com">Contact: ozarkprepper4@gmail.com</a></p>
 </footer>
 </body>
 </html>

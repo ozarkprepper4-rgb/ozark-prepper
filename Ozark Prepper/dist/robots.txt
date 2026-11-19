@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Sitemap: https://ozarkprepper4.com/sitemap.xml
+Index-Depth: 3
