@@ -3,105 +3,165 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Ozark Prepper - Emergency preparedness, off-grid power, food storage, and survival guides for self-reliant living.">
+  <meta name="description" content="Ozark Prepper - Emergency preparedness, off-grid power, food storage, and survival guides for self-reliant living. Buy digital products.">
+  <meta name="keywords" content="prepper, survival, emergency preparedness, off-grid power, food storage, Ozark Prepper, digital products, survival guides">
   <title>Ozark Prepper | Emergency Prep & Survival Guides</title>
-  <style>
-    :root {
-      --primary: #2c5aa0;
-      --secondary: #1e3a6f;
-      --accent: #d4a017;
-      --bg: #f5f3f0;
-      --text: #2d2d2d;
-      --white: #ffffff;
-    }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
-    header { background: var(--primary); color: var(--white); padding: 1rem 0; position: sticky; top: 0; z-index: 100; }
-    nav { display: flex; justify-content: space-between; align-items: center; padding: 0 2rem; max-width: 1200px; margin: 0 auto; }
-    nav h1 { font-size: 1.5rem; font-weight: 700; }
-    nav a { color: var(--white); text-decoration: none; margin-left: 1.5rem; font-size: 0.95rem; }
-    nav a:hover { text-decoration: underline; }
-    .hero { background: linear-gradient(135deg, var(--secondary), var(--primary)); color: var(--white); padding: 4rem 2rem; text-align: center; }
-    .hero h1 { font-size: 2.5rem; margin-bottom: 1rem; }
-    .hero p { font-size: 1.1rem; max-width: 600px; margin: 0 auto 1.5rem; }
-    .cta-button { background: var(--accent); color: var(--secondary); padding: 0.75rem 1.5rem; text-decoration: none; border-radius: 5px; font-weight: 700; display: inline-block; }
-    .cta-button:hover { background: #f5d44a; }
-    .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; padding: 2rem 2rem; max-width: 1200px; margin: 0 auto; }
-    .feature { background: var(--white); padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-    .feature h3 { color: var(--primary); margin-bottom: 0.5rem; }
-    .feature p { font-size: 0.95rem; }
-    .products { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; padding: 2rem 2rem; max-width: 1200px; margin: 0 auto; }
-    .product { background: var(--white); padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-top: 4px solid var(--primary); }
-    .product h3 { color: var(--primary); margin-bottom: 0.5rem; }
-    .product p { font-size: 0.95rem; color: #666; }
-    .price { font-size: 1.25rem; font-weight: 700; color: var(--primary); }
-    .buy-btn { width: 100%; padding: 0.75rem; background: var(--primary); color: var(--white); border: none; border-radius: 5px; font-weight: 700; cursor: pointer; }
-    .buy-btn:hover { background: #1e3a6f; }
-    footer { background: var(--secondary); color: var(--white); text-align: center; padding: 2rem; font-size: 0.9rem; }
-    @media (max-width: 768px) {
-      nav { flex-direction: column; }
-      nav a { margin: 0 0 0.5rem 0; }
-      .hero h1 { font-size: 1.8rem; }
-    }
-  </style>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+  
   <header>
-    <nav>
-      <h1>Ozark Prepper</h1>
-      <nav>
+    <div class="nav-container">
+      <a href="/" class="logo">
+        <div class="logo-icon">🔥</div>
+        <span>Ozark Prepper</span>
+      </a>
+      <button class="menu-toggle" aria-label="Toggle menu" onclick="toggleMenu()">
+        <span class="hamburger"><span></span><span></span><span></span></span>
+      </button>
+      <ul class="nav-menu" id="nav-menu">
+        <li><a href="#products">Shop</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#featured">Featured</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><a href="#products" class="nav-cta">All Products</a></li>
+      </ul>
+      <div class="mobile-menu" id="mobile-menu">
         <a href="#products">Shop</a>
         <a href="#about">About</a>
+        <a href="#featured">Featured</a>
         <a href="#contact">Contact</a>
-      </nav>
-    </nav>
+        <a href="#products" class="nav-cta">All Products</a>
+      </div>
+    </div>
   </header>
 
-  <section class="hero">
-    <h1>Ready for Anything</h1>
-    <p>Comprehensive emergency preparedness, off-grid power, and survival guides for self-reliant living.</p>
-    <a href="#products" class="cta-button">Shop Emergency Kits</a>
-  </section>
+  <main id="main-content">
+    <section class="hero">
+      <div class="container">
+        <h1>Ready for Anything</h1>
+        <p>Comprehensive emergency preparedness, off-grid power, and survival guides for self-reliant living.</p>
+        <div class="hero-buttons">
+          <a href="#products" class="cta-button">Shop Products</a>
+          <a href="#about" class="cta-button" style="background: transparent; border: 2px solid var(--white); color: var(--white);">Learn More</a>
+        </div>
+      </div>
+    </section>
 
-  <section class="features">
-    <div class="feature">
-      <h3>📦 Emergency Kits</h3>
-      <p>Ready-made kits for 7-day survival. Everything you need, nothing you don't.</p>
-    </div>
-    <div class="feature">
-      <h3>⚡ Off-Grid Power</h3>
-      <p>Solar, battery, and generator systems for when the grid goes down.</p>
-    </div>
-    <div class="feature">
-      <h3>🌿 Food Storage</h3>
-      <p>Long-term food storage, rotation, and preservation guides.</p>
-    </div>
-  </section>
+    <section class="features">
+      <div class="feature">
+        <div class="feature-icon">📦</div>
+        <h3>Emergency Kits</h3>
+        <p>Ready-made kits for 7-day survival. Everything you need, nothing you don't.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">⚡</div>
+        <h3>Off-Grid Power</h3>
+        <p>Solar, battery, and generator systems for when the grid goes down.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🌿</div>
+        <h3>Food Storage</h3>
+        <p>Long-term food storage, rotation, and preservation guides.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🔐</div>
+        <h3>Digital Security</h3>
+        <p>Protect your data and crypto from cyber threats.</p>
+      </div>
+    </section>
 
-  <section class="products" id="products">
-    <div class="product">
-      <h3>Emergency Preparedness Checklist</h3>
-      <p>7-day survival checklist, water storage guide, and emergency contact templates.</p>
-      <div class="price">$4.99</div>
-      <button class="buy-btn" onclick="alert('Checkout coming soon')">Buy Now</button>
-    </div>
-    <div class="product">
-      <h3>Water Storage Guide</h3>
-      <p>How to store water safely, purification methods, and storage containers.</p>
-      <div class="price">$7.99</div>
-      <button class="buy-btn" onclick="alert('Checkout coming soon')">Buy Now</button>
-    </div>
-    <div class="product">
-      <h3>Off-Grid Power Guide</h3>
-      <p>Solar setup, battery selection, and inverter basics for off-grid living.</p>
-      <div class="price">$12.99</div>
-      <button class="buy-btn" onclick="alert('Checkout coming soon')">Buy Now</button>
-    </div>
-  </section>
+    <section class="products" id="products">
+      <div class="container">
+        <h2 class="text-center" style="font-size: 1.8rem; margin-bottom: 2rem; color: var(--primary);">
+          <span style="color: transparent;">$</span>
+          <span style="color: var(--primary);">00</span><span style="color: transparent;">.00</span>
+          <span style="color: var(--primary);">00</span>
+        </h2>
+        <div class="container">
+          <div class="product-card">
+            <div class="product-badge">Best Seller</div>
+            <h3>Emergency Preparedness Checklist</h3>
+            <p>The complete 7-day survival kit checklist. Everything you need to be prepared for any emergency.</p>
+            <div class="price">$4.99</div>
+            <button class="buy-btn" onclick="alert('Checkout powered by Stripe')">Buy Now</button>
+          </div>
+          <div class="product-card">
+            <div class="product-badge">New</div>
+            <h3>Water Storage Guide</h3>
+            <p>How to store water safely, purification methods, and storage containers.</p>
+            <div class="price">$7.99</div>
+            <button class="buy-btn" onclick="alert('Checkout powered by Stripe')">Buy Now</button>
+          </div>
+          <div class="product-card">
+            <div class="product-badge">Best Value</div>
+            <h3>Off-Grid Power Guide</h3>
+            <p>Solar setup, battery selection, and inverter basics for off-grid living.</p>
+            <div class="price">$12.99</div>
+            <button class="buy-btn" onclick="alert('Checkout powered by Stripe')">Buy Now</button>
+          </div>
+          <div class="product-card">
+            <div class="product-badge">Complete</div>
+            <h3>Food Rotation System</h3>
+            <p>Long-term food storage, rotation schedules, and preservation guides.</p>
+            <div class="price">$9.99</div>
+            <button class="buy-btn" onclick="alert('Checkout powered by Stripe')">Buy Now</button>
+          </div>
+        </div>
+      </div>
 
-  <footer id="contact">
-    <p>Ozark Prepper &copy; 2026</p>
-    <p>Emergency preparedness and survival resources for self-reliant living.</p>
-  </footer>
-</body>
-</html>
+      <section class="featured" id="featured">
+        <div class="container">
+          <h2 class="text-center">Featured Topics</h2>
+          <div class="featured-grid">
+            <div class="featured-card">
+              <h3>🌊 Water</h3>
+              <p>How to store, purify, and manage water for emergencies.</p>
+            </div>
+            <div class="featured-card">
+              <h3>🌾 Food</h3>
+              <p>Long-term food storage and rotation strategies.</p>
+            </div>
+            <div class="featured-card">
+              <h3>⚡ Power</h3>
+              <p>Solar, batteries, and generators for off-grid living.</p>
+            </div>
+            <div class="featured-card">
+              <h3>🔐 Digital Security</h3>
+              <p>Protect your data and crypto from cyber threats.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="about" id="about">
+        <div class="container">
+          <h2>Why Choose Ozark Prepper?</h2>
+          <p>We provide high-quality, expert-reviewed survival and preparedness guides. Our content is created by experienced preppers who understand what it takes to be truly self-reliant. Every digital product is designed to help you prepare for any situation, from everyday emergencies to long-term survival scenarios.</p>
+          <p>All our guides come with instant digital delivery. No waiting, no shipping. Just download and start preparing.</p>
+        </div>
+      </section>
+
+      <section class="contact" id="contact">
+        <div class="container">
+          <h2>Stay Connected</h2>
+          <form id="contact-form">
+            <input type="text" name="name" placeholder="Your Name" required>
+            <input type="email" name="email" placeholder="Your Email" required>
+            <textarea name="message" placeholder="Your Message" rows="5" required></textarea>
+            <button type="submit">Send Message</button>
+          </form>
+        </div>
+      </section>
+
+      <footer class="site-footer">
+        <p>Ozark Prepper &copy; 2026</p>
+        <p>Emergency preparedness and survival resources for self-reliant living.</p>
+        <p><a href="#contact">Contact</a> | <a href="/privacy">Privacy</a> | <a href="/terms">Terms</a></p>
+      </footer>
+
+      <script src="js/main.js"></script>
+    </body>
+    </html>

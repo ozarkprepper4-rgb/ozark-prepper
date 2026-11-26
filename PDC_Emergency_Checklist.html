@@ -3,105 +3,107 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Ozark Prepper Emergency Preparedness Checklist - 7-day survival kit checklist, water storage guide, and emergency contact templates.">
-  <title>Ozark Prepper - Emergency Checklist</title>
-  <style>
-    :root {
-      --primary: #2c5aa0;
-      --secondary: #1e3a6f;
-      --accent: #d4a017;
-      --bg: #f5f3f0;
-      --text: #2d2d2d;
-      --white: #ffffff;
-    }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
-    header { background: var(--primary); color: var(--white); padding: 1rem 0; }
-    nav { display: flex; justify-content: space-between; align-items: center; padding: 0 2rem; max-width: 1200px; margin: 0 auto; }
-    nav h1 { font-size: 1.5rem; font-weight: 700; }
-    nav a { color: var(--white); text-decoration: none; margin-left: 1.5rem; font-size: 0.95rem; }
-    .hero { background: linear-gradient(135deg, var(--secondary), var(--primary)); color: var(--white); padding: 3rem 2rem; text-align: center; }
-    .hero h1 { font-size: 2rem; margin-bottom: 1rem; }
-    .hero p { font-size: 1rem; max-width: 600px; margin: 0 auto 1.5rem; }
-    .checklist-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; padding: 2rem 2rem; max-width: 1200px; margin: 0 auto; }
-    .checklist-item { background: var(--white); padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 4px solid var(--primary); }
-    .checklist-item h3 { color: var(--primary); margin-bottom: 0.5rem; }
-    .checklist-item p { font-size: 0.95rem; color: #666; }
-    .buy-box { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: var(--white); padding: 2rem; border-radius: 8px; text-align: center; }
-    .buy-box h2 { font-size: 1.5rem; margin-bottom: 1rem; }
-    .buy-box p { font-size: 1rem; margin-bottom: 1.5rem; }
-    .price { font-size: 2rem; font-weight: 700; margin-bottom: 1.5rem; }
-    .buy-btn { background: var(--accent); color: var(--secondary); padding: 0.75rem 2rem; border: none; border-radius: 5px; font-weight: 700; cursor: pointer; }
-    .buy-btn:hover { background: #f5d44a; }
-    footer { background: var(--secondary); color: var(--white); text-align: center; padding: 2rem; font-size: 0.9rem; }
-  </style>
+  <meta name="description" content="Ozark Prepper Emergency Preparedness Checklist - Complete 7-day survival kit checklist with water storage, food, first aid, and more.">
+  <title>Ozark Prepper - Emergency Preparedness Checklist</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
   <header>
-    <nav>
-      <h1>Ozark Prepper</h1>
-      <nav>
-        <a href="index.html">Home</a>
+    <div class="nav-container">
+      <a href="/" class="logo">
+        <div class="logo-icon">🔥</div>
+        <span>Ozark Prepper</span>
+      </a>
+      <button class="menu-toggle" aria-label="Toggle menu" onclick="toggleMenu()">
+        <span class="hamburger"><span></span><span></span><span></span></span>
+      </button>
+      <ul class="nav-menu" id="nav-menu">
+        <li><a href="/">Home</a></li>
+        <li><a href="PDC_Emergency_Checklist.html">Emergency Checklist</a></li>
+        <li><a href="Water_Storage_Guide.html">Water Guide</a></li>
+        <li><a href="Food_Rotation.html">Food Rotation</a></li>
+        <li><a href="Off-Grid_Power.html">Off-Grid Power</a></li>
+        <li><a href="#contact" class="nav-cta">Contact</a></li>
+      </ul>
+      <div class="mobile-menu" id="mobile-menu">
+        <a href="/">Home</a>
         <a href="PDC_Emergency_Checklist.html">Emergency Checklist</a>
         <a href="Water_Storage_Guide.html">Water Guide</a>
         <a href="Food_Rotation.html">Food Rotation</a>
         <a href="Off-Grid_Power.html">Off-Grid Power</a>
-      </nav>
-    </nav>
+        <a href="#contact">Contact</a>
+      </div>
+    </div>
   </header>
 
-  <main>
+  <main id="main-content">
     <section class="hero">
-      <h1>Emergency Preparedness Checklist</h1>
-      <p>Everything you need for 7 days of survival. Created for self-reliant living.</p>
-    </section>
-
-    <section class="checklist-grid">
-      <div class="checklist-item">
-        <h3>💧 Water</h3>
-        <p>1 gallon per person per day. 7-day total: 7 gallons per person.</p>
-      </div>
-      <div class="checklist-item">
-        <h3>🥫 Food</h3>
-        <p>7 days of food per person. Canned goods, peanut butter, crackers, cereal.</p>
-      </div>
-      <div class="checklist-item">
-        <h3>⚕️ First Aid</h3>
-        <p>Bandages, gauze, antiseptic, pain relievers, prescription meds (7 days).</p>
-      </div>
-      <div class="checklist-item">
-        <h3>🔦 Light & Power</h3>
-        <p>Flashlights, headlamps, extra batteries, power bank, weather radio.</p>
-      </div>
-      <div class="checklist-item">
-        <h3>🛡️ Shelter & Warmth</h3>
-        <p>Sleeping bags, extra clothing, plastic sheeting, duct tape, waterproof matches.</p>
-      </div>
-      <div class="checklist-item">
-        <h3>📞 Communication</h3>
-        <p>Two-way radio, NOAA weather radio, paper maps, pre-paid phone card.</p>
-      </div>
-      <div class="checklist-item">
-        <h3>📄 Documents</h3>
-        <p>ID, birth certificates, insurance papers, bank info, cash ($200-500), medications list.</p>
-      </div>
-      <div class="checklist-item">
-        <h3>👕 Clothing</h3>
-        <p>Extra clothing, rain gear, boots, hats, waterproof matches, whistle.</p>
+      <div class="container">
+        <h1>Emergency Preparedness Checklist</h1>
+        <p>The complete 7-day survival kit checklist. Everything you need to be prepared for any emergency.</p>
       </div>
     </section>
 
-    <section class="buy-box">
-      <h2>Emergency Preparedness Checklist</h2>
-      <p>The complete 7-day survival kit checklist, ready to print and use.</p>
-      <div class="price">$4.99</div>
-      <button class="buy-btn" onclick="alert('Checkout coming soon')">Buy Now</button>
-      <p style="font-size: 0.85rem; margin-top: 1rem; color: #ccc;">Instant PDF delivery. Free updates forever.</p>
+    <section class="products">
+      <div class="container">
+        <div class="product-card">
+          <div class="product-badge">Best Seller</div>
+          <h3>Emergency Preparedness Checklist</h3>
+          <p>The complete 7-day survival checklist covering water, food, first aid, shelter, and more. Ready to print and use.</p>
+          <div class="price">$4.99</div>
+          <button class="buy-btn" onclick="alert('Checkout powered by Stripe')">Buy Now</button>
+        </div>
+        <div class="product-card">
+          <div class="product-badge">New</div>
+          <h3>Water Storage Guide</h3>
+          <p>How to store water safely, purification methods, and storage containers.</p>
+          <div class="price">$7.99</div>
+          <button class="buy-btn" onclick="alert('Checkout powered by Stripe')">Buy Now</button>
+        </div>
+        <div class="product-card">
+          <div class="product-badge">Best Value</div>
+          <h3>Off-Grid Power Guide</h3>
+          <p>Solar setup, battery selection, and inverter basics for off-grid living.</p>
+          <div class="price">$12.99</div>
+          <button class="buy-btn" onclick="alert('Checkout powered by Stripe')">Buy Now</button>
+        </div>
+        <div class="product-card">
+          <div class="product-badge">Complete</div>
+          <h3>Food Rotation System</h3>
+          <p>Long-term food storage, rotation schedules, and preservation guides.</p>
+          <div class="price">$9.99</div>
+          <button class="buy-btn" onclick="alert('Checkout powered by Stripe')">Buy Now</button>
+        </div>
+      </div>
     </section>
+
+    <section class="about" id="about">
+      <div class="container">
+        <h2>Why Emergency Preparation Matters</h2>
+        <p>When disaster strikes, you don't have time to buy everything you need. You need to be prepared now. Our Emergency Preparedness Checklist covers everything you need for 7 days of self-reliance, from water and food to first aid and shelter.</p>
+      </div>
+    </section>
+
+    <section class="contact" id="contact">
+      <div class="container">
+        <h2>Stay Connected</h2>
+        <form id="contact-form">
+          <input type="text" name="name" placeholder="Your Name" required>
+          <input type="email" name="email" placeholder="Your Email" required>
+          <textarea name="message" placeholder="Your Message" rows="5" required></textarea>
+          <button type="submit">Send Message</button>
+        </form>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <p>Ozark Prepper &copy; 2026</p>
+      <p>Emergency preparedness and survival resources for self-reliant living.</p>
+      <p><a href="/privacy">Privacy</a> | <a href="/terms">Terms</a></p>
+    </footer>
   </main>
-
-  <footer>
-    <p>Ozark Prepper &copy; 2026 | Emergency preparedness and survival resources for self-reliant living.</p>
-  </footer>
+  <script src="js/main.js"></script>
 </body>
 </html>
