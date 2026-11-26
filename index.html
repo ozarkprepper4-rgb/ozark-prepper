@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Ozark Prepper - Emergency preparedness, off-grid power, food storage, and survival guides for self-reliant living.">
+  <title>Ozark Prepper | Emergency Preparedness & Survival Guides</title>
+  <style>
+    :root {
+      --primary: #2c5aa0;
+      --secondary: #1e3a6f;
+      --accent: #d4a017;
+      --bg: #f5f3f0;
+      --text: #2d2d2d;
+      --white: #ffffff;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+    header { background: var(--primary); color: var(--white); padding: 1rem 0; }
+    nav { display: flex; justify-content: space-between; align-items: center; padding: 0 2rem; max-width: 1200px; margin: 0 auto; }
+    nav h1 { font-size: 1.5rem; font-weight: 700; }
+    nav a { color: var(--white); text-decoration: none; margin-left: 1.5rem; font-size: 0.95rem; }
+    nav a:hover { text-decoration: underline; }
+    .hero { background: linear-gradient(135deg, var(--secondary), var(--primary)); color: var(--white); padding: 3rem 2rem; text-align: center; }
+    .hero h1 { font-size: 2.5rem; margin-bottom: 1rem; }
+    .hero p { font-size: 1.1rem; max-width: 600px; margin: 0 auto 1.5rem; }
+    .cta-button { background: var(--accent); color: var(--secondary); padding: 0.75rem 1.5rem; text-decoration: none; border-radius: 5px; font-weight: 700; }
+    .cta-button:hover { background: #f5d44a; }
+    .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; padding: 2rem 2rem; max-width: 1200px; margin: 0 auto; }
+    .feature { background: var(--white); padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .feature h3 { color: var(--primary); margin-bottom: 0.5rem; }
+    .feature p { font-size: 0.95rem; }
+    .products { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; padding: 2rem 2rem; max-width: 1200px; margin: 0 auto; }
+    .product { background: var(--white); padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-top: 4px solid var(--primary); }
+    .product h3 { color: var(--primary); margin-bottom: 0.5rem; }
+    .product p { font-size: 0.95rem; color: #666; }
+    .price { font-size: 1.25rem; font-weight: 700; color: var(--primary); }
+    footer { background: var(--secondary); color: var(--white); text-align: center; padding: 2rem; font-size: 0.9rem; }
+    @media (max-width: 768px) {
+      nav { flex-direction: column; }
+      nav a { margin: 0 0 0.5rem 0; }
+      .hero h1 { font-size: 1.8rem; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <h1>Ozark Prepper</h1>
+      <nav>
+        <a href="#products">Shop</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h1>Ready for Anything</h1>
+    <p>Comprehensive emergency preparedness, off-grid power, and survival guides for self-reliant living.</p>
+    <a href="#products" class="cta-button">Shop Emergency Kits</a>
+  </section>
+
+  <section class="features">
+    <div class="feature">
+      <h3>📦 Emergency Kits</h3>
+      <p>Ready-made kits for 7-day survival. Everything you need, nothing you don't.</p>
+    </div>
+    <div class="feature">
+      <h3>⚡ Off-Grid Power</h3>
+      <p>Solar, battery, and generator systems for when the grid goes down.</p>
+    </div>
+    <div class="feature">
+      <h3>🌿 Food Storage</h3>
+      <p>Long-term food storage, rotation, and preservation guides.</p>
+    </div>
+  </section>
+
+  <section class="products" id="products">
+    <div class="product">
+      <h3>Emergency Preparedness Checklist</h3>
+      <p>7-day survival checklist, water storage guide, and emergency contact templates.</p>
+      <div class="price">$4.99</div>
+      <a href="#" class="cta-button" style="width: 100%; display: block; text-align: center;">Buy Now</a>
+    </div>
+    <div class="product">
+      <h3>Water Storage Guide</h3>
+      <p>How to store water safely, purification methods, and storage containers.</p>
+      <div class="price">$7.99</div>
+      <a href="#" class="cta-button" style="width: 100%; display: block; text-align: center;">Buy Now</a>
+    </div>
+    <div class="product">
+      <h3>Off-Grid Power Guide</h3>
+      <p>Solar setup, battery selection, and inverter basics for off-grid living.</p>
+      <div class="price">$12.99</div>
+      <a href="#" class="cta-button" style="width: 100%; display: block; text-align: center;">Buy Now</a>
+    </div>
+  </section>
+
+  <footer id="contact">
+    <p>Ozark Prepper &copy; 2026</p>
+    <p>Emergency preparedness and survival resources for self-reliant living.</p>
+  </footer>
+</body>
+</html>
