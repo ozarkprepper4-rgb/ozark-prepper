@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Ozark Prepper Off-Grid Power Guide - Solar power, batteries, and generators for when the grid goes down.">
+  <title>Ozark Prepper - Off-Grid Power Guide</title>
+  <style>
+    :root {
+      --primary: #2c5aa0;
+      --secondary: #1e3a6f;
+      --accent: #d4a017;
+      --bg: #f5f3f0;
+      --text: #2d2d2d;
+      --white: #ffffff;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+    header { background: var(--primary); color: var(--white); padding: 1rem 0; position: sticky; top: 0; z-index: 100; }
+    nav { display: flex; justify-content: space-between; align-items: center; padding: 0 2rem; max-width: 1200px; margin: 0 auto; }
+    nav h1 { font-size: 1.5rem; font-weight: 700; }
+    nav a { color: var(--white); text-decoration: none; margin-left: 1.5rem; font-size: 0.95rem; }
+    nav a:hover { text-decoration: underline; }
+    .hero { background: linear-gradient(135deg, var(--secondary), var(--primary)); color: var(--white); padding: 3rem 2rem; text-align: center; }
+    .hero h1 { font-size: 2rem; margin-bottom: 1rem; }
+    .hero p { font-size: 1rem; max-width: 600px; margin: 0 auto 1.5rem; }
+    .checklist-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; padding: 2rem 2rem; max-width: 1200px; margin: 0 auto; }
+    .checklist-item { background: var(--white); padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 4px solid var(--primary); }
+    .checklist-item h3 { color: var(--primary); margin-bottom: 0.5rem; }
+    .checklist-item p { font-size: 0.95rem; color: #666; }
+    .buy-box { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: var(--white); padding: 2rem; border-radius: 8px; text-align: center; }
+    .buy-box h2 { font-size: 1.5rem; margin-bottom: 1rem; }
+    .buy-box p { font-size: 1rem; margin-bottom: 1.5rem; }
+    .price { font-size: 2rem; font-weight: 700; margin-bottom: 1.5rem; }
+    .buy-btn { background: var(--accent); color: var(--secondary); padding: 0.75rem 2rem; border: none; border-radius: 5px; font-weight: 700; cursor: pointer; }
+    .buy-btn:hover { background: #f5d44a; }
+    footer { background: var(--secondary); color: var(--white); text-align: center; padding: 2rem; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <h1>Ozark Prepper</h1>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="PDC_Emergency_Checklist.html">Emergency Checklist</a>
+        <a href="Water_Storage_Guide.html">Water Guide</a>
+        <a href="Food_Rotation.html">Food Rotation</a>
+        <a href="Off-Grid_Power.html">Off-Grid Power</a>
+      </nav>
+    </nav>
+  </header>
+  <main>
+    <section class="hero">
+      <h1>Off-Grid Power Guide</h1>
+      <p>Solar power, batteries, and generators for when the grid goes down.</p>
+    </section>
+    <section class="checklist-grid">
+      <div class="checklist-item">
+        <h3>☀️ Solar Panels</h3>
+        <p>Types, sizing, and installation basics for solar power systems.</p>
+      </div>
+      <div class="checklist-item">
+        <h3>🔋 Batteries</h3>
+        <p>Lead-acid vs lithium. Sizing your battery bank for your needs.</p>
+      </div>
+      <div class="checklist-item">
+        <h3>⚡ Inverters</h3>
+        <p>Pure sine vs modified sine. What you need for your appliances.</p>
+      </div>
+      <div class="checklist-item">
+        <h3>🔌 Generators</h3>
+        <p>Portable vs standby. Fuel types, runtime, and quiet options.</p>
+      </div>
+      <div class="checklist-item">
+        <h3>📐 Sizing</h3>
+        <p>How to calculate your power needs. Load calculations made simple.</p>
+      </div>
+    </section>
+    <section class="buy-box">
+      <h2>Off-Grid Power Guide</h2>
+      <p>Complete guide to going off-grid with solar, batteries, and generators.</p>
+      <div class="price">$12.99</div>
+      <button class="buy-btn" onclick="alert('Checkout coming soon')">Buy Now</button>
+    </section>
+  </main>
+  <footer>
+    <p>Ozark Prepper &copy; 2026 | Emergency preparedness and survival resources for self-reliant living.</p>
+  </footer>
+</body>
+</html>
