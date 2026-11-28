@@ -8,7 +8,7 @@
   :root{
     --green:#2e5339; --green2:#3d6a47; --ink:#222; --muted:#555; --bg:#f5f2ea; --card:#fff; --line:#ddd; --buy:#1f6f43;
   }
-  *{margin:0;padding:0,box-sizing:border-box}
+  *{margin:0;padding:0;box-sizing:border-box}
   body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.6}
   header{background:var(--green);color:#fff;padding:22px 20px;text-align:center}
   header h1{margin:0;font-size:1.6rem}
@@ -177,17 +177,17 @@
     </div>
   </section>
   <section id="buy">
-    <div class="container">
-      <div class="card">
-        <h2>Buy the Books</h2>
-        <div class="affiliate-note">
-          <strong>Payment and delivery:</strong>
-          <p>Click a book's "Buy Now" to pay securely on Stripe. Your ebook is emailed to you automatically (PDF and EPUB) after checkout — it works in Apple Books, Google Play Books, Kindle and Kobo. Full refund within 14 days if it doesn't work for you.</p>
-          <p><strong>Where the money goes:</strong> Book sales keep this site free and fund new guides.</p>
-        </div>
-        <a class="btn" href="#books">Back to Books</a>
-      </div>
+  <div class="container">
+  <div class="card">
+    <h2>Buy the Books</h2>
+    <div class="affiliate-note">
+      <strong>Payment and delivery:</strong>
+      <p>Click a book's "Buy Now" to pay securely on Stripe. Your ebook is emailed to you automatically (PDF and EPUB) after checkout — it works in Apple Books, Google Play Books, Kindle and Kobo. Full refund within 14 days if it doesn't work for you.</p>
+      <p><strong>Where the money goes:</strong> Book sales keep this site free and fund new guides.</p>
     </div>
+    <a class="btn" href="#books">Back to Books</a>
+  </div>
+  </div>
   </section>
   <section id="email-capture" style="padding:3rem 2rem 2rem; background: var(--bg); text-align: center;">
     <div class="container" style="max-width:600px;">
@@ -196,24 +196,23 @@
       <form id="email-capture-form" action="https://formsubmit.co/ajax/ozarkprepper4@gmail.com" method="POST" style="max-width: 500px; margin: 0 auto;">
         <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
           <div style="flex: 1; min-width: 150px; margin-bottom: 1rem;">
-            <input type="text" id="ec-name" name="name" placeholder="Your Name" required style="width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: 5px; font-size: 1rem;">
+            <input type="text" id="ec-name" name="name" placeholder="Your Name" required style="width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: 5px; font-size: 1rem; background: var(--card); color: var(--ink);">
           </div>
           <div style="flex: 1; min-width: 150px; margin-bottom: 1rem;">
-            <input type="email" id="ec-email" name="email" placeholder="Your Email" required style="width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: 5px; font-size: 1rem;">
+            <input type="email" id="ec-email" name="email" placeholder="Your Email" required style="width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: 5px; font-size: 1rem; background: var(--card); color: var(--ink);">
           </div>
         </div>
         <div style="margin-bottom: 1rem;">
-          <input type="text" id="ec-subject" name="subject" placeholder="How can we help?" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: 5px; font-size: 1rem;">
+          <input type="text" id="ec-subject" name="subject" placeholder="How can we help?" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: 5px; font-size: 1rem; background: var(--card); color: var(--ink);">
         </div>
-        <button type="submit" style="background: var(--accent); color: var(--secondary); padding: 0.85rem 1.5rem; border: none; border-radius: 5px; font-weight: 700; cursor: pointer; width: 100%;">Subscribe &amp; Get Your Guide</button>
+        <button type="submit" style="background: var(--buy); color: var(--card); padding: 0.85rem 1.5rem; border: none; border-radius: 5px; font-weight: 700; cursor: pointer; width: 100%;">Subscribe &amp; Get Your Guide</button>
         <span id="ec-status" style="margin-top: 0.75rem; font-size: 0.9rem; text-align: center;"></span>
       </form>
     </div>
   </section>
 </div>
-<footer>
   <p>&copy; 2026 Ozark Prepper. A free, honest preparedness resource.</p>
-  <p><a href="refund.html">Refund Policy</a> · <a href="terms.html">Terms of Service</a> · <a href="privacy.html">Privacy Policy</a> · <a href="mailto:ozarkprepper4@gmail.com">Contact: ozarkprepper4@gmail.com</a></p>
+  <p><a href="refund.html">Refund Policy</a> &middot; <a href="terms.html">Terms of Service</a> &middot; <a href="privacy.html">Privacy Policy</a> &middot; <a href="mailto:ozarkprepper4@gmail.com">Contact: ozarkprepper4@gmail.com</a></p>
 </footer>
 </body>
 </html>
