@@ -50,8 +50,7 @@
           <div class="product-badge">Best Seller</div>
           <h3>Emergency Preparedness Checklist</h3>
           <p>The complete 7-day survival checklist covering water, food, first aid, shelter, and more.</p>
-          <div class="price">$4.99</div>
-          <button class="buy-btn" onclick="alert('Checkout powered by Stripe')">Buy Now</button>
+          <button class="buy-btn" onclick="openCheckout('Emergency_Checklist.pdf', this)">Buy Now</button>
         </div>
         <div class="product-card">
           <div class="product-badge">New</div>
@@ -98,7 +97,13 @@
       <p>Emergency preparedness and survival resources for self-reliant living.</p>
       <p><a href="/privacy">Privacy</a> | <a href="/terms">Terms</a></p>
     </footer>
+    <div id="checkout-overlay" class="checkout-overlay">
+      <div class="checkout-card">
+        <p class="checkout-msg">Opening secure checkout&hellip;</p>
+        <div class="checkout-price">$4.99</div>
+        <button class="checkout-pay-btn buy-btn" onclick="payCheckout('Emergency_Checklist.pdf')">Pay $4.99</button>
+      </div>
+    </div>
   </main>
-  <script src="js/main.js"></script>
-</body>
-</html>
+<script src="js/main.js"></script>
+</body></html>

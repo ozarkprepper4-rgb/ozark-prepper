@@ -80,34 +80,33 @@
           <span style="color: var(--primary);">00</span>
         </h2>
         <div class="container">
-          <div class="product-card">
+          <a class="product-card" href="PDC_Emergency_Checklist.html">
             <div class="product-badge">Best Seller</div>
-            <h3>Emergency Preparedness Checklist</h3>
+            <h3>Emergency Checklist</h3>
             <p>The complete 7-day survival kit checklist. Everything you need to be prepared for any emergency.</p>
-            <div class="price">$4.99</div>
-            <button class="buy-btn" onclick="alert('Checkout powered by Stripe')">Buy Now</button>
-          </div>
-          <div class="product-card">
+            <button class="buy-btn" onclick="openCheckout('Emergency_Checklist.pdf', this)">Buy Now</button>
+          </a>
+          <a class="product-card" href="Water_Storage_Guide.html">
             <div class="product-badge">New</div>
             <h3>Water Storage Guide</h3>
             <p>How to store water safely, purification methods, and storage containers.</p>
             <div class="price">$7.99</div>
-            <button class="buy-btn" onclick="alert('Checkout powered by Stripe')">Buy Now</button>
-          </div>
-          <div class="product-card">
+            <a class="buy-btn" href="Water_Storage_Guide.html">Buy Now</a>
+          </a>
+          <a class="product-card" href="Off-Grid_Power.html">
             <div class="product-badge">Best Value</div>
-            <h3>Off-Grid Power Guide</h3>
+            <h3>Off-Grid Power</h3>
             <p>Solar setup, battery selection, and inverter basics for off-grid living.</p>
             <div class="price">$12.99</div>
-            <button class="buy-btn" onclick="alert('Checkout powered by Stripe')">Buy Now</button>
-          </div>
-          <div class="product-card">
+            <a class="buy-btn" href="Off-Grid_Power.html">Buy Now</a>
+          </a>
+          <a class="product-card" href="Food_Rotation.html">
             <div class="product-badge">Complete</div>
-            <h3>Food Rotation System</h3>
+            <h3>Food Rotation</h3>
             <p>Long-term food storage, rotation schedules, and preservation guides.</p>
             <div class="price">$9.99</div>
-            <button class="buy-btn" onclick="alert('Checkout powered by Stripe')">Buy Now</button>
-          </div>
+            <a class="buy-btn" href="Food_Rotation.html">Buy Now</a>
+          </a>
         </div>
       </div>
 
@@ -146,14 +145,35 @@
       <section class="contact" id="contact">
         <div class="container">
           <h2>Stay Connected</h2>
-          <form id="contact-form">
-            <input type="text" name="name" placeholder="Your Name" required>
-            <input type="email" name="email" placeholder="Your Email" required>
-            <textarea name="message" placeholder="Your Message" rows="5" required></textarea>
-            <button type="submit">Send Message</button>
+          <p class="contact-intro">Join the Ozark Prepper list for <strong>new survival guides, discount codes, and emergency prep tips</strong>. No spam, ever. Unsubscribe anytime.</p>
+          <form id="email-capture-form" action="https://formsubmit.co/ajax/ozarkprepper4@gmail.com" method="POST">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="ec-name">Name</label>
+                <input type="text" id="ec-name" name="name" placeholder="Your Name" required>
+              </div>
+              <div class="form-group">
+                <label for="ec-email">Email</label>
+                <input type="email" id="ec-email" name="email" placeholder="Your Email" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="ec-subject">Subject</label>
+              <input type="text" id="ec-subject" name="subject" placeholder="How can we help?">
+            </div>
+            <button type="submit" class="btn-submit">Subscribe &amp; Get Your Guide</button>
+            <span id="ec-status" class="ec-status" role="status" aria-live="polite"></span>
           </form>
         </div>
       </section>
+
+      <div id="checkout-overlay" class="checkout-overlay">
+        <div class="checkout-card">
+          <p class="checkout-msg">Opening secure checkout&hellip;</p>
+          <div class="checkout-price">$4.99</div>
+          <button class="checkout-pay-btn buy-btn" onclick="payCheckout('Emergency_Checklist.pdf')">Pay $4.99</button>
+        </div>
+      </div>
 
       <footer class="site-footer">
         <p>Ozark Prepper &copy; 2026</p>
@@ -161,5 +181,5 @@
         <p><a href="#contact">Contact</a> | <a href="/privacy">Privacy</a> | <a href="/terms">Terms</a></p>
       </footer>
     </main>
-  </body>
-</html>
+  <script src="js/main.js"></script>
+</body></html>
